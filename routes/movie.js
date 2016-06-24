@@ -4,9 +4,6 @@ var router = express.Router();
 const movieTool = require('../model/movie');
 const addEvent = require('../util/myEmitter').addEvent;
 
-var myEmit = addEvent('getMovie',function (data) {
-    console.log(data);
-});
 router.post('/',(req,res,next)=>{
     "use strict";
     var sURl = 'http://www.ygdy8.net/html/gndy/dyzz/20160619/51244.html';

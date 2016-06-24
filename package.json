@@ -13,17 +13,16 @@
     "eventproxy": "^0.3.4",
     "express": "^4.13.4",
     "grunt": "^1.0.1",
-    "grunt-contrib-uglify": "^1.0.1",
     "iconv-lite": "^0.4.13",
     "morgan": "~1.6.1",
     "mysql": "^2.11.1",
-    "node-mysql": "^0.4.2",
     "pug": "^2.0.0-beta3",
     "serve-favicon": "~2.3.0",
     "superagent": "^2.0.0",
     "superagent-charset": "^1.1.0"
   },
   "devDependencies": {
+  	"grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-jsdoc": "^2.1.0"
   }

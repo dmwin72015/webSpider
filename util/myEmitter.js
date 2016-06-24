@@ -13,11 +13,11 @@ function MyEmitter() {
 
 var myEmit = new MyEmitter();
 
-
-function addEvent(sEvent,callback) {
-    if(!sEvent) return;
-    myEmit.on(sEvent,callback);
+function addEvent(sEvent, callback) {
+    if (!sEvent) return;
+    myEmit.on(sEvent, callback);
     return myEmit;
 }
 
 exports.addEvent = addEvent;
+exports.emitter = myEmit;
