@@ -1,1 +1,2 @@
-把以前的pachong项目,重新命名为webSpider
+##把以前的pachong项目,重新命名为webSpider
+### 由于依赖的模块比较多,有时候会造成路径太长而无法上传,所以干脆没有将依赖的模块上传,用的时候,只需将项目clone到本地,然后执行npm install即可.
