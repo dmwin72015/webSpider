@@ -1,0 +1,13 @@
+extends head
+
+block head_cont
+    link(rel='stylesheet', href='/css/index.css')
+
+block content
+    .input-wraper
+        span.input-box
+            input#kw(type='text')
+        a#get(href='javascript:;')|获取
+    .result-list
+        ul
+    script(src="/js/index.js")

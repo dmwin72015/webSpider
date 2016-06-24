@@ -1,0 +1,15 @@
+extends head
+
+block head_cont
+    link(rel='stylesheet', href='/css/article.css')
+
+block content
+    div.article-wrap
+        h3.article-title= art_title
+        h5.sub-title= art_subTitle
+        p.other-info
+            span.pub-time #{pub_time || '今天'}
+            a.source(href=sSource_href) #{sSource}
+            span.editor #{editor}
+        div.article-content
+            | !{art_content}

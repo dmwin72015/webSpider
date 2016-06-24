@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: article.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: article.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by yxp on 2016/6/16.
+ */
+const cheerio = require('cheerio');
+const sAgentCharset = require('superagent-charset');
+const sAgent = sAgentCharset(require('superagent'));
+const fs = require('fs');
+const http = require('http');
+const tool = require('../util/mysql_connect');
+
+const headrs = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+};
+
+/**
+ * 获取页面上的数据
+ * @param {string} -  资源的url
+ * @param {Obejct|JSON} [opt={charset:'utf-8'}] - 参数
+ *
+ * */
+function _getData(url, opt) {
+    //判断传递参数的个数，
+    if (typeof url == 'object') {
+        opt = url;
+        url = null;
+    }
+    // 初始化opt
+    opt = opt || {};
+    var url = url || opt.url,
+        cb = opt.success,
+        charset = opt.charset || 'utf-8';
+    //没有url和success 返回
+    if (!url || !cb) return;
+    sAgent.get(url).charset(charset).end((err, res) => {
+        cb &amp;&amp; cb(err, res);
+    });
+}
+/**
+ * 获取页面的DOM
+ * @link _getData
+ * @param {string} url - 页面的url
+ * @param {JSON} [opt={charset:'utf-8'}] - 参数
+ * @param {Function} [cb] - 回掉函数
+ * */
+function _getDom(url, opt, cb) {
+    if (typeof opt == 'object') {
+        opt = opt || {};
+    } else if (typeof  opt == 'function') {
+        cb = opt;
+    }
+    _getData(url, {
+        success: function (err, res) {
+            if (err) {
+                cb(1, err);
+            } else {
+                var sHtml = res.text.trim();
+                var errorInfo = {
+                    message: '空文章',
+                    eerror: {
+                        status: 200,
+                        stack: ''
+                    }
+                };
+                !sHtml ? cb(1, errorInfo) : cb(0, cheerio.load(sHtml, {
+                    ignoreWhitespace: true,
+                    xmlMode: true,
+                    decodeEntities: false//禁止中文转成unicode，主要出现在html()方法的时候，一些title、alt
+                }));
+            }
+        },
+        charset: opt.charset
+    });
+}
+/**
+ * 获取页面中img资源
+ * @param {string} url - 页面的url
+ * @param {Function} [cb] - 回掉函数 接受一个参数:arr ,保存获取到的图片src
+ * */
+function _getImg(url, cb) {
+    _getDom(url, ($)=> {
+        var arrRes = [];
+        $('img[src]').each(function (i, e) {
+            arrRes[i] = $(e).attr('src');
+        });
+        cb(arrRes);
+    });
+}
+/**
+ * 保存img资源
+ * @param {string} url - 图片的url
+ * @param {Function} [cb] - 回掉函数 接受两个个参数:（err,res）;err:报错信息，res：结果数据
+ * */
+function _saveImg(url, cb) {
+    _getData(url, {
+        success: function (err, res) {
+            fs.writeFile('download/' + randomName() + '.png', res.body, (err, data)=> {
+                cb &amp;&amp; cb(err, data);
+            })
+        }
+    })
+}
+/**
+ * 保存文章
+ * @param {string} url  - 文章的url
+ * @param {@link _getData.opt Obejct|JSON} opt - 参数
+ * @param {Function} cb - 回掉函数
+ * @returns undefined - 无返回值
+ * */
+function _saveArticle(url, opt, cb) {
+    "use strict";
+    _getDom(url, opt, (err, data)=> {
+        if (err) {
+            cb(1, err);
+        } else {
+            var $ = data;
+            var $article = $('#cont_1_1_2');
+            var sTitle = $article.children('h1').text();
+            var sTime = $article.find('.left-t').text().match(/\d{4}年\d{2}月\d{2}日\s*\d{2}:\d{2}/i);
+            sTime = sTime ? sTime[0] : '';
+            var sSource = $article.find('.left-t>a').eq(0).text();
+            var sSource_href = $article.find('.left-t>a').eq(0).attr('href');
+            var aImg = [];
+            $article.find('.left_zw img').each(function (i, ele) {
+                var src = $(ele).attr('src');
+                if (/^(\/?).*?\.(bmp|jpg|gif)$/ig.test(src)) {
+                    src += opt.baseUrl + RegExp.$1 + src;
+                }
+                aImg.push(src);
+            });
+            var sImgText = $article.find('div.left_pt').text() || $article.find('div.pictext').text();
+
+            var sArticleText = '',
+                sArticleHtml = '';
+            $article.find('.left_zw p').each(function (i, ele) {
+                sArticleText += $(ele).text();
+                sArticleHtml += $(ele).html();
+            });
+            var sAuthor = $article.find('div.left_name div.left_name').text();
+            var sql = 'INSERT INTO `dongmin`.`blog_article` (`arti_name`, `arti_author_id`, `arti_author_name`, `arti_textcontent`, `arti_htmlcontent` , `arti_sorce`, `arti_status`, `arti_label`, `arti_cate_id`, `arti_cate_name` , `create_time`, `pub_time`, `last_edit_time`) VALUES (?, "1", "admin",?, ?, ?,"1","新闻","1","社会新闻", now(),?, now())';
+            sTime = sTime.replace(/年|月/g, '-').replace(/\s*/, ' ');
+            var oAllData = {
+                title: sTitle,
+                art_title: sTitle,
+                art_subTitle: sTitle,
+                pub_time: sTime,
+                sSource: sSource,
+                sSource_href: sSource_href,
+                art_content: sArticleHtml,
+                editor: sAuthor
+            };
+            tool.query(sql, [sTitle, sArticleText, sArticleHtml, sSource, sTime], function (err, row) {
+                if (err) {
+                    cb(1, err);
+                    return;
+                } else {
+                }
+            });
+            cb(0, oAllData);
+        }
+    });
+}
+/**
+ * 获取所有文章
+ * */
+function getAllArticle() {
+
+
+}
+/**
+ * 返回年月日 时分秒的字符串，例如：201608081024213
+ * 1-4位：年;5-6位：月;7-8位：日;9-10位：小时;11-12位：分钟;13-14位：秒;15-17位：毫秒
+ * */
+function randomName() {
+    var oD = new Date;
+    var year = oD.getFullYear(),
+        month = oD.getMonth() + 1,
+        day = oD.getDate(),
+        hour = oD.getHours(),
+        minute = oD.getMinutes(),
+        second = oD.getSeconds(),
+        msecond = oD.getMilliseconds();
+    return '' + year + comp(month) + comp(day) + comp(hour) + comp(minute) + comp(second) + comp(msecond);
+}
+/**
+ * 把小于9的数字转换成0*,例如  8->08
+ * @param｛Number} num - 数字
+ * @returns {String}
+ * */
+function comp(num) {
+    return num > 9 ? num : '0' + num;
+}
+module.exports = {
+    getData: _getData,
+    getDom: _getDom,
+    getImg: _getImg,
+    saveImg: _saveImg,
+    saveArticle: _saveArticle
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_getData">_getData</a></li><li><a href="global.html#_getDom">_getDom</a></li><li><a href="global.html#_getImg">_getImg</a></li><li><a href="global.html#_saveArticle">_saveArticle</a></li><li><a href="global.html#_saveImg">_saveImg</a></li><li><a href="global.html#cheerio">cheerio</a></li><li><a href="global.html#comp">comp</a></li><li><a href="global.html#getAllArticle">getAllArticle</a></li><li><a href="global.html#randomName">randomName</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jun 22 2016 11:42:54 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

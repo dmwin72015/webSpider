@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取图片资源</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-1.12.4.js"></script>
+</head>
+<body>
+    <div class="input-wraper">
+        <span class="input-box">
+            <input type="text" id="kw">
+        </span><a href="javascript:;" id="get">获取</a>
+    </div>
+    <div class="result-list">
+        <ul>
+            <li>http:/_ijt=dt0iqndqk22r3qpgha4urt83md</li>
+            <li>http:/_ijt=dt0iqndqk22r3qpgha4urt83md</li>
+            <li>http:/_ijt=dt0iqndqk22r3qpgha4urt83md</li>
+            <li>http:/_ijt=dt0iqndqk22r3qpgha4urt83md</li>
+            <li>http:/_ijt=dt0iqndqk22r3qpgha4urt83md</li>
+
+        </ul>
+    </div>
+</body>
+<script>
+    $(function () {
+        $('#kw').focus(function () {
+            $(this).parent().addClass('active');
+        }).blur(function () {
+            $(this).parent().removeClass('active');
+        });
+
+        $('#get').click(function () {
+            var sUrl = '';
+            var data = {};
+            $.post('/pach/hello',data,function (data) {
+
+
+            });
+        });
+    });
+</script>
+</html>
