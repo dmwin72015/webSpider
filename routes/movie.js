@@ -4,10 +4,20 @@ var router = express.Router();
 const movieTool = require('../model/movie');
 const addEvent = require('../util/myEmitter').addEvent;
 
-router.post('/',(req,res,next)=>{
+router.post('/', (req, res, next)=> {
     "use strict";
-    var sURl = 'http://www.ygdy8.net/html/gndy/dyzz/20160619/51244.html';
-    movieTool.getMovie(sURl,res,next);
+    var url = req.body.url;
+    var pathname = req.body.pathname;
+    if(/.*\/$/ig.test(url)){
+        url = url.slice(0,-1);
+    }
+    if (!url) {
+        next();
+    } else {
+        // movieTool.getMovie(sURl,res,next);
+        movieTool.getMovieUrl(url, res, next);
+    }
+    return;
 });
 
 module.exports = router;

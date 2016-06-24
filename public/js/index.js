@@ -15,11 +15,12 @@ $(function () {
             url: '/movie',
             type: 'post',
             data: {
-                url: $kw.val()
+                url: $kw.val(),
+                pathname:window.location.pathname
             },
             timeout: '5000',
             success: function (data, textStatus, xhr) {
-                console.log(data);
+               console.dir(data);
             },
             error: function (xml, textStatus, error) {
                 console.log(textStatus);

@@ -10,7 +10,8 @@ module.exports = {
         database: 'dongmin',
         connectionLimit: 20,
         supportBigNumbers: true,
-        dateStrings:'date'
+        dateStrings:'date',
+        debug:true
     },
     'oracle_dev':{
 

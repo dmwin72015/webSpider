@@ -1,52 +1,136 @@
 /**
  * Created by yxp on 2016/6/23.
  */
+const URL = require('url');
+
 const agent = require('../util/myAgent');
+const query = require('../util/mysql_connect')['query'];
 const myEmit = require('../util/myEmitter')['emitter'];
 const addEvent = require('../util/myEmitter').addEvent;
-const keys = ['mov_cnName', 'mov_enName', 'mov_year', 'mov_country', 'mov_type', 'mov_language', 'mov_subtitles', 'mov_IMDb', 'mov_fileType', 'mov_fileResolution', 'mov_fileSize', 'mov_showTime', 'mov_director', 'mov_leadActor', 'mov_summary', 'mov_awards', 'mov_downloadUrl', 'mov_srcUrl', 'mov_poster', 'mov_stills', 'create_date'];
+
+const options = {
+    charset: 'gb2312'
+};
+const keys = ['mov_cnName', 'mov_enName', 'mov_year', 'mov_country', 'mov_type', 'mov_language', 'mov_subtitles', 'mov_IMDb', 'mov_fileType', 'mov_fileResolution', 'mov_fileSize', 'mov_showTime', 'mov_director', 'mov_leadActor', 'mov_summary', 'mov_downloadUrl', 'mov_srcUrl', 'mov_poster', 'mov_stills', 'create_date'];
 /**
  * movie构造函数
  * @constructor
  * @param {Array} arr - 传入一个包含与key(按照数据库中字段构成的一个数组)相对应的value的数组.
  * */
-function movie(arr) {
+function Movie(arr) {
     var i = 0,
         len = keys.length;
     while (i < len) {
         this[keys[i]] = arr[i];
+        i++;
     }
     return this;
 }
+Movie.fn = Movie.prototype = {
+    constructor: Movie,
+    sql: '',
+    save: function () {
+
+    },
+    del: function () {
+        var sql = 'delete from blog_movie where id = ';
+    }
+};
 
 /**
  * 监听事件对象
  * */
-var sql = 'INSERT INTO `blog_movie` (`mov_cnName`,`mov_enName`,`mov_year`,`mov_country`,`mov_type`,`mov_language`,`mov_subtitles`,`mov_IMDb`,`mov_fileType`,`mov_fileResolution`,`mov_fileSize`,`mov_showTime`,`mov_director`,`mov_leadActor`,`mov_summary`,`mov_awards`,`mov_downloadUrl`,`mov_srcUrl`,`mov_poster`,`mov_stills`,`create_date`)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())';
-
-addEvent('saveMovie', function(data, res) {
-    var $zoom = data('#Zoom');
+var count = 0;
+addEvent('saveMovie', function ($, res, url) {
+    "use strict";
+    var $zoom = $('#Zoom');
+    res.send($zoom.html());
+    if (!$zoom.get(0)) {
+        console.log('当前页面无资源');
+        return;
+    }
     var sHtml = $zoom.find('p').eq(0).text();
     var arrRes = sHtml.match(/◎译\s*名(.*)◎片\s*名(.*)◎年\s*代(.*)◎国\s*家(.*)◎类\s*别(.*)◎语\s*言(.*)◎字\s*幕(.*)◎IMDb评分(.*)◎文件格式(.*)◎视频尺寸(.*)◎文件大小(.*)◎片\s*长(.*)◎导\s*演(.*)◎主\s*演(.*)◎简\s*介(.*)/i);
-
-    var arrData = arrRes.slice(1).map(function(item) {
+    if (!arrRes) return;
+    var arrData = arrRes.slice(1).map(function (item) {
         return item.trim();
     });
-    res.send(arrData.concat(download, sMoviePoster, sMovieStills));
+
+    var sDownloadUrl = $zoom.find('table a').attr('href');
+    var sSrcUrl = url;
+    var sPoster = $zoom.find('img').eq(0).attr('src');
+    var sStills = $zoom.find('img').eq(1).attr('src');
+
+    arrData = arrData.concat(sDownloadUrl, sSrcUrl, sPoster, sStills);
+
+    var movie = new Movie(arrData);
+    var sql = 'INSERT INTO `blog_movie` (`mov_cnName`,`mov_enName`,`mov_year`,`mov_country`,`mov_type`,`mov_language`,`mov_subtitles`,`mov_IMDb`,`mov_fileType`,`mov_fileResolution`,`mov_fileSize`,`mov_showTime`,`mov_director`,`mov_leadActor`,`mov_summary`,`mov_downloadUrl`,`mov_srcUrl`,`mov_poster`,`mov_stills`,`create_date`)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())';
+
+    query(sql, arrData, (err, rows) => {
+        if (err) {
+            count--;
+            // res.send(err);
+            // console.log('保存失败');
+        } else {
+            count++;
+            // console.log(count);
+            // res.send(movie);
+        }
+    });
+});
+/**
+ * 获取页面中所有电影的链接
+ */
+addEvent('getMovieUrl', function ($, res, next, url) {
+    var oA = $('div.co_content8 a,div.co_content2 a');
+    var i = 0,
+        arrUseful = [],
+        len = oA.length;
+    for (; i < len; i++) {
+        var sHref = oA.eq(i).attr('href');
+        if (sHref.indexOf('/gndy/') > 0 && sHref.indexOf('index.html') < 0) {
+            //TODO 没有添加路劲的判断(是绝对路径还是相对路径)
+            arrUseful.push(url+sHref);
+        }
+        getMovie(arrUseful[i], res, next);
+    }
+    // console.log('本次捕获到url【' + len + '】条,实际用到【' + arrUseful.length + '】条');
+    // res.send('成功获取数据'+count+'条');
 });
 
+/**
+ * 获取页面中的电影相关信息
+ * @param {string} url - 电影数据来源网页地址
+ * @param {object}  res - 请求返回的响应对象
+ * @param {function} next - 执行下一个路由方法
+ * */
 function getMovie(url, res, next) {
     "use strict";
-    var options = {
-        charset: 'gb2312'
-    }
-    agent.getDom(url, options, (err, $) => {
+    agent.getDom(url, options, (err, dom) => {
         if (err) {
-            next(err);
+            res.send(err);
         } else {
-            myEmit.emit('saveMovie', $, res);
+            myEmit.emit('saveMovie', dom, res, next, url);
+        }
+    });
+}
+/**
+ * 获取网站中所有电影的地址
+ * @param {string} url - 所要爬取资源的地址
+ * @param {object}  res - 请求返回的响应对象
+ * @param {function} next - 执行下一个路由方法
+ * */
+function getMovieUrl(url, res, next) {
+    "use strict";
+    agent.getDom(url, options, (err, dom) => {
+        if (err) {
+            res.send(err);
+        } else {
+            myEmit.emit('getMovieUrl', dom, res, url);
         }
     });
 }
 
+
 exports.getMovie = getMovie;
+exports.getMovieUrl = getMovieUrl;

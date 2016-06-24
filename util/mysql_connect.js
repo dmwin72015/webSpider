@@ -42,7 +42,9 @@ pool.on('enqueue', function (conn) {
 pool.on('end', function (conn) {
     console.log('链接ID' + conn.threadId + '连接关闭......');
 });
-
+pool.on('error',function(conn){
+    console.log(conn,'链接关闭......');
+});
 function testConnect() {
     baseQuery('select now()', function (err, row) {
         console.log(row);
