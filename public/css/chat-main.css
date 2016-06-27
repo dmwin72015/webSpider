@@ -1,1 +1,31 @@
 @charset "UTF-8";
+p.line {
+    border-bottom: 2px solid #333;
+}
+.chat-wraper {
+	width: 70%;
+    min-width: 800px;
+    margin:0 auto;
+    border:1px solid #aaa;
+    position: relative;
+}
+.chat-wraper:after {
+    content: ' ';
+    clear: both;
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+.chat-wraper .panel {
+    float: left;
+}
+.left-panel {
+    width: 30%
+}
+.right-panel {
+    width: 70%;
+}
+.left-panel .online-list>li{
+	padding: 5px; 
+	font-size: 14px;
+}
