@@ -29,10 +29,10 @@ function Movie(arr) {
 Movie.fn = Movie.prototype = {
     constructor: Movie,
     sql: '',
-    save: function () {
+    save: function() {
 
     },
-    del: function () {
+    del: function() {
         var sql = 'delete from blog_movie where id = ';
     }
 };
@@ -41,7 +41,7 @@ Movie.fn = Movie.prototype = {
  * 监听事件对象
  * */
 var count = 0;
-addEvent('saveMovie', function ($, res, next, url) {
+addEvent('saveMovie', function($, res, next, url) {
     "use strict";
     var $zoom = $('#Zoom');
     if (!$zoom.get(0)) {
@@ -51,7 +51,7 @@ addEvent('saveMovie', function ($, res, next, url) {
     var sHtml = $zoom.find('p').eq(0).text();
     var arrRes = sHtml.match(/◎译\s*名(.*)◎片\s*名(.*)◎年\s*代(.*)◎国\s*家(.*)◎类\s*别(.*)◎语\s*言(.*)◎字\s*幕(.*)◎IMDb评分(.*)◎文件格式(.*)◎视频尺寸(.*)◎文件大小(.*)◎片\s*长(.*)◎导\s*演(.*)◎主\s*演(.*)◎简\s*介(.*)/i);
     if (!arrRes) return;
-    var arrData = arrRes.slice(1).map(function (item) {
+    var arrData = arrRes.slice(1).map(function(item) {
         return item.trim();
     });
 
@@ -84,7 +84,7 @@ addEvent('saveMovie', function ($, res, next, url) {
 /**
  * 获取页面中所有电影的链接
  */
-addEvent('getMovieUrl', function ($, res, next, url) {
+addEvent('getMovieUrl', function($, res, next, url) {
     var oA = $('div.co_content8 a,div.co_content2 a');
     var i = 0,
         arrUseful = [],
@@ -93,12 +93,14 @@ addEvent('getMovieUrl', function ($, res, next, url) {
         var sHref = oA.eq(i).attr('href');
         if (sHref.indexOf('/gndy/') > 0 && sHref.indexOf('index.html') < 0) {
             //TODO 没有添加路劲的判断(是绝对路径还是相对路径)
-            arrUseful.push(url + sHref);
+            if(arrUseful.indexOf(sHref)<0){
+                arrUseful.push(url + sHref);
+            }
         }
         getMovie(arrUseful[i], res, next);
     }
     count = arrUseful.length;
-    console.log('总条数'+count);
+    console.log('总条数' + count);
     // console.log('本次捕获到url【' + len + '】条,实际用到【' + arrUseful.length + '】条');
     // res.send(url);
     // res.send('成功获取数据'+count+'条');
@@ -138,13 +140,21 @@ function getMovieUrl(url, res, next) {
     });
 }
 //获取数据库中的数据
-function getMovieData(callback) {
+function getMovAll(callback) {
     var sql = 'SELECT * from blog_movie ORDER BY mov_year;';
-    query(sql,(err,rows)=>{
-        err?callback(1,err):callback(0,rows);
+    query(sql, (err, rows) => {
+        err ? callback(1, err) : callback(0, rows);
     })
 }
 
+// 根据ID获取数据
+function getMovByID(id) {
+    var sql = 'SELECT * from blog_movie where id = ?';
+    query(sql, [id], (err, rows) => {
+        err ? callback(1, err) : callback(0, rows);
+    })
+}
 exports.getMovie = getMovie;
 exports.getMovieUrl = getMovieUrl;
-exports.getMovieData = getMovieData;
+exports.getMovAll = getMovAll;
+exports.getMovByID = getMovByID;

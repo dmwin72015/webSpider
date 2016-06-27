@@ -10,6 +10,15 @@ h3.list-title{
     padding: 10px 20px 20px;
     border:1px solid #dcddde;
 }
+.article-list .list-head{
+    background-color: #F3F3F3;
+    color: #333;
+}
+.list-head >span{
+    display: inline-block;
+    font-size: 14px;
+    padding:5px 0;
+}
 .article-list>ul>li{
     padding:5px;
     padding-left: 8px;

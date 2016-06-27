@@ -1,0 +1,8 @@
+include  ../head
+
+block head_cont
+    script(src='http://localhost:8080/socket.io/socket.io.js')
+    script(src='js/chat.js')
+block content
+    input(type='text' id='kw')
+    input(type='button' id='send' value="发送")

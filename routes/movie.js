@@ -18,16 +18,20 @@ router.post('/', (req, res, next)=> {
     }
     return;
 }).get('/list', (req, res, next)=> {
-    movieTool.getMovieData((err, data)=> {
+    movieTool.getMovAll((err, data)=> {
         if (err) {
             next(data);
         } else {
+            console.log(data.length);
             res.render('movie/movie_list', {
                 arr: data
             });
         }
     });
     return;
-});
+}).get('/list:id', (req, res, next)=> {
+    var id  = req.param.id || -1;
+    return;
+});;
 
 module.exports = router;
