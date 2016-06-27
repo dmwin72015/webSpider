@@ -18,11 +18,12 @@
     "mysql": "^2.11.1",
     "pug": "^2.0.0-beta3",
     "serve-favicon": "~2.3.0",
+    "socket.io": "^1.4.8",
     "superagent": "^2.0.0",
     "superagent-charset": "^1.1.0"
   },
   "devDependencies": {
-  	"grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-jsdoc": "^2.1.0"
   }

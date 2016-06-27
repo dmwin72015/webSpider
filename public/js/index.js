@@ -8,7 +8,7 @@ $(function () {
     }).blur(function () {
         $(this).parent().removeClass('active');
     });
-    $('#get').click(function () {
+    $('#get').one('click',function () {
         var sUrl = '';
         var data = {url: $kw.val()};
         $.ajax({
@@ -18,7 +18,7 @@ $(function () {
                 url: $kw.val(),
                 pathname:window.location.pathname
             },
-            timeout: '5000',
+            timeout: '15000',
             success: function (data, textStatus, xhr) {
                console.dir(data);
             },

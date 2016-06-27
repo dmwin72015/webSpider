@@ -11,7 +11,7 @@ module.exports = {
         connectionLimit: 20,
         supportBigNumbers: true,
         dateStrings:'date',
-        debug:true
+        debug:false
     },
     'oracle_dev':{
 

@@ -20,6 +20,7 @@ function baseQuery(sql, data, callback) {
         conn.query(sql, data, function (err, rows) {
             //释放连接
             conn.release();
+            console.log('释放链接......');
             callback && callback(err, rows);
         })
     });
@@ -33,17 +34,20 @@ function endPool(pool, cb) {
 }
 //事件监听
 pool.on('connection', function (conn) {
-    console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
+    console.log('已经链接');
+    // console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
 });
 
 pool.on('enqueue', function (conn) {
-    console.log(conn.threadId + '连接池连接成功...');
+    console.log('队列中......');
+    // console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
 });
 pool.on('end', function (conn) {
-    console.log('链接ID' + conn.threadId + '连接关闭......');
+    console.log('连接关闭.....');
+    // console.log('链接ID' + conn.threadId + '连接关闭......');
 });
 pool.on('error',function(conn){
-    console.log(conn,'链接关闭......');
+    console.log('链接关闭......');
 });
 function testConnect() {
     baseQuery('select now()', function (err, row) {

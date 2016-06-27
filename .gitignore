@@ -1,4 +1,4 @@
-#或略websotrm的文件
+#不需要上传到github的文件
 .idea/
 #.gitignore
 node_modules/

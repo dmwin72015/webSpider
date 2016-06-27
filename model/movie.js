@@ -41,10 +41,9 @@ Movie.fn = Movie.prototype = {
  * 监听事件对象
  * */
 var count = 0;
-addEvent('saveMovie', function ($, res, url) {
+addEvent('saveMovie', function ($, res, next, url) {
     "use strict";
     var $zoom = $('#Zoom');
-    res.send($zoom.html());
     if (!$zoom.get(0)) {
         console.log('当前页面无资源');
         return;
@@ -64,17 +63,21 @@ addEvent('saveMovie', function ($, res, url) {
     arrData = arrData.concat(sDownloadUrl, sSrcUrl, sPoster, sStills);
 
     var movie = new Movie(arrData);
+
     var sql = 'INSERT INTO `blog_movie` (`mov_cnName`,`mov_enName`,`mov_year`,`mov_country`,`mov_type`,`mov_language`,`mov_subtitles`,`mov_IMDb`,`mov_fileType`,`mov_fileResolution`,`mov_fileSize`,`mov_showTime`,`mov_director`,`mov_leadActor`,`mov_summary`,`mov_downloadUrl`,`mov_srcUrl`,`mov_poster`,`mov_stills`,`create_date`)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())';
 
     query(sql, arrData, (err, rows) => {
         if (err) {
-            count--;
+            // count--;
             // res.send(err);
             // console.log('保存失败');
         } else {
-            count++;
+            count--;
             // console.log(count);
             // res.send(movie);
+        }
+        if (count == 0) {
+            console.log('解析完毕');
         }
     });
 });
@@ -90,16 +93,19 @@ addEvent('getMovieUrl', function ($, res, next, url) {
         var sHref = oA.eq(i).attr('href');
         if (sHref.indexOf('/gndy/') > 0 && sHref.indexOf('index.html') < 0) {
             //TODO 没有添加路劲的判断(是绝对路径还是相对路径)
-            arrUseful.push(url+sHref);
+            arrUseful.push(url + sHref);
         }
         getMovie(arrUseful[i], res, next);
     }
+    count = arrUseful.length;
+    console.log('总条数'+count);
     // console.log('本次捕获到url【' + len + '】条,实际用到【' + arrUseful.length + '】条');
+    // res.send(url);
     // res.send('成功获取数据'+count+'条');
 });
 
 /**
- * 获取页面中的电影相关信息
+ * 获取电影页面中的电影相关信息
  * @param {string} url - 电影数据来源网页地址
  * @param {object}  res - 请求返回的响应对象
  * @param {function} next - 执行下一个路由方法
@@ -108,7 +114,8 @@ function getMovie(url, res, next) {
     "use strict";
     agent.getDom(url, options, (err, dom) => {
         if (err) {
-            res.send(err);
+            console.log('获取DOM失败');
+            // res.send(err);
         } else {
             myEmit.emit('saveMovie', dom, res, next, url);
         }
@@ -126,11 +133,18 @@ function getMovieUrl(url, res, next) {
         if (err) {
             res.send(err);
         } else {
-            myEmit.emit('getMovieUrl', dom, res, url);
+            myEmit.emit('getMovieUrl', dom, res, next, url);
         }
     });
 }
-
+//获取数据库中的数据
+function getMovieData(callback) {
+    var sql = 'SELECT * from blog_movie ORDER BY mov_year;';
+    query(sql,(err,rows)=>{
+        err?callback(1,err):callback(0,rows);
+    })
+}
 
 exports.getMovie = getMovie;
 exports.getMovieUrl = getMovieUrl;
+exports.getMovieData = getMovieData;
