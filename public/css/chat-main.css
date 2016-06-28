@@ -1,13 +1,17 @@
 @charset "UTF-8";
+*{
+    box-sizing: border-box;
+}
 p.line {
     border-bottom: 2px solid #333;
 }
 .chat-wraper {
-	width: 70%;
-    min-width: 800px;
+	width: 60%;
+    min-width: 600px;
     margin:0 auto;
-    border:1px solid #aaa;
+    /*border:1px solid #aaa;*/
     position: relative;
+    padding-top: 20px;
 }
 .chat-wraper:after {
     content: ' ';
@@ -16,16 +20,94 @@ p.line {
     height: 0;
     visibility: hidden;
 }
+.top-bar{
+    display: block;
+    height:35px;
+    width:100%;
+    border:1px solid #aaa;
+    /*box-shadow: 0 1px 3px rgba(0,0,0,0.2);*/
+}
 .chat-wraper .panel {
     float: left;
+    min-height:400px;
 }
 .left-panel {
-    width: 30%
+    width: 30%;
+    border-left:1px solid #aaa;
+    border-bottom:1px solid #aaa;
 }
 .right-panel {
     width: 70%;
+    border-width:0 1px 1px 1px;
+    border-style:solid;
+    border-color:#aaa;
 }
-.left-panel .online-list>li{
-	padding: 5px; 
-	font-size: 14px;
+.left-panel .user-list{
+}
+.talk-to{
+    line-height: 35px;
+    padding-left: 10px;
+}
+#own-info{
+    float: right;
+    height:100%;
+    line-height: 35px;
+}
+.user-list{
+
+}
+.user-list li{
+    font-size:14px;
+    padding:4px 10px;
+}
+.user-list li:hover{
+    cursor: pointer;
+    background-color: #dcdcdc;
+}
+.box{  }
+.box.talk-box{
+    width: 100%;
+
+}
+.record-area{
+    width:100%;
+    height:250px;
+
+    /*box-shadow: 0 0 3px #ccc inset;*/
+}
+.tool-area{
+    height:35px;
+    border-top:1px solid #aaa;
+    border-bottom:1px solid #aaa;
+}
+.input-area{
+    height:104px;
+}
+.edit-text{
+    height:80px;
+    padding:5px;
+    outline: none;
+    overflow-y: scroll;
+}
+.input-area .btn-box{
+    overflow: hidden;
+    padding-right:10px;
+}
+.btn-box>span{
+    float: right;
+}
+.btn-box> .btn{
+    display: inline-block;
+    margin-left: 10px;
+    padding:4px 5px;
+    font-size: 14px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #FFF;
+    cursor: pointer;
+}
+.btn-box> .btn.btn-main{
+    border-color: #4395ff;
+    background-color: #4395ff;
+    color: #FFF;
 }

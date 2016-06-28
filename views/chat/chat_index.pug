@@ -5,6 +5,30 @@ block head_cont
 	script(src='http://localhost:8080/socket.io/socket.io.js')
 	script(src='js/chat.js')
 block content
-	input(type='text' id='kw')
-	input(type='button' id='send' value="发送")
-	p.line| 分割开来 
+	.chat-wraper
+		section.top-bar
+			p#own-info
+			ul
+				li
+					a.head-pic(href='#')
+						img(src='', alt='')
+				li
+					span.talk-to 在线人数:
+		section.panel.left-panel
+			ul.user-list
+		section.panel.right-panel
+			.box.talk-box
+				.record-area
+					ul
+						li
+						li
+						li
+						li
+						li
+				.tool-area
+				.input-area
+					#kw.edit-text(contenteditable='true')
+					p.btn-box.tool-btn
+						span#send.btn.btn-main 发送
+						span#clean.btn 清空
+

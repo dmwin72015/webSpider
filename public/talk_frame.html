@@ -1,26 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>聊天窗口</title>
-	<link rel="stylesheet" href="css/common.css">
-	<link rel="stylesheet" type="text/css" href="css/chat-main.css">
+    <meta charset="UTF-8">
+    <title>聊天窗口</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/chat-main.css">
 </head>
 <body>
-	<div class="chat-wraper">	
-		<section class="panel left-panel">
-			<ul class="online-list">
-				<li>第一</li>
-				<li>第二</li>
-				<li>第三</li>
-				<li>第四</li>
-				<li>第五</li>
-			</ul>
+<div class="chat-wraper">
+    <section class="top-bar">
+        <ul>
+            <li>
+                <a href="#" class="head-pic">
+                    <img src="" alt="">
+                </a>
+            </li>
+            <li>
+                <span class="talk-to"></span>
+            </li>
+        </ul>
+    </section>
+    <section class="panel left-panel">
+        <ul class="user-list">
+            <li>第一</li>
+            <li>第二</li>
+            <li>第三</li>
+            <li>第四</li>
+            <li>第五</li>
+        </ul>
+    </section>
+    <section class="panel right-panel">
+        <div class="box talk-box">
+            <div class="record-area">
+                <ul class="">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="tool-area">
 
-		</section>
-		<section class="panel right-panel">
-			
-		</section>
-	</div>
+            </div>
+            <div class="input-area">
+                <div class="edit-text" contenteditable="true"></div>
+                <p class="btn-box tool-btn">
+                    <span class="btn btn-main" id="send">发送</span>
+                    <span class="btn" id="clean">清空</span>
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
 </body>
 </html>
