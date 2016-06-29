@@ -28,13 +28,17 @@ module.exports = function(grunt) {
             options: {
                 double: false,
                 tabs: false,
+                donotencode:false
             },
-            build: {
-                src: ['public/blog/*.html', 'public/chat/*.html'],
-                dest: ['views/blog/*.pug', 'views/chat/*.pug']
+            files:{
+                src:'public/blog/*.html',
+                dest:'views/blog',
+                ext:'.pug'
             }
         }
     });
+
+
     // 加载包含 "uglify" 任务的插件。
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
@@ -46,8 +50,9 @@ module.exports = function(grunt) {
 
     // 加载html2jade任务插件
     grunt.loadNpmTasks('grunt-html2jade');
+    grunt.loadTasks('tasks');
 
 
     // 默认被执行的任务列表。
-    grunt.registerTask('default', ['uglify']);
+    grunt.registerTask('default', ['html2jade']);
 };
