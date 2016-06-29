@@ -20,3 +20,8 @@ img {
 a,a:hover{
     text-decoration: none;
 }
+textarea{
+	outline: none;
+
+}
+

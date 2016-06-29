@@ -9,7 +9,6 @@ $(function () {
         $('#own-info').html(data.user + '(' + data.browser + ')');
     });
     
-    
 
     //监听用户上线
     socket.on('userJoin', (data)=> {
@@ -29,8 +28,8 @@ $(function () {
     });
 
     //监听来自服务端的数据
-    socket.on('sendToClient', (data)=> {
-        console.log(data);
+    socket.on('toAllMessage', (data)=> {
+
     });
 
     //监听群发消息

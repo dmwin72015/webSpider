@@ -57,3 +57,7 @@
 .result-list>ul>li:nth-child(odd){
     /*background-color: #f3f3f3;*/
 }
+.result-list>ul a.tosee{
+    float: right;
+    padding-right: 10px;
+}

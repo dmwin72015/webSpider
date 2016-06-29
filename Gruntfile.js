@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
@@ -10,21 +10,30 @@ module.exports = function (grunt) {
                 dest: 'public/**/*.min.<%= pkg.version%>.js'
             }
         },
-        jshint:{
-            all:['app/**/*.js'],
-            options:{
-                browser:false
+        jshint: {
+            all: ['app/**/*.js'],
+            options: {
+                browser: false
             }
         },
-        jsdoc:{
-            dist:{
-                src:['model/*.js'],
-                options:{
-                    destination:'public/doc'
+        jsdoc: {
+            dist: {
+                src: ['model/*.js'],
+                options: {
+                    destination: 'public/doc'
                 }
             }
+        },
+        html2jade: {
+            options: {
+                double: false,
+                tabs: false,
+            },
+            build: {
+                src: ['public/blog/*.html', 'public/chat/*.html'],
+                dest: ['views/blog/*.pug', 'views/chat/*.pug']
+            }
         }
-
     });
     // 加载包含 "uglify" 任务的插件。
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -34,6 +43,10 @@ module.exports = function (grunt) {
 
     //加载jsdoc 任务插件
     grunt.loadNpmTasks('grunt-jsdoc');
+
+    // 加载html2jade任务插件
+    grunt.loadNpmTasks('grunt-html2jade');
+
 
     // 默认被执行的任务列表。
     grunt.registerTask('default', ['uglify']);

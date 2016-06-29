@@ -1,5 +1,6 @@
 var io = require('socket.io').listen('8080');
-var sockets = io.sockets || '';
+
+const movieTool = require('../model/movie');
 var onlineUsers = [];
 var onlineNum = 0;
 
@@ -25,6 +26,8 @@ io.on('connection', (socket)=> {
         userlist: onlineUsers
     });
 
+
+
     //触发客户端的链接事件
     socket.emit('connect', {
         user: sIp,
@@ -40,18 +43,39 @@ io.on('connection', (socket)=> {
     socket.on('mydata', (data)=> {
         console.log(data);
         data.time = new Date;
-
         // 给其他所有人发送(不包括当前socket)
-        socket.broadcast.emit('sendAllPeople', data);
+        // socket.broadcast.emit('sendAllPeople', data);
+        io.emit('toAllMessage',data);
     });
-
-
+    //断开连接之后触发
     socket.on('disconnect', (socket)=> {
         console.log(socket);
         var index = onlineUsers.indexOf(sIp);
         onlineUsers.splice(index);
         onlineNum--;
     });
+    /*****获取url***************************************************/
+    socket.on('get baseUrl',(data)=>{
+        var url = data || 'http://www.dytt8.net';
+        movieTool.getUseFullLink(url,(err,data)=>{
+            socket.emit('send useFullLink',data);
+        });
+    });
+
+    socket.on('get singleUrl',(url) =>{
+        if(url){
+            movieTool.getSingleLink(url,(data)=>{
+                socket.emit('send singleData',data);
+            });
+        }else{
+            socket.emit('send singleData',{
+                errCode:0,
+                message:'url地址不存在'
+            });
+        }
+
+    });
+
 });
 
 function getBrowserInfo(user_agent) {

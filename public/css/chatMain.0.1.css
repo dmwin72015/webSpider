@@ -1,0 +1,226 @@
+@charset "UTF-8";
+* {
+    box-sizing: border-box;
+}
+
+.wraper {
+    position: relative;
+}
+
+.chat-window {
+    width: 60%;
+    min-width: 542px;
+    border: 1px solid #e9e9e9;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 2px 0px 0px 2px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+.chat-window .panel {
+    float: left;
+    height: 100%;
+}
+
+.panel.left {
+    width: 150px;
+    height: 500px;
+    border-right: 1px #d9d9d9 solid;
+}
+
+.panel.right {
+    width: 390px;
+    border-right: 1px #d9d9d9 solid;
+}
+
+.search-box,
+.talk-head {
+    height: 35px;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box .inner {
+    display: block;
+    padding: 4px 5px 7px;
+}
+
+.search-box .inner:active {
+    border-color: #4781ff;
+}
+
+.search-box input {
+    width: 100%;
+    font-size: 13px;
+    padding: 3px;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.15) inset;
+    outline: none;
+}
+
+.search-box input:focus,
+.search-box input:active {
+    border-color: #4781ff;
+    box-shadow: none;
+}
+
+.search-box .icon-search {
+    position: absolute;
+}
+
+.friend-list {
+    height: 365px;
+    position: relative;
+}
+
+.friend-list ul {}
+
+.friend-list ul li:hover {
+    background-color: #f2f2f5;
+}
+
+.friend-list ul li:hover a {
+    color: #333;
+}
+
+.friend-list .friend-item {
+    padding: 4px 7px 4px 5px;
+    overflow: hidden;
+}
+
+.friend-item img,
+.friend-item a {
+    float: left;
+}
+
+.friend-item img {
+    width: 30px;
+    height: 30px;
+}
+
+.friend-item a {
+    line-height: 30px;
+    font-size: 14px;
+    padding-left: 10px;
+    color: #666;
+    max-width: 90px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.scroll-bar {
+    position: absolute;
+    width: 6px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    background: #f2f2f5;
+}
+
+.scroll-bar .bar-bar {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    width: 100%;
+    height: 80px;
+    border-radius: 5px;
+    background-color: #808080;
+}
+
+.talk-head {
+    border-bottom: 1px solid #d9d9d9;
+    line-height: 35px;
+}
+
+.talk-title {
+    float: left;
+    padding-left: 10px;
+}
+
+.talk-title a {
+    color: #666;
+}
+
+.talk-title a:hover {
+    color: #eb7350;
+}
+
+.talk-body {
+    height: 320px;
+    border-bottom: 1px solid #d9d9d9
+}
+
+.talk-content {
+    height: 99%;
+    overflow-y: auto;
+}
+
+.talk-content li {
+    padding: 4px 5px;
+}
+
+.talk-content li.other-msg {
+    text-align: left;
+}
+
+.talk-content li.other-msg {
+    text-align: right;
+}
+
+.talk-input {
+    height: 150px;
+    position: relative;
+}
+
+.input-content {
+    height: 110px;
+}
+
+.input-content textarea {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 5px;
+    border: none;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.15) inset;
+}
+
+.input-btn {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    overflow: hidden;
+}
+
+.input-btn .btn {
+    float: right;
+    margin-left: 12px;
+}
+
+.btn {
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+.btn.btn-primary {
+    color: #fff;
+    background-color: #3385ff;
+    border-color: #2d78f4;
+}
+
+.btn.btn-primary:hover {
+    background: #317ef3;
+    border-bottom: 1px solid #2868c8;
+}
