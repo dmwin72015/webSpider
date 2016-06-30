@@ -8,17 +8,17 @@ $(function () {
     }).blur(function () {
         $(this).parent().removeClass('active');
     });
-    $('#get').one('click',function () {
+    $('#get').on('click',function () {
         var sUrl = '';
         var data = {url: $kw.val()};
         $.ajax({
-            url: '/movie',
+            url: '/pach/ruanyf',
             type: 'post',
             data: {
                 url: $kw.val(),
                 pathname:window.location.pathname
             },
-            timeout: '15000',
+            timeout: '1500',
             success: function (data, textStatus, xhr) {
                console.dir(data);
             },

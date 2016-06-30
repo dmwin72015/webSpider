@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var pachong = require('./routes/article');
+var article = require('./routes/article');
 var movie = require('./routes/movie');
 var chat = require('./routes/chat_onLine');
 var blog = require('./routes/blog');
@@ -29,7 +29,7 @@ app.use(cookieParser());
 // 路由
 app.use('/', routes);
 app.use('/users', users);
-app.use('/pach',pachong);
+app.use('/pach',article);
 app.use('/movie',movie);
 app.use('/chat',chat);
 app.use('/blog',blog);

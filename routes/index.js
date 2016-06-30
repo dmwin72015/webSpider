@@ -37,7 +37,7 @@ router.get('/', (req, res, next)=> {
         })
     });
 
-}).get('/article', (req, res, next)=> {
+}).get('/articl', (req, res, next)=> {
     var url = "http://www.cnblogs.com/wengxuesong/p/5589854.html";
     pach.getDom(url, ($)=> {
         var title = $('#topics h1.postTitle').text();

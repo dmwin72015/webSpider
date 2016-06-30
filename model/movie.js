@@ -194,14 +194,13 @@ function handleDom($,url) {
     return arrData.concat(sDownloadUrl, sSrcUrl, sPoster, sStills);
 }
 //保存数据
-
 function saveDomData(arrData, cb) {
     var sql = 'INSERT INTO `blog_movie` (`mov_cnName`,`mov_enName`,`mov_year`,`mov_country`,`mov_type`,`mov_language`,`mov_subtitles`,`mov_IMDb`,`mov_fileType`,`mov_fileResolution`,`mov_fileSize`,`mov_showTime`,`mov_director`,`mov_leadActor`,`mov_summary`,`mov_downloadUrl`,`mov_srcUrl`,`mov_poster`,`mov_stills`,`create_date`)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())';
     query(sql, arrData, (err, rows) => {
         if (err) {
 
         } else {
-
+            cb && cb();
         }
     });
 }
