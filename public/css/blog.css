@@ -48,7 +48,7 @@
 .arc_text { /*font-size: 13px; */color: #666; line-height: 1.8}
 .arc_author { overflow: hidden; position: absolute; right: 5px;bottom: 25px;}
 .arc_author>span { display: inline-block; padding-right: 30px; }
-.arc_author a, .arc_author .icon { display: inline-block; vertical-align: middle; font-size: 12px; }
+.arc_author a, .arc_author .icon { display: inline-block; vertical-align: middle; font-size: 12px;margin-right:3px; }
 .icon { width: 16px; height: 15px; background: url(../images/new_icon.png) 0 0 no-repeat; }
 .type a { color: #759b08; }
 .type .icon { background-position: 0 0; }

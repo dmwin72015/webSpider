@@ -3,6 +3,9 @@
  */
 const agent = require('../util/myAgent');
 const baseQuery = require('../util/mysql_connect')['query'];
+const myEmit = require('../util/myEmitter')['emitter'];
+const addEvent = require('../util/myEmitter').addEvent;
+
 const headrs = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
 };
@@ -13,7 +16,7 @@ const headrs = {
  * @param {Function} cb - 回掉函数
  * @returns undefined - 无返回值
  * */
-function saveArticle(url, opt, cb) {
+function saveMovie(url, opt, cb) {
     "use strict";
     agent.getDom(url, opt, (err, data)=> {
         if (err) {
@@ -140,6 +143,12 @@ function getByName(name, callback) {
     var sql = 'SELECT * FROM `blog_article` WHERE arti_name like ?';
     baseQuery(sql, [name], callback);
 }
+
+/***/ 
+
+
+
+
 
 module.exports = {
     getAll: getAll,

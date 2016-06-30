@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var pachong = require('./routes/article');
 var movie = require('./routes/movie');
 var chat = require('./routes/chat_onLine');
+var blog = require('./routes/blog');
 
 var app = express();
 
@@ -24,13 +25,16 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
+// 路由
 app.use('/', routes);
 app.use('/users', users);
 app.use('/pach',pachong);
 app.use('/movie',movie);
 app.use('/chat',chat);
+app.use('/blog',blog);
+// 静态资源
+app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -28,7 +28,6 @@ module.exports = function(grunt) {
             options: {
                 double: false,
                 tabs: false,
-                donotencode:false
             },
             files:{
                 src:'public/blog/*.html',
@@ -49,8 +48,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
 
     // 加载html2jade任务插件
-    grunt.loadNpmTasks('grunt-html2jade');
-    grunt.loadTasks('tasks');
+    // grunt.loadNpmTasks('grunt-html2jade');
+    grunt.loadTasks('grunt_tasks');
 
 
     // 默认被执行的任务列表。
