@@ -1,11 +1,11 @@
-/**
- * Created by yxp on 2016/6/16.
- */
+const _ = require('underscore');
+const io = require('socket.io').listen('9080');
+
 const agent = require('../util/myAgent');
 const baseQuery = require('../util/mysql_connect')['query'];
 const myEmit = require('../util/myEmitter')['emitter'];
 const addEvent = require('../util/myEmitter').addEvent;
-const _ = require('underscore');
+
 const headrs = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
 };
@@ -160,23 +160,17 @@ function getArticleLinkFromWeb(url, cb) {
             var $li = $('#alpha-inner li.module-list-item'),
                 i = 0,
                 len = $li.length;
-            for (; i < len; i++) {
-                var href = $li.eq(i).find('a').attr('href');
-                if (href) {
-                    getArticleFromWeb(url, cb);
-                }
-            }
+            // for (; i < len; i++) {
+            //     var href = $li.eq(i).find('a').attr('href');
+            //     if (href) {
+            //        myEmit.emit('get article from web',href);
+            //     }
+            // }
+            cb && cb($li);
         }
     });
 }
 
-/**
- * 从网页中抓取文章数据
- * */
-function getArticleFromWeb(url, cb) {
-    if (!url) return;
-    myEmit.emit('get article from web', url, cb);
-}
 
 //获取DOM从页面中
 addEvent('get article from web', (url, cb)=> {
@@ -213,6 +207,29 @@ addEvent('save article to database', (dom, url, cb)=> {
         cb(err, rows);
     });
 });
+
+/**
+ * 使用socket的方式
+ */ 
+
+io.on('connection', (socket)=> {
+    console.log(socket.id + '--链接....');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {

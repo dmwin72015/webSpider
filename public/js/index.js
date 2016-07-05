@@ -2,6 +2,7 @@
  * Created by yxp on 2016/6/21.
  */
 $(function () {
+    var socket = io('http://localhost:8080');
     var $kw = $('#kw');
     $kw.focus(function () {
         $(this).parent().addClass('active');
@@ -18,7 +19,6 @@ $(function () {
                 url: $kw.val(),
                 pathname:window.location.pathname
             },
-            timeout: '1500',
             success: function (data, textStatus, xhr) {
                console.dir(data);
             },

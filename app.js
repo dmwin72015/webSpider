@@ -29,7 +29,7 @@ app.use(cookieParser());
 // 路由
 app.use('/', routes);
 app.use('/users', users);
-app.use('/pach',article);
+app.use('/article',article);
 app.use('/movie',movie);
 app.use('/chat',chat);
 app.use('/blog',blog);
