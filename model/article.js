@@ -32,9 +32,9 @@ function Article(data) {
 }
 Article.fn = Article.prototype = {
     constructor: Article,
-    save: function (cb) {
-        if (!this.arti_name) return 'article不存在';
-        var sql = "INSERT INTO `blog_article` (`arti_name`, `arti_author_id`, `arti_author_name`, `arti_textcontent`, `arti_htmlcontent`, `arti_sorce`, `arti_status`, `arti_label`, `arti_cate_id`, `arti_cate_name`,`arti_editor` ,`arti_from`, `pub_time`, `last_edit_time`,`read_permission`,`read_num`,`like_num`,`unlike_num`,`hot`,`create_time`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())";
+    save: function(cb) {
+        if (!this.arti_name) return 'article_name 不存在';
+        var sql = "INSERT INTO `blog_article` (`arti_name`, `arti_author_id`, `arti_author_name`, `arti_textcontent`, `arti_htmlcontent`, `arti_sorce`, `arti_status`, `arti_label`, `arti_cate_id`, `arti_cate_name`,`arti_editor` ,`arti_from`, `pub_time`, `last_edit_time`,`read_permission`,`read_num`,`like_num`,`unlike_num`,`hot`,`create_time`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?," + (this.create_time || 'now()') + ");";
         var arrData = [
             this.arti_name,
             this.arti_author_id || 1,
@@ -54,19 +54,12 @@ Article.fn = Article.prototype = {
             this.read_num || 0,
             this.like_num || 0,
             this.unlike_num || 0,
-            this.hot || 0,
-            this.create_time || 'now()',
+            this.hot || 0
+            // this.create_time || 'now()'
         ];
-        baseQuery(sql, arrData, (err, rows)=> {
-            if (err) {
-                cb(1, {
-                    msg: '插入失败',
-                    err: err
-                });
-            } else {
 
-                cb(0, rows);
-            }
+        baseQuery(sql, arrData, (err, rows) => {
+            cb && cb(err, rows);
         });
     }
 }
@@ -82,7 +75,7 @@ function getAll(options, callback) {
         options = undefined;
     }
     var sql = 'SELECT * FROM `blog_article` WHERE arti_name !="" order by pub_time';
-    mysqlTool.query(sql, function (err, rows) {
+    mysqlTool.query(sql, function(err, rows) {
         callback && callback(err, rows);
     });
 }
@@ -120,7 +113,7 @@ function getLimit(start, end, callback) {
             break;
     }
     var sql = 'SELECT * FROM `blog_article` limit ' + start + ',' + end + ';';
-    mysqlTool.query(sql, function (err, rows) {
+    mysqlTool.query(sql, function(err, rows) {
         callback && callback(err, rows);
     });
 }
@@ -152,90 +145,108 @@ function getByName(name, callback) {
  * 捕获取页面中文章链接
  * */
 function getArticleLinkFromWeb(url, cb) {
-    agent.getDom(url, (err, dom)=> {
+    agent.getDom(url, (err, dom) => {
         if (err) {
-
+            cb && cb({
+                err: 0,
+                data: err
+            })
         } else {
             var $ = dom;
             var $li = $('#alpha-inner li.module-list-item'),
                 i = 0,
-                len = $li.length;
-            // for (; i < len; i++) {
-            //     var href = $li.eq(i).find('a').attr('href');
-            //     if (href) {
-            //        myEmit.emit('get article from web',href);
-            //     }
-            // }
-            cb && cb($li);
+                len = $li.length,
+                tmpArr = [];
+            for (; i < len; i++) {
+                var $a = $li.eq(i).find('a');
+                var href = $a.attr('href');
+                var txt = $a.text();
+                if (href && tmpArr.indexOf(href) < 0) {
+                    tmpArr.push({
+                        name: txt,
+                        href: href
+                    });
+                }
+            }
+            cb && cb({
+                err: 1,
+                d: tmpArr
+            });
         }
     });
 }
 
 
 //获取DOM从页面中
-addEvent('get article from web', (url, cb)=> {
-    agent.getDom(url, (err, dom)=> {
+addEvent('get article from web', (arg) => {
+    if (!arg.url) return;
+    var url = encodeURI(arg.url);
+    agent.getDom(url, (err, dom) => {
         if (err) {
-
+            arg.socket.emit('dataFromServer', {
+                err: 0,
+                data: dom,
+                id: arg.id,
+                href: arg.href
+            });
         } else {
-            myEmit.emit('save article to database', dom, url, cb);
+            myEmit.emit('save article to database', dom, arg);
         }
     });
 });
 
 //保存到数据库
-addEvent('save article to database', (dom, url, cb)=> {
+addEvent('save article to database', (dom, arg) => {
     var $ = dom;
-    var $content = $('#entry-1867');
+    var $content = $('#content');
     var article = {
         arti_name: $('#page-title').text(),
         arti_author_id: '1001',
-        arti_author_name: $content.find('.vcard.author a').text(),
+        arti_author_name: $content.find('article.hentry p.vcard.author a').text(),
         arti_textcontent: $('#main-content').text(),
         arti_htmlcontent: $('#main-content').html(),
-        arti_sorce: url,
+        arti_sorce: arg.url,
         arti_status: 1,
-        arti_label: $content.find('.entry-categories ul').text(),
+        arti_label: $content.find('.entry-categories ul a').text(),
         arti_cate_id: '2',
-        arti_cate_name: $content.find('.entry-categories ul').text(),
-        arti_editor: $content.find('.vcard.author a').text(),
-        arti_from: url,
+        arti_cate_name: $content.find('div.entry-categories ul').text(),
+        arti_editor: $content.find('article.hentry p.vcard.author a').text(),
+        arti_from: arg.url,
         pub_time: $content.find('abbr.published').attr('title')
     };
+
     var arti = new Article(article);
-    arti.save((err, rows)=> {
-        cb(err, rows);
+
+    arti.save((err, rows) => {
+        var oBack = err ? { err: 0, data: err } : { err: 1, data: arti };
+        oBack.url = arg.url;
+        oBack.id = arg.id;
+        arg.socket.emit('dataFromServer', oBack);
     });
 });
 
 /**
  * 使用socket的方式
- */ 
+ */
 
-io.on('connection', (socket)=> {
-    console.log(socket.id + '--链接....');
+io.on('connection', (socket) => {
+    console.log(socket.id + ',,,链接....');
+
+    // 使用socket监听
+    socket.on('get_article_data', (data) => {
+        if (!data) return;
+        myEmit.emit('get article from web', {
+            id: data.id,
+            url: data.url,
+            socket: socket
+        });
+    });
+
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = {
     getAll: getAll,
     getById: getById,
     getByName: getByName,
     getryf: getArticleLinkFromWeb
-
 };

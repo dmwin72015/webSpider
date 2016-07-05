@@ -20,7 +20,6 @@ function baseQuery(sql, data, callback) {
         conn.query(sql, data, function (err, rows) {
             //释放连接
             conn.release();
-            console.log('释放链接......');
             callback && callback(err, rows);
         })
     });

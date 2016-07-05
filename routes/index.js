@@ -37,13 +37,12 @@ router.get('/', (req, res, next)=> {
         })
     });
 
-}).get('/articl', (req, res, next)=> {
+}).get('/getarticl', (req, res, next)=> {
     var url = "http://www.cnblogs.com/wengxuesong/p/5589854.html";
     pach.getDom(url, ($)=> {
         var title = $('#topics h1.postTitle').text();
         var subTitle = $('#wxs-h-1').text();
         var sContent = $('#cnblogs_post_body').html();
-
         res.render('article/article_detail',{
             title:title,
             art_title:title,
