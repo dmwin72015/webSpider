@@ -3,6 +3,9 @@
     padding: 10px 0;
     text-align: center;
 }
+#get,.input-box{
+    vertical-align: middle;
+}
 .input-box{
     display: inline-block;
     border:1px solid #ececec;

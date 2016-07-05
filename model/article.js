@@ -48,8 +48,8 @@ Article.fn = Article.prototype = {
             this.arti_cate_name || '',
             this.arti_editor || '',
             this.arti_from || '',
-            this.pub_time || '',
-            this.last_edit_time || '',
+            this.pub_time || '0000-00-00',
+            this.last_edit_time || '0000-00-00',
             this.read_permission || 1,
             this.read_num || 0,
             this.like_num || 0,
@@ -212,12 +212,13 @@ addEvent('save article to database', (dom, arg) => {
         arti_cate_name: $content.find('div.entry-categories ul').text(),
         arti_editor: $content.find('article.hentry p.vcard.author a').text(),
         arti_from: arg.url,
-        pub_time: $content.find('abbr.published').attr('title')
+        pub_time: $content.find('abbr.published').attr('title').replace('T',' ').split('+')[0]
     };
 
     var arti = new Article(article);
 
     arti.save((err, rows) => {
+        if(err) throw err;//暂时留着吧，方便出错的时候查找问题！
         var oBack = err ? { err: 0, data: err } : { err: 1, data: arti };
         oBack.url = arg.url;
         oBack.id = arg.id;
