@@ -7,12 +7,14 @@ const sAgent = sAgentCharset(require('superagent'));
 const fs = require('fs');
 const http = require('http');
 const myTool = require('./littleTool');
-
-const headrs = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+const options = {
+    'charset': 'utf-8',
+    'Content-Type': 'text/html; charset=utf-8',
+    'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
+    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
 };
 
-const options = {charset: 'utf-8'};
+
 /**
  * 获取页面上的数据
  * @param {string} -  资源的url
@@ -29,12 +31,29 @@ function _getData(url, opt) {
     opt = opt || {};
     var url = url || opt.url,
         cb = opt.success,
-        charset = opt.charset || 'utf-8';
+        charset = opt.charset || options['charset'];
     //没有url和success 返回
     if (!url || !cb) return;
-    sAgent.get(url).charset(charset).end((err, res) => {
-        cb && cb(err, res);
-    });
+    sAgent.get(url)
+        .charset(charset)
+        .set({'User-Agent':options['User-Agent']})
+        .set({'Accept':options['Accept']})
+        .set({'Connection':'keep-alive'})
+        .set({'Cookie':'_gat=1; _ga=GA1.2.1260051827.1467730043'})
+        .set({'Accept-Encoding':'gzip, deflate, sdch'})
+        .on('error',(err)=>{
+            console.log(url);
+            console.log(err);
+        })
+        .end((err, res) => {
+            if (err) {
+                console.dir(res);
+
+                throw err;
+            }
+
+            cb && cb(err, res);
+        });
 }
 /**
  * 获取页面的DOM
@@ -101,6 +120,7 @@ function _saveImg(url, cb) {
         }
     })
 }
+
 
 module.exports = {
     getData: _getData,

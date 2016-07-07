@@ -122,7 +122,7 @@ addEvent('get article from web', (arg) => {
                 href: url
             });
         } else {
-            myEmit.emit('save article to database', dom, arg);
+            myEmit.emit('save article to database', data, arg);
         }
     });
 });
@@ -159,10 +159,10 @@ addEvent('save article to database', (dom, arg) => {
             url : arg.url,
             id: arg.id,
             rows:rows
-        }
+        };
+        arti = null;
         arg.socket.emit('dataFromServer', oDataBack);
     });
-    arti = null;
 });
 
 /**
@@ -187,8 +187,5 @@ io.on('connection', (socket) => {
 });
 
 module.exports = {
-    getAll: getAll,
-    getById: getById,
-    getByName: getByName,
     getryf: getArticleLinkFromWeb
 };

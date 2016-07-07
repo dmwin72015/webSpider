@@ -17,29 +17,29 @@ function uuid() {
     return uuid;
 }
 
-$(function() {
+$(function () {
     var socket = io('http://localhost:9080');
     var $kw = $('#kw');
     var $ul = $('div.result-list ul').eq(0);
-    $kw.focus(function() {
+    $kw.focus(function () {
         $(this).parent().addClass('active');
-    }).blur(function() {
+    }).blur(function () {
         $(this).parent().removeClass('active');
     });
-    $('#get').on('click', function() {
+    $('#get').on('click', function () {
         // var sUrl = 'http://www.ruanyifeng.com/blog/algorithm/';
         // var sUrl = 'http://www.ruanyifeng.com/blog/javascript';
         var sUrl = 'http://www.ruanyifeng.com/blog/developer/';
-        var data = { url: $kw.val() || sUrl };
+        var data = {url: $kw.val() || sUrl};
         $.ajax({
             url: '/article/ruanyf',
             type: 'post',
             data: data,
-            success: function(data, textStatus, xhr) {
+            success: function (data, textStatus, xhr) {
                 if (data && data.err == 1) {
                     var len;
                     if (data.d && (len = data.d.length) > 0) {
-                        $('#arti_num').html('一共搜索到<em>'+len+'</em>条结果');
+                        $('#arti_num').html('一共搜索到<em>' + len + '</em>条结果');
                         var str = '',
                             i = 0;
                         for (; i < len; i++) {
@@ -48,16 +48,19 @@ $(function() {
                         $ul.html(str);
                     }
 
+                } else {
+                    alert(data.msg);
                 }
+
             },
-            error: function(xml, textStatus, error) {
+            error: function (xml, textStatus, error) {
                 console.log(textStatus);
             }
         })
     });
 
     // 采集单个
-    $ul.on('click', 'a.tosee', function() {
+    $ul.on('click', 'a.tosee', function () {
         if ($(this).hasClass('disable')) return;
         var url = $(this).prev().text();
         var id = $(this).parent()[0].id;
@@ -69,9 +72,9 @@ $(function() {
     });
 
     // 采集所有
-    $('#caiji').on('click', function() {
+    $('#caiji').on('click', function () {
         var arr = [];
-        $ul.find('li span.arti_href').each(function(i, e) {
+        $ul.find('li span.arti_href').each(function (i, e) {
             arr.push($(e).text());
             if (!$(this).next().hasClass('disable')) {
                 var id = $(e).parent()[0].id;
@@ -83,17 +86,19 @@ $(function() {
         });
     });
 
+    //监听与服务器连接
     socket.on('connect', (data) => {
-        console.log('链接成功.....');
+        // console.log('链接成功.....');
     });
 
+    //监听 服务器端是否成功获取页面资源
     socket.on('dataFromServer', (json) => {
         console.log(json);
 
         var id = json.id;
         var resStatus = json.err ? '成功' : '重试';
         var sClass = json.err ? 'tosee disable ' : 'tosee try-again fale';
-        $('#' + id).find('a').attr('class',sClass).text(resStatus);
+        $('#' + id).find('a').attr('class', sClass).text(resStatus);
     });
 
 });

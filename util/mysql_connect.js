@@ -33,12 +33,12 @@ function endPool(pool, cb) {
 }
 //事件监听
 pool.on('connection', function (conn) {
-    console.log('已经链接');
+    // console.log('已经链接',conn);
     // console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
 });
 
 pool.on('enqueue', function (conn) {
-    console.log('队列中......');
+    // console.log('队列中......',conn);
     // console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
 });
 pool.on('end', function (conn) {
