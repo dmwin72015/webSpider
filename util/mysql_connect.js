@@ -48,6 +48,8 @@ pool.on('end', function (conn) {
 pool.on('error',function(conn){
     console.log('链接关闭......');
 });
+
+//测试链接
 function testConnect() {
     baseQuery('select now()', function (err, row) {
         console.log(row);

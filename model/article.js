@@ -60,7 +60,10 @@ Article.fn = Article.prototype = {
 
         baseQuery(sql, arrData, (err, rows) => {
             //留着测试.链接数据库出错的时候
-            if(err) throw err;
+            if(err){
+                throw err ;
+                return;
+            }
             cb && cb(err, rows);
         });
     }
@@ -147,14 +150,11 @@ function getByName(name, callback) {
  * 捕获取页面中文章链接
  * */
 function getArticleLinkFromWeb(url, cb) {
-    agent.getDom(url, (err, dom) => {
+    agent.getDom(url, (err, data) => {
         if (err) {
-            cb && cb({
-                err: 0,
-                data: err
-            })
+            var json = {err: 0, d: data};
         } else {
-            var $ = dom;
+            var $ = data;
             var $li = $('#alpha-inner li.module-list-item'),
                 i = 0,
                 len = $li.length,
@@ -170,11 +170,9 @@ function getArticleLinkFromWeb(url, cb) {
                     });
                 }
             }
-            cb && cb({
-                err: 1,
-                d: tmpArr
-            });
+            var json = {err: 1, d: tmpArr};
         }
+        cb && cb(json);
     });
 }
 
@@ -223,9 +221,10 @@ addEvent('save article to database', (dom, arg) => {
         var oBack = err ? { err: 0, data: err } : { err: 1, data: arti };
         oBack.url = arg.url;
         oBack.id = arg.id;
-        arti = null;
+        oBack.rows = rows;
         arg.socket.emit('dataFromServer', oBack);
     });
+    arti = null;
 });
 
 /**
@@ -235,10 +234,10 @@ addEvent('save article to database', (dom, arg) => {
 io.on('connection', (socket) => {
     // console.log(socket.id + ',,,链接....1111');
 
-    // 使用socket监听
+    // 使用socket监听 获取文章数据事件(获取从客户端传来的url)
     socket.on('get_article_data', (data) => {
         if (!data) return;
-        
+
         myEmit.emit('get article from web', {
             id: data.id,
             url: data.url,
@@ -246,6 +245,7 @@ io.on('connection', (socket) => {
         });
     });
 
+    
 });
 
 module.exports = {
