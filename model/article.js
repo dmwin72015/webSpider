@@ -238,6 +238,7 @@ io.on('connection', (socket) => {
     // 使用socket监听
     socket.on('get_article_data', (data) => {
         if (!data) return;
+        
         myEmit.emit('get article from web', {
             id: data.id,
             url: data.url,

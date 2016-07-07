@@ -59,9 +59,9 @@ $(function() {
     // 采集单个
     $ul.on('click', 'a.tosee', function() {
         if ($(this).hasClass('disable')) return;
-        // var url = $(this).prev().text();
+        var url = $(this).prev().text();
         var id = $(this).parent()[0].id;
-        var url = 'http://www.ruanyifeng.com/blog/2008/03/six_criteria_of_a_business-critical_programming_language.html';
+        // var url = 'http://www.ruanyifeng.com/blog/2008/03/six_criteria_of_a_business-critical_programming_language.html';
         socket.emit('get_article_data', {
             url: url,
             id: id
@@ -92,8 +92,8 @@ $(function() {
 
         var id = json.id;
         var resStatus = json.err ? '成功' : '重试';
-        var sClass = json.err ? 'disable ' : 'try-again fale';
-        $('#' + id).find('a').addClass(sClass).text(resStatus);
+        var sClass = json.err ? 'tosee disable ' : 'tosee try-again fale';
+        $('#' + id).find('a').attr('class',sClass).text(resStatus);
     });
 
 });
