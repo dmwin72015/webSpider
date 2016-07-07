@@ -59,6 +59,8 @@ Article.fn = Article.prototype = {
         ];
 
         baseQuery(sql, arrData, (err, rows) => {
+            //留着测试.链接数据库出错的时候
+            if(err) throw err;
             cb && cb(err, rows);
         });
     }
@@ -218,10 +220,10 @@ addEvent('save article to database', (dom, arg) => {
     var arti = new Article(article);
 
     arti.save((err, rows) => {
-        if(err) throw err;//暂时留着吧，方便出错的时候查找问题！
         var oBack = err ? { err: 0, data: err } : { err: 1, data: arti };
         oBack.url = arg.url;
         oBack.id = arg.id;
+        arti = null;
         arg.socket.emit('dataFromServer', oBack);
     });
 });
@@ -231,7 +233,7 @@ addEvent('save article to database', (dom, arg) => {
  */
 
 io.on('connection', (socket) => {
-    console.log(socket.id + ',,,链接....');
+    // console.log(socket.id + ',,,链接....1111');
 
     // 使用socket监听
     socket.on('get_article_data', (data) => {

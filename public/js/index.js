@@ -27,8 +27,10 @@ $(function() {
         $(this).parent().removeClass('active');
     });
     $('#get').on('click', function() {
-        var sUrl = '';
-        var data = { url: $kw.val() || 'http://www.ruanyifeng.com/blog/javascript' };
+        // var sUrl = 'http://www.ruanyifeng.com/blog/algorithm/';
+        // var sUrl = 'http://www.ruanyifeng.com/blog/javascript';
+        var sUrl = 'http://www.ruanyifeng.com/blog/developer/';
+        var data = { url: $kw.val() || sUrl };
         $.ajax({
             url: '/article/ruanyf',
             type: 'post',
@@ -37,6 +39,7 @@ $(function() {
                 if (data && data.err == 1) {
                     var len;
                     if (data.d && (len = data.d.length) > 0) {
+                        $('#arti_num').html('一共搜索到<em>'+len+'</em>条结果');
                         var str = '',
                             i = 0;
                         for (; i < len; i++) {
@@ -44,6 +47,7 @@ $(function() {
                         }
                         $ul.html(str);
                     }
+
                 }
             },
             error: function(xml, textStatus, error) {
@@ -55,8 +59,9 @@ $(function() {
     // 采集单个
     $ul.on('click', 'a.tosee', function() {
         if ($(this).hasClass('disable')) return;
-        var url = $(this).prev().text();
+        // var url = $(this).prev().text();
         var id = $(this).parent()[0].id;
+        var url = 'http://www.ruanyifeng.com/blog/2008/03/six_criteria_of_a_business-critical_programming_language.html';
         socket.emit('get_article_data', {
             url: url,
             id: id
@@ -86,8 +91,8 @@ $(function() {
         console.log(json);
 
         var id = json.id;
-        var resStatus = json.err ? '成功' : '失败';
-        var sClass = json.err ? 'disable ' : 'disable fale';
+        var resStatus = json.err ? '成功' : '重试';
+        var sClass = json.err ? 'disable ' : 'try-again fale';
         $('#' + id).find('a').addClass(sClass).text(resStatus);
     });
 

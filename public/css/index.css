@@ -44,7 +44,7 @@
     display: inline-block;
     border:1px solid #d4d4d4;
     padding: 0.25em 1em;
-    background-color: #ececec
+    background-color: #ececec;
     color:#333;
     border-radius: 0.2em;
 }
@@ -74,6 +74,16 @@
     float: right;
     cursor: pointer;
 }
+.tool-btn #arti_num{
+    display: inline-block;
+    padding:0.25em 1em;
+    border:1px solid transparent;
+}
+.tool-btn #arti_num em{
+    font-weight: bold;
+    color: red;
+    padding:0 0.5em;
+}
 .result-list{
     width: 758px;
     margin:20px auto;
@@ -82,8 +92,10 @@
 .result-list>ul>li{
     padding:4px 3px;
     line-height:24px;
-    word-wrap:break-word;
-    word-break:normal;
+    /*word-wrap:break-word;*/
+    /*word-break:normal;*/
+    white-space:nowrap;
+    overflow: hidden;
     position: relative;
 }
 .result-list>ul{
@@ -114,6 +126,9 @@
 .result-list  a.tosee.disable{
     background-color: #dcddde;
     cursor: default;
+}
+.result-list a.tosee.try-again{
+    cursor: pointer;
 }
 .result-list  a.tosee.fale{
     background-color: red;
