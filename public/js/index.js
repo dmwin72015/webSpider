@@ -78,8 +78,12 @@ $(function () {
             arr.push($(e).text());
             if (!$(this).next().hasClass('disable')) {
                 var id = $(e).parent()[0].id;
+                var url =  $(e).text();
+                if(url.indexOf('odp_data_php_parser')>-1){
+                    return;
+                }
                 socket.emit('get_article_data', {
-                    url: $(e).text(),
+                    url:url,
                     id: id
                 })
             }

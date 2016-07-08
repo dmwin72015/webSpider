@@ -2,19 +2,28 @@
  * Created by yxp on 2016/6/16.
  */
 const cheerio = require('cheerio');
+const sAgent = require('superagent');
+const sAgentProxy = require('superagent-proxy');
 const sAgentCharset = require('superagent-charset');
-const sAgent = sAgentCharset(require('superagent'));
+sAgentCharset(sAgent);
+sAgentProxy(sAgent);
 const fs = require('fs');
 const http = require('http');
 const myTool = require('./littleTool');
 const options = {
     'charset': 'utf-8',
+    'Connection':'keep-alive',
     'Content-Type': 'text/html; charset=utf-8',
     'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
-    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding':'gzip, deflate, sdch',
+    'Accept-Language':'zh-CN,zh;q=0.8,en;q=0.6',
+    // 'Host':'www.ruanyifeng.com',
+    'Cookie':'_gat=1; _ga=GA1.2.2015803745.1466476471',
+    'Referer':'http://www.ruanyifeng.com/blog/developer'
 };
-
-
+const proxyIP = 'http://61.135.217.24:80';
+const dateStr = new Date().toUTCString();
 /**
  * 获取页面上的数据
  * @param {string} -  资源的url
@@ -32,15 +41,13 @@ function _getData(url, opt) {
     var url = url || opt.url,
         cb = opt.success,
         charset = opt.charset || options['charset'];
+
     //没有url和success 返回
     if (!url || !cb) return;
     sAgent.get(url)
         .charset(charset)
-        .set({'User-Agent':options['User-Agent']})
-        .set({'Accept':options['Accept']})
-        .set({'Connection':'keep-alive'})
-        .set({'Cookie':'_gat=1; _ga=GA1.2.1260051827.1467730043'})
-        .set({'Accept-Encoding':'gzip, deflate, sdch'})
+        // .proxy(proxyIP)
+        .set(options)
         .on('error',(err)=>{
             //问题出在这里啊，频繁访问某一个站点资源，可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
             console.log(url);
@@ -48,11 +55,9 @@ function _getData(url, opt) {
         })
         .end((err, res) => {
             if (err) {
-                console.dir(res);
-
+                // console.dir(res);
                 throw err;
             }
-
             cb && cb(err, res);
         });
 }

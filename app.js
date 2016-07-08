@@ -33,7 +33,9 @@ app.use('/article',article);
 app.use('/movie',movie);
 app.use('/chat',chat);
 app.use('/blog',blog);
-// 静态资源
+
+
+// 静态资源 (静态资源为什么放在路由后面的原因:从磁盘读取文件,而相比较而言磁盘IO操作的效率较低.)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler

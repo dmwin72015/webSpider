@@ -1,6 +1,6 @@
 var io = require('socket.io').listen('8080');
 
-const movieTool = require('../model/movie');
+const movieTool = require('./movie');
 var onlineUsers = [];
 var onlineNum = 0;
 

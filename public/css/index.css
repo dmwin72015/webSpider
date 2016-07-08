@@ -106,7 +106,7 @@
 }
 .result-list>ul>li:hover{
     background-color: #fafafa;
-    cursor: pointer;
+    /*1cursor: pointer;*/
 }
 .result-list>ul>li:nth-child(odd){
     /*background-color: #f3f3f3;*/
@@ -120,15 +120,13 @@
     line-height: 32px;
 }
 .result-list  a.tosee:hover{
+    cursor: pointer;
     color:#000;
     background-color: #dcddde;
 }
 .result-list  a.tosee.disable{
     background-color: #dcddde;
     cursor: default;
-}
-.result-list a.tosee.try-again{
-    cursor: pointer;
 }
 .result-list  a.tosee.fale{
     background-color: red;
