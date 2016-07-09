@@ -3,10 +3,10 @@
  */
 const cheerio = require('cheerio');
 const sAgent = require('superagent');
-const sAgentProxy = require('superagent-proxy');
+// const sAgentProxy = require('superagent-proxy');
 const sAgentCharset = require('superagent-charset');
 sAgentCharset(sAgent);
-sAgentProxy(sAgent);
+// sAgentProxy(sAgent);
 const fs = require('fs');
 const http = require('http');
 const myTool = require('./littleTool');

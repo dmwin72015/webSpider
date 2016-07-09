@@ -6,20 +6,104 @@
     <title>Title</title>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/article.css">
+    <style>
+    * {
+        box-sizing: border-box;
+    }
+    
+    .movie-popup,
+    .movie-popup .back-opacity {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .movie-popup .thumb-pic {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .movie-popup .thumb-pic img {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .movie-popup .back-opacity {
+        background-color: #000;
+        opacity: 0.435;
+        z-index: 4;
+        left: 100%;
+        transition: all 0.2s ease-out;
+    }
+    
+    .movie-popup .circle-outline {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 5px solid #fff;
+        border-radius: 50%;
+        top: 50%;
+        left: 150%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+    
+    .movie-popup .circle-outline .center.pause:after,
+    .movie-popup .circle-outline .center.pause:before {
+        content: " ";
+        width: 6px;
+        height: 50%;
+        background-color: #fff;
+        position: absolute;
+        top: 0;
+        transform: translate(0, 50%);
+        border-radius: 4px;
+    }
+    
+    .movie-popup .circle-outline .center.pause:after {
+        right: 30%;
+    }
+    
+    .movie-popup .circle-outline .center.pause:before {
+        left: 30%;
+    }
+    
+    .movie-popup .circle-outline .center.play {}
+    
+    .movie-popup:hover .circle-outline {
+        left: 50%;
+    }
+    
+    .movie-popup:hover .back-opacity {
+        left: 0;
+    }
+    
+    .mymovie {
+        width: 400px;
+        height: 220px;
+        margin: 20px auto;
+        position: relative;
+    }
+    </style>
 </head>
 
 <body>
-    <div class="article-wrap">
-        <h3 class="article-title">安徽公务接待全面禁酒 招商引资和外事活动除外</h3>
-        <h5 class="sub-title">招商引资和外事活动除外</h5>
-        <p class="other-info">
-            <span class="pub-time">2016-05-12 12:34:29</span>
-            <a href="#" class="source"> 测试网站</a>
-            <span class="editor">责任编辑：李东舰 CN031</span>
-        </p>
-<!--         <div class="article-content">
-            近日，安徽多个县市下发了“公务接待活动中严禁饮酒”的有关通知，并开展“酒桌办公”专项整治工作。安徽安庆桐城市纪委6月17日发布消息称，中央巡视组巡视安徽“回头看”反馈意见安庆整改部署动员大会召开后，桐城市纪委迅速落实会议精神，下发关于在公务接待活动中严禁饮酒的通知。通知强调，进一步加强作风建设，严肃工作纪律，坚决整治“酒桌办公”现象，自2016年6月17日起，除外事和招商引资工作外，省内公务接待一律不准饮酒（包括所有含酒精类饮品）。通知要求，各地各部门各单位党（工）委、党组书记切实履行第一责任人职责，将省内公务接待一律不准饮酒精神迅速传达到全体干部职工，严格遵照执行。此外，安徽淮南寿县县委办公室也在6月17日发布通知称，为认真贯彻中央巡视组巡视“回头看”反馈意见整改暨专项整治推进电视电话会会议精神，根据市委统一部署，按照有关规定，在全市范围内开展“酒桌办公”专项整治工作。通知称，本次专项整治重点治理问题包括：“不请客吃饭”不办事、“请客吃饭”乱办事；通过“酒桌办公”要资金、跑项目、争考核名次或谋取不当利益；党员干部及公职人员接受可能影响公正执行公务的宴请；在开展调研、培训、召开会议等公务活动中接受公款宴请；向下级单位和企事业单位及个人转嫁招待费用以及同城部门、上下级之间相互公款宴请等。通知还称，上级纪检监察机关将会同相关部门，通过财务检查、审计和明查暗访等形式，对“酒桌办公”问题进行专项督查。从今日（6月17日）起，今后所有县内公务活动（除外事、招商活动外）一律不准饮酒。另据公开报道，安徽芜湖南陵县在6月16日成立了由县纪委书记为组长的南陵县“酒桌办公”专项整治工作领导小组，制定《南陵县关于“酒桌办公”专项整治工作方案》，及时印发《南陵县关于“酒桌办公”专项整治工作的通知》，并要求各单位将文件精神于6月17日前迅速传达，“确保一人不漏”。其整治重点内容与寿县一致。据澎湃新闻记者了解，“省内公务接待（除外事、招商活动外）一律不准饮酒”这一要求并不只局限于上述县市，而是全省范围内的统一行动。这意味着，安徽省内的机关、事业单位工作人员在工作日及节假日执行公务接待时，不管中午还是晚上，一律不准饮酒或含有酒精的饮料。此前的6月1日，中央第五巡视组向安徽省反馈了巡视“回头看”情况。其中，中央第五巡视组组长桑竹梅指出，安徽省巡视整改落实不到位，酒桌文化尚未得到有效治理。新华网报道指出，“酒桌文化”实质是“权力文化”，“酒桌办公”本质是权力寻租。当权力从办公桌转战酒桌，当公务办理变成“吃喝办事”，规矩和底线往往在推杯换盏中被扔在一边，交情和利益成了“通行证”，酒桌也就成了交易的舞台。
-        </div> -->
+    <div class="mymovie">
+        <div class="movie-popup">
+            <div class="thumb-pic">
+                <img src="http://r4.ykimg.com/050C00005780374F67BC3D2C7100870C" alt="">
+            </div>
+            <div class="back-opacity"></div>
+            <div class="circle-outline">
+                <span class="center pause"></span>
+                <!-- <span class="center play"></span> -->
+            </div>
+        </div>
     </div>
 </body>
 <script>
@@ -38,8 +122,6 @@ function F3(address) {
 F2.prototype = new F1('Father');
 F2.prototype.constructor = F2;
 F3.prototype = new F2(50);
-
-
 </script>
 
 </html>
