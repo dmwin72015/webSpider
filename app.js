@@ -5,17 +5,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var article = require('./routes/article');
-var movie = require('./routes/movie');
-var chat = require('./routes/chat_onLine');
-var blog = require('./routes/blog');
+var routes = require('./core/routes/index');
+var users = require('./core/routes/users');
+var article = require('./core/routes/article');
+var movie = require('./core/routes/movie');
+var chat = require('./core/routes/chat_onLine');
+var blog = require('./core/routes/blog');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'core/views'));
 // app.enable("view cache");
 app.set('view engine', 'pug');
 

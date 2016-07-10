@@ -1,10 +1,10 @@
 const _ = require('underscore');
 const io = require('socket.io').listen('9080');
 
-const agent = require('../util/myAgent');
-const baseQuery = require('../util/mysql_connect')['query'];
-const myEmit = require('../util/myEmitter')['emitter'];
-const addEvent = require('../util/myEmitter').addEvent;
+const agent = require('./myAgent');
+const baseQuery = require('./mysql_connect')['query'];
+const myEmit = require('./myEmitter')['emitter'];
+const addEvent = require('./myEmitter').addEvent;
 
 const keys = ['arti_name', 'arti_author_id', 'arti_author_name', 'arti_textcontent', 'arti_htmlcontent', 'arti_sorce', 'arti_status', 'arti_label', 'arti_cate_id', 'arti_cate_name', 'arti_editor', 'arti_from', 'pub_time', 'last_edit_time', 'read_permission', 'read_num', 'like_num', 'unlike_num', 'hot', 'create_time'];
 

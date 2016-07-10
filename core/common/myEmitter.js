@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const util = require('util');
+const util = require('common');
 
 util.inherits(MyEmitter, EventEmitter);
 

@@ -15,6 +15,7 @@
     "grunt": "^1.0.1",
     "html2jade": "^0.8.4",
     "iconv-lite": "^0.4.13",
+    "lodash": "^4.13.1",
     "morgan": "~1.6.1",
     "mysql": "^2.11.1",
     "pug": "^2.0.0-beta3",

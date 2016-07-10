@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var pool = require('../util/mysql_connect');
+var pool = require('./mysql_connect');
 
 router.get('/', (req, res, next) => {
     var sql = 'SELECT id, mov_cnName, mov_enName, mov_year, mov_country, mov_type, mov_language, mov_subtitles, mov_IMDb, mov_fileType, mov_fileResolution, mov_fileSize, mov_showTime, mov_director, mov_leadActor, mov_summary, mov_downloadUrl, mov_srcUrl,mov_poster FROM blog_movie limit 10,5;';

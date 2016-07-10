@@ -2,7 +2,7 @@
  * Created by mjj on 16/6/19.
  */
 var mysql = require('mysql');
-var config = require('../config/database.conf')['mysql_dev'];
+var config = require('./database.conf')['mysql_dev'];
 var pool = mysql.createPool(config);
 
 /**

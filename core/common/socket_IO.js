@@ -1,9 +1,9 @@
 const _ = require('underscore');
 const EventEmitter = require('events');
-const util = require('util');
+const util = require('common');
 const _io = require('socket.io');
 var _clazz = {};
-// util.inherits(MyEmitter, EventEmitter);
+// common.inherits(MyEmitter, EventEmitter);
 /**
  * 初始化io
  * @param {number} port - 端口

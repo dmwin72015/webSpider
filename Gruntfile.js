@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 
     // 加载html2jade任务插件
     // grunt.loadNpmTasks('grunt-html2jade');
-    grunt.loadTasks('grunt_tasks');
+    grunt.loadTasks('tasks');
 
 
     // 默认被执行的任务列表。
