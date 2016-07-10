@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var chat = require('./chat');
+var chat = require('../controller/chat');
 
 
 router.get('/',(req,res,next)=>{

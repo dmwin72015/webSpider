@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const movieTool = require('./movie');
+const movieTool = require('../controller/movie');
 
 router.post('/', (req, res, next)=> {
     "use strict";

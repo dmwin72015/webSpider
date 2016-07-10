@@ -3,10 +3,10 @@
  */
 const URL = require('url');
 
-const agent = require('./myAgent');
-const query = require('./mysql_connect')['query'];
-const myEmit = require('./myEmitter')['emitter'];
-const addEvent = require('./myEmitter').addEvent;
+const agent = require('../common/myAgent');
+const query = require('../common/mysql_connect')['query'];
+const myEmit = require('../common/myEmitter')['emitter'];
+const addEvent = require('../common/myEmitter').addEvent;
 
 const options = {
     charset: 'gb2312'
