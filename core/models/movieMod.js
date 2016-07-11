@@ -1,7 +1,7 @@
 /**
  * Created by mjj on 16/7/10.
  */
-exports.movie = {
+module.exports = {
     tableName: 'blog_movie',
     charset: 'UTF-8',
     attributes: {

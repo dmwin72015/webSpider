@@ -2,7 +2,7 @@
  * Created by mjj on 16/6/19.
  */
 var mysql = require('mysql');
-var config = require('../config/database.conf')['mysql_dev'];
+var config = require('.././database.conf')['mysql_dev'];
 var pool = mysql.createPool(config);
 
 /**
@@ -15,43 +15,59 @@ function baseQuery(sql, data, callback) {
     if (typeof data == 'function') {
         callback = data;
     }
-    pool.getConnection(function (err, conn) {
+    pool.getConnection(function(err, conn) {
         if (err) throw err.stack;
-        conn.query(sql, data, function (err, rows) {
+        conn.query(sql, data, function(err, rows) {
             //释放连接
             conn.release();
             callback && callback(err, rows);
         })
     });
 }
+// promise 写法
+function baseQueryProm(sql, data) {
+    if (!sql) return;
+    return new Promise((resolve, reject) => {
+        pool.getConnection((err, conn) => {
+            if (err) reject(err);
+            conn.query(sql, data, function(err, rows) {
+                //释放连接
+                conn.release();
+                if (err) reject(err);
+                resolve(rows);
+            })
+        });
+    });
+}
+
 
 //所有连接关闭
 function endPool(pool, cb) {
-    pool.end(function (err) {
+    pool.end(function(err) {
         cb(err);
     });
 }
 //事件监听
-pool.on('connection', function (conn) {
+pool.on('connection', function(conn) {
     // console.log('已经链接',conn);
     // console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
 });
 
-pool.on('enqueue', function (conn) {
+pool.on('enqueue', function(conn) {
     // console.log('队列中......',conn);
     // console.log('链接ID：' + conn && conn.threadId + '连接池连接成功...');
 });
-pool.on('end', function (conn) {
+pool.on('end', function(conn) {
     console.log('连接关闭.....');
     // console.log('链接ID' + conn.threadId + '连接关闭......');
 });
-pool.on('error',function(conn){
+pool.on('error', function(conn) {
     console.log('链接关闭......');
 });
 
 //测试链接
 function testConnect() {
-    baseQuery('select now()', function (err, row) {
+    baseQuery('select now()', function(err, row) {
         console.log(row);
     });
 }
@@ -60,7 +76,8 @@ function testConnect() {
 
 /**暴露方法*/
 var tools = {
-    query: baseQuery
+    query: baseQuery,
+    queryProm: baseQueryProm
 };
 
 
