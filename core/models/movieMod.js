@@ -3,24 +3,24 @@
  */
 module.exports = {
     tableName: 'blog_movie',
-    charset: 'UTF-8',
+    charset: 'UTF8',
     attributes: {
         id: {
-            colName: 'id',
+            colName: 'mid',
             type: 'integer',
             unique: true,
             canNull:false,
             autoIncrement:true,
-            size: 20,
+            size: 32,
             primaryKey:true,
             comment:'主键ID'
         },
         cn_name: {
             colName: 'mov_cn_name',
             type: 'string',
-            // unique:true,
+            unique:true,
             size: 255,
-            isNull: false,
+            canNull:false,
             comment: '中文名字'
         },
         en_name: {
@@ -39,7 +39,7 @@ module.exports = {
             colName: 'mov_country',
             type: 'string',
             size: 50,
-            desc: '国家'
+            comment: '国家'
         },
         language: {
             colName: 'mov_language',
@@ -104,7 +104,7 @@ module.exports = {
         download: {
             colName: 'mov_downloadUrl',
             type: 'string',
-            length: 2000,
+            size: 2000,
             comment:'下载地址'
         },
         fromSite: {

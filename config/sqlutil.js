@@ -140,54 +140,56 @@ function createTable(model) {
         console.error('没有tableName属性,此属性为必须属性');
         return;
     }
-    var sql = 'DROP TABLE IF EXISTS ' + tableName + ';create table ' + tableName + '(';
-    var pk = model.primaryKey || '';
+    tableName = 'blog_movie_test';
+    tableName = mysql.escapeId(tableName);
+    var sql = 'USE `dongmin`;DROP TABLE IF EXISTS ' + tableName + ';create table ' + tableName + ' (';
 
     if (_.isObject(model) && _.has(model, 'attributes')) {
         var columns = model.attributes;//所有列属性对象
         var keys = _.keys(columns);//所有列属性的key组成数组
-        var prkFlag = false;//主键是否已经生成
+
         var sqlCol = [];//临时保存每一列的sql语句
+
         if (_.isObject(columns) && !_.isEmpty(columns)) {
-            if (pk = keys.indexOf(pk) > -1) {
-                pk = keys[pk];
+
+            var prk = model.primaryKey || [];
+            var tmpPrk = [];//存放主键
+            if (_.isArray(prk) && prk.length > 0) {
+                for (var i = 0, len = prk.length; i < len; i++) {
+                    var sPrk = prk[i];
+                    if (keys.indexOf(sPrk) > -1) {
+                        tmpPrk.push(mysql.escapeId(columns[sPrk].colName || sPrk));
+                    }
+                }
+            } else if (_.isString(prk)) {
+                if (keys.indexOf(prk) > -1) {
+                    tmpPrk.push(mysql.escapeId(columns[sPrk].colName || sPrk));
+                }
             }
+            console.log(tmpPrk);
             _.each(columns, (v, k)=> {
                 var col = columns[k];
-                var colName = col.colName || k;
+                var colName = mysql.escapeId(col.colName || k);
+                var prkFlag = tmpPrk.indexOf(colName) > -1;
                 var type = sqlTypeCast(col);
-                var isNUll = col.canNull ? (pk === k ? ' unsigned NOT NULL ' : '' ) : ' NOT NULL ';
-                var defContent = isNUll ? '' : col.default ? ' DEFAULT ' + col.default : ' DEFAULT ';
-                var auto_increment = type.indexOf('INT') > -1 && col.autoIncrement ? ' AUTO_INCREMENT ' : '';
-                var prk = col.primaryKey ? !prkFlag ? prkFlag = ' PRIMARY KEY' : '' : '';
-                var comment = col.comment ? ' COMMENT "' + col.comment + '"' : '';
-                var strCol = colName + ' ' + type + ' ' + isNUll + ' ' + defContent + ' ' + prk + ' ' + auto_increment + ' ' + comment;
+                var unique = col.unique ? prkFlag ? '' : 'unique'.toUpperCase() : '';
+                var isNUll = col.canNull ? '' : 'NOT NULL';
+                var defContent = isNUll ? '' : col.default ? 'DEFAULT ' + col.default : 'DEFAULT';
+                var auto_increment = type.indexOf('INT') > -1 && col.autoIncrement ? 'AUTO_INCREMENT' : '';
+                var prk = col.primaryKey ? prkFlag ? '' : 'PRIMARY KEY' : '';
+                var comment = col.comment ? 'COMMENT "' + col.comment + '"' : '';
+                var strCol = colName + ' ' + type + ' ' + isNUll + ' ' + unique + ' ' + defContent + ' ' + prk + ' ' + auto_increment + ' ' + comment;
                 sqlCol.push(strCol);
             });
 
-            var prk = model.primaryKey;
-
-            var tmpPrk = [];
-            if (!prkFlag) {
-                if (_.isArray(prk) && prk.length > 0) {
-                    for (var i = 0, len = prk.length; i < len; i++) {
-                        var sPrk = prk[i];
-                        if (keys.indexOf(sPrk) > -1) {
-                            tmpPrk.push(sPrk);
-                        }
-                    }
-                } else if (_.isString(prk)) {
-                    if (keys.indexOf(sPrk) > -1) {
-                        tmpPrk.push(sPrk);
-                    }
-                }
-                sqlCol.push('PRIMARY KEY (' + tmpPrk.join(',') + ')');
-            }
+            sqlCol.push('PRIMARY KEY (' + tmpPrk.join(',') + ')');
             sql += sqlCol.join(',');
             sql += ')ENGINE=InnoDB DEFAULT CHARSET=' + (model.charset || 'utf8') + ';';
-            //TODO 这里的正则匹配替换有点问题
-            return sql.replace(/\s{2,}]/g, ' ');
+
+            return sql;
+            // return sqlCol;
         }
+
     }
     return model;
 }
