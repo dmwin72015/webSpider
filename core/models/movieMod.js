@@ -3,7 +3,7 @@
  */
 module.exports = {
     tableName: 'blog_movie',
-    charset: 'UTF8',
+    charset: 'utf8',
     attributes: {
         id: {
             colName: 'mid',

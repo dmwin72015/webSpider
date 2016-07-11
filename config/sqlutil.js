@@ -133,6 +133,7 @@ function toSqlDate(date) {
  * 根据model对象创建表结构sql语句
  * @param {object|JSON} model -  model对象
  * @return {string} - 返回对应的创建表的sql语句 ,如果 model格式 不对,则返回传入的model
+ * @tips - //TODO 这里的sql语句一次只能执行一条,如果一次执行两条sql语句就会报错.
  * */
 function createTable(model) {
     var tableName = model.tableName || '';
@@ -142,7 +143,7 @@ function createTable(model) {
     }
     tableName = 'blog_movie_test';
     tableName = mysql.escapeId(tableName);
-    var sql = 'USE `dongmin`;DROP TABLE IF EXISTS ' + tableName + ';create table ' + tableName + ' (';
+    var sql = 'DROP TABLE IF EXISTS ' + tableName + ';create table ' + tableName + ' (';
 
     if (_.isObject(model) && _.has(model, 'attributes')) {
         var columns = model.attributes;//所有列属性对象
@@ -166,7 +167,7 @@ function createTable(model) {
                     tmpPrk.push(mysql.escapeId(columns[sPrk].colName || sPrk));
                 }
             }
-            console.log(tmpPrk);
+
             _.each(columns, (v, k)=> {
                 var col = columns[k];
                 var colName = mysql.escapeId(col.colName || k);
@@ -187,7 +188,6 @@ function createTable(model) {
             sql += ')ENGINE=InnoDB DEFAULT CHARSET=' + (model.charset || 'utf8') + ';';
 
             return sql;
-            // return sqlCol;
         }
 
     }
