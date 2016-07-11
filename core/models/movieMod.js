@@ -9,105 +9,116 @@ module.exports = {
             colName: 'id',
             type: 'integer',
             unique: true,
-            length: 20,
-            primaryKey: true
+            canNull:false,
+            autoIncrement:true,
+            size: 20,
+            primaryKey:true,
+            comment:'主键ID'
         },
         cn_name: {
             colName: 'mov_cn_name',
             type: 'string',
             // unique:true,
-            length: 255,
+            size: 255,
             isNull: false,
-            desc: '中文名字'
+            comment: '中文名字'
         },
         en_name: {
             colName: 'mov_en_name',
             type: 'string',
-            length: 255,
-            desc: '英文名字'
+            size: 255,
+            comment: '英文名字'
         },
         year: {
             colName: 'mov_year',
             type: 'string',
-            length: 50,
-            desc: '上映年代'
+            size: 50,
+            comment: '上映年代'
         },
         country: {
             colName: 'mov_country',
             type: 'string',
-            length: 50,
+            size: 50,
             desc: '国家'
         },
         language: {
             colName: 'mov_language',
             type: 'string',
-            length: 50,
-            desc: '语言'
+            size: 50,
+            comment: '语言'
         },
         IMDB: {
             colName: 'mov_IMDb',
             type: 'string',
-            length: 50,
-            desc: '评分'
+            size: 50,
+            comment: '评分'
         },
         fileType: {
             colName: 'mov_fileType',
             type: 'string',
-            length: 50,
-            desc: '文件类型'
+            size: 50,
+            comment: '文件类型'
         },
         resolution: {
             colName: 'mov_fileResolution',
             type: 'string',
-            length: 50,
-            desc: '分辨率'
+            size: 50,
+            comment: '分辨率'
         },
         fileSize: {
             colName: 'mov_fileSize',
             type: 'string',
-            length: 50,
-            desc: '电影文件大小'
+            size: 50,
+            comment: '电影文件大小'
         },
         showTime: {
             colName: 'mov_showTime',
             type: 'string',
-            length: 50,
-            desc: '电影时长'
+            size: 50,
+            comment: '电影时长'
         },
         director: {
             colName: 'mov_director',
             type: 'string',
-            length: 200
+            length: 200,
+            comment:'导演'
         },
         actor: {
             colName: 'mov_leadActor',
             type: 'string',
-            length: 200
+            length: 200,
+            comment:'领衔主演'
         },
         summary: {
             colName: 'mov_summary',
-            type: 'string',
-            length: 200
+            type: 'text',
+            size: 200,
+            comment:'简介'
         },
         awards: {
             colName: 'mov_awards',
             type: 'string',
-            length: 50
+            length: 50,
+            comment:'获奖'
         },
         download: {
             colName: 'mov_downloadUrl',
             type: 'string',
-            length: 2000
+            length: 2000,
+            comment:'下载地址'
         },
         fromSite: {
             colName: 'mov_srcUrl',
             type: 'string',
-            length: 2000
+            size: 2000,
+            comment:'来源网址'
         },
         createTime: {
             colName: 'create_date',
             type: 'datetime',
-            default: 'now()'
+            default: 'now()',
+            comment:'创建时间'
         }
-    }
+    },
+    primaryKey:['id']
 };
