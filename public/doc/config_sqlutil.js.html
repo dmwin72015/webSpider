@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: config/sqlutil.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: config/sqlutil.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by yxp on 2016/7/11.
+ */
+const _ = require('lodash');
+const mysql = require('mysql');
+/**
+ * 根据model中类型生成的数据库中对应的字段类型
+ * @param {object|JSON}  attr  - model中attributes,或者attributes的type属性.
+ * @return {string} - 对应数据库中的类型
+ * */
+function sqlTypeCast(attr) {
+    if (!attr) return 'VARCHAR(255)';
+    var type;//model中的类型
+    var size;//长度
+    var expandedType;//对应的数据的类型
+
+    type = _.isObject(attr) &amp;&amp; _.has(attr, 'type') ? attr.type : (attr ? attr.toLowerCase() : attr);
+
+    switch (type) {
+        case 'string':
+        {
+            size = 255; // By default.
+            // If attr.size is positive integer, use it as size of varchar.
+            if (!Number.isNaN(attr.size) &amp;&amp; (parseInt(attr.size) === parseFloat(attr.size)) &amp;&amp; (parseInt(attr.size) > 0)) {
+                size = attr.size;
+            }
+
+            expandedType = 'VARCHAR(' + size + ')';
+            break;
+        }
+
+        case 'text':
+        case 'array':
+        case 'json':
+            expandedType = 'LONGTEXT';
+            break;
+
+        case 'mediumtext':
+            expandedType = 'mediumtext';
+            break;
+
+        case 'longtext':
+            expandedType = 'longtext';
+            break;
+
+        case 'boolean':
+            expandedType = 'BOOL';
+            break;
+
+        case 'int':
+        case 'integer':
+        {
+            size = 32; // By default
+
+            if (!Number.isNaN(attr.size) &amp;&amp; (parseInt(attr.size) === parseFloat(attr.size)) &amp;&amp; (parseInt(size) > 0)) {
+                size = parseInt(attr.size);
+            }
+
+            // MEDIUMINT gets internally promoted to INT so there is no real benefit
+            // using it.
+
+            switch (size) {
+                case 8:
+                    expandedType = 'TINYINT';
+                    break;
+                case 16:
+                    expandedType = 'SMALLINT';
+                    break;
+                case 32:
+                    expandedType = 'INT';
+                    break;
+                case 64:
+                    expandedType = 'BIGINT';
+                    break;
+                default:
+                    expandedType = 'INT';
+                    break;
+            }
+
+            break;
+        }
+
+        case 'float':
+        case 'double':
+            expandedType = 'FLOAT';
+            break;
+
+        case 'decimal':
+            expandedType = 'DECIMAL';
+            break;
+
+        case 'date':
+            expandedType = 'DATE';
+            break;
+
+        case 'datetime':
+            expandedType = 'DATETIME';
+            break;
+
+        case 'time':
+            expandedType = 'TIME';
+            break;
+
+        case 'binary':
+            expandedType = 'BLOB';
+            break;
+
+        default:
+            console.error('Unregistered type given: %s,using [LONGTEXT] instead of %s', type, type);
+            expandedType = 'LONGTEXT';
+            break;
+    }
+
+    return expandedType;
+}
+
+/**
+ * 把日期格式转换成sql中日期格式
+ * @param {Date}  data - 日期格式的对象
+ * @return {string} - 数据库中对应的格式
+ * */
+function toSqlDate(date) {
+    date = date.getFullYear() + '-' +
+        ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
+        ('00' + date.getDate()).slice(-2) + ' ' +
+        ('00' + date.getHours()).slice(-2) + ':' +
+        ('00' + date.getMinutes()).slice(-2) + ':' +
+        ('00' + date.getSeconds()).slice(-2);
+
+    return date;
+}
+/**
+ * 根据model对象创建表结构sql语句
+ * @param {object|JSON} model -  model对象
+ * @return {string} - 返回对应的创建表的sql语句 ,如果 model格式 不对,则返回传入的model
+ * @tips - //TODO 这里的sql语句一次只能执行一条,如果一次执行两条sql语句就会报错.
+ * */
+function createTable(model) {
+    var tableName = model.tableName || '';
+    if (!tableName) {
+        console.error('没有tableName属性,此属性为必须属性');
+        return;
+    }
+    tableName = 'blog_movie_test';
+    tableName = mysql.escapeId(tableName);
+    var sql = 'DROP TABLE IF EXISTS ' + tableName + ';create table ' + tableName + ' (';
+
+    if (_.isObject(model) &amp;&amp; _.has(model, 'attributes')) {
+        var columns = model.attributes;//所有列属性对象
+        var keys = _.keys(columns);//所有列属性的key组成数组
+
+        var sqlCol = [];//临时保存每一列的sql语句
+
+        if (_.isObject(columns) &amp;&amp; !_.isEmpty(columns)) {
+
+            var prk = model.primaryKey || [];
+            var tmpPrk = [];//存放主键
+            if (_.isArray(prk) &amp;&amp; prk.length > 0) {
+                for (var i = 0, len = prk.length; i &lt; len; i++) {
+                    var sPrk = prk[i];
+                    if (keys.indexOf(sPrk) > -1) {
+                        tmpPrk.push(mysql.escapeId(columns[sPrk].colName || sPrk));
+                    }
+                }
+            } else if (_.isString(prk)) {
+                if (keys.indexOf(prk) > -1) {
+                    tmpPrk.push(mysql.escapeId(columns[sPrk].colName || sPrk));
+                }
+            }
+
+            _.each(columns, (v, k)=> {
+                var col = columns[k];
+                var colName = mysql.escapeId(col.colName || k);
+                var prkFlag = tmpPrk.indexOf(colName) > -1;
+                var type = sqlTypeCast(col);
+                var unique = col.unique ? prkFlag ? '' : 'unique'.toUpperCase() : '';
+                var canNull = col.canNull ? '' : 'NOT NULL';
+                var defContent = isNUll ? '' : col.default ? 'DEFAULT ' + col.default : 'DEFAULT';
+                var auto_increment = type.indexOf('INT') > -1 &amp;&amp; col.autoIncrement ? 'AUTO_INCREMENT' : '';
+                var prk = col.primaryKey ? prkFlag ? '' : 'PRIMARY KEY' : '';
+                var comment = col.comment ? 'COMMENT "' + col.comment + '"' : '';
+                var strCol = colName + ' ' + type + ' ' + canNull + ' ' + unique + ' ' + defContent + ' ' + prk + ' ' + auto_increment + ' ' + comment;
+                sqlCol.push(strCol);
+            });
+
+            sqlCol.push('PRIMARY KEY (' + tmpPrk.join(',') + ')');
+            sql += sqlCol.join(',');
+            sql += ')ENGINE=InnoDB DEFAULT CHARSET=' + (model.charset || 'utf8') + ';';
+            return sql;
+        }
+    }
+    return model;
+}
+
+
+/**
+ * 根据查询出来的列生成model文件
+ * @param {Array} table  - desc table;返回的结果(所有列信息)
+ * @return {string} - 返回的model.
+ * */
+function createModel(table) {
+
+}
+
+
+module.exports = {
+    model2sql: createTable,
+    sql2model: createModel
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Movie.html">Movie</a></li><li><a href="MyEmitter.html">MyEmitter</a></li><li><a href="%25257Barray%25257D%252520-%252520arr%252520%2525E4%2525BF%25259D%2525E5%2525AD%252598%2525E7%25259D%252580%2525E4%2525B8%25258Ekeys%2525E4%2525B8%252580%2525E4%2525B8%252580%2525E5%2525AF%2525B9%2525E5%2525BA%252594%2525E7%25259A%252584%2525E6%252595%2525B0%2525E6%25258D%2525AE.html">{array} - arr 保存着与keys一一对应的数据</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_">_</a></li><li><a href="global.html#_fn">_fn</a></li><li><a href="global.html#_getData">_getData</a></li><li><a href="global.html#_getDom">_getDom</a></li><li><a href="global.html#_getImg">_getImg</a></li><li><a href="global.html#_saveImg">_saveImg</a></li><li><a href="global.html#article">article</a></li><li><a href="global.html#cheerio">cheerio</a></li><li><a href="global.html#Clazz">Clazz</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createModel">createModel</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getArticleLinkFromWeb">getArticleLinkFromWeb</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getByName">getByName</a></li><li><a href="global.html#getLimit">getLimit</a></li><li><a href="global.html#getMovie">getMovie</a></li><li><a href="global.html#getMovieUrl">getMovieUrl</a></li><li><a href="global.html#mysql">mysql</a></li><li><a href="global.html#sqlTypeCast">sqlTypeCast</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#toSqlDate">toSqlDate</a></li><li><a href="global.html#URL">URL</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Jul 12 2016 10:15:33 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

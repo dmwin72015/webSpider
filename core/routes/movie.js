@@ -32,6 +32,6 @@ router.post('/', (req, res, next)=> {
 }).get('/list:id', (req, res, next)=> {
     var id  = req.param.id || -1;
     return;
-});;
+});
 
 module.exports = router;

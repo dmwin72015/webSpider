@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sqlutil.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sqlutil.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Created by yxp on 2016/7/11.
  */
 const _ = require('lodash');
@@ -14,14 +42,14 @@ function sqlTypeCast(attr) {
     var size;//长度
     var expandedType;//对应的数据的类型
 
-    type = _.isObject(attr) && _.has(attr, 'type') ? attr.type : (attr ? attr.toLowerCase() : attr);
+    type = _.isObject(attr) &amp;&amp; _.has(attr, 'type') ? attr.type : (attr ? attr.toLowerCase() : attr);
 
     switch (type) {
         case 'string':
         {
             size = 255; // By default.
             // If attr.size is positive integer, use it as size of varchar.
-            if (!Number.isNaN(attr.size) && (parseInt(attr.size) === parseFloat(attr.size)) && (parseInt(attr.size) > 0)) {
+            if (!Number.isNaN(attr.size) &amp;&amp; (parseInt(attr.size) === parseFloat(attr.size)) &amp;&amp; (parseInt(attr.size) > 0)) {
                 size = attr.size;
             }
 
@@ -52,7 +80,7 @@ function sqlTypeCast(attr) {
         {
             size = 32; // By default
 
-            if (!Number.isNaN(attr.size) && (parseInt(attr.size) === parseFloat(attr.size)) && (parseInt(size) > 0)) {
+            if (!Number.isNaN(attr.size) &amp;&amp; (parseInt(attr.size) === parseFloat(attr.size)) &amp;&amp; (parseInt(size) > 0)) {
                 size = parseInt(attr.size);
             }
 
@@ -145,18 +173,18 @@ function createTable(model) {
     tableName = mysql.escapeId(tableName);
     var sql = 'DROP TABLE IF EXISTS ' + tableName + ';create table ' + tableName + ' (';
 
-    if (_.isObject(model) && _.has(model, 'attributes')) {
+    if (_.isObject(model) &amp;&amp; _.has(model, 'attributes')) {
         var columns = model.attributes;//所有列属性对象
         var keys = _.keys(columns);//所有列属性的key组成数组
 
         var sqlCol = [];//临时保存每一列的sql语句
 
-        if (_.isObject(columns) && !_.isEmpty(columns)) {
+        if (_.isObject(columns) &amp;&amp; !_.isEmpty(columns)) {
 
             var prk = model.primaryKey || [];
             var tmpPrk = [];//存放主键
-            if (_.isArray(prk) && prk.length > 0) {
-                for (var i = 0, len = prk.length; i < len; i++) {
+            if (_.isArray(prk) &amp;&amp; prk.length > 0) {
+                for (var i = 0, len = prk.length; i &lt; len; i++) {
                     var sPrk = prk[i];
                     if (keys.indexOf(sPrk) > -1) {
                         tmpPrk.push(mysql.escapeId(columns[sPrk].colName || sPrk));
@@ -174,22 +202,20 @@ function createTable(model) {
                 var prkFlag = tmpPrk.indexOf(colName) > -1;
                 var type = sqlTypeCast(col);
                 var unique = col.unique ? prkFlag ? '' : 'unique'.toUpperCase() : '';
-                var isNUll = col.canNull ? '' : 'NOT NULL';
+                var canNull = col.canNull ? '' : 'NOT NULL';
                 var defContent = isNUll ? '' : col.default ? 'DEFAULT ' + col.default : 'DEFAULT';
-                var auto_increment = type.indexOf('INT') > -1 && col.autoIncrement ? 'AUTO_INCREMENT' : '';
+                var auto_increment = type.indexOf('INT') > -1 &amp;&amp; col.autoIncrement ? 'AUTO_INCREMENT' : '';
                 var prk = col.primaryKey ? prkFlag ? '' : 'PRIMARY KEY' : '';
                 var comment = col.comment ? 'COMMENT "' + col.comment + '"' : '';
-                var strCol = colName + ' ' + type + ' ' + isNUll + ' ' + unique + ' ' + defContent + ' ' + prk + ' ' + auto_increment + ' ' + comment;
+                var strCol = colName + ' ' + type + ' ' + canNull + ' ' + unique + ' ' + defContent + ' ' + prk + ' ' + auto_increment + ' ' + comment;
                 sqlCol.push(strCol);
             });
 
             sqlCol.push('PRIMARY KEY (' + tmpPrk.join(',') + ')');
             sql += sqlCol.join(',');
             sql += ')ENGINE=InnoDB DEFAULT CHARSET=' + (model.charset || 'utf8') + ';';
-
             return sql;
         }
-
     }
     return model;
 }
@@ -198,12 +224,36 @@ function createTable(model) {
 /**
  * 根据查询出来的列生成model文件
  * @param {Array} table  - desc table;返回的结果(所有列信息)
+ * @return {string} - 返回的model.
  * */
-function createModelFile(table) {
+function createModel(table) {
 
 }
 
 
 module.exports = {
-    model2sql: createTable
-};
+    model2sql: createTable,
+    sql2model: createModel
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#_">_</a></li><li><a href="global.html#createModel">createModel</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#sqlTypeCast">sqlTypeCast</a></li><li><a href="global.html#toSqlDate">toSqlDate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Jul 12 2016 10:11:54 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

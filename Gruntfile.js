@@ -18,9 +18,10 @@ module.exports = function(grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['model/*.js'],
+                //TODO  只能识别数组的第一个元素
+                src: ['core/**/*.js','config/*.js'],
                 options: {
-                    destination: 'public/doc'
+                    destination: 'public/doc/'
                 }
             }
         },

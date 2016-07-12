@@ -6,11 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./core/routes/index');
-var users = require('./core/routes/users');
-var article = require('./core/routes/article');
-var movie = require('./core/routes/movie');
-var chat = require('./core/routes/chat_onLine');
-var blog = require('./core/routes/blog');
 
 var app = express();
 
@@ -28,14 +23,11 @@ app.use(cookieParser());
 
 // 路由
 app.use('/', routes);
-app.use('/users', users);
-app.use('/article',article);
-app.use('/movie',movie);
-app.use('/chat',chat);
-app.use('/blog',blog);
 
-
-// 静态资源 (静态资源为什么放在路由后面的原因:从磁盘读取文件,而相比较而言磁盘IO操作的效率较低.)
+/* 静态资源
+*  【静态资源】放在【路由】后面的原因:
+* 从磁盘读取文件,而相比较而言磁盘IO操作的效率较低.当路由未找到的时候再去着静态文件。
+* */
 app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler

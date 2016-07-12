@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/models/movieMod.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/models/movieMod.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by mjj on 16/7/10.
+ */
+module.exports = {
+    tableName: 'blog_movie',
+    charset: 'utf8',
+    attributes: {
+        id: {
+            colName: 'mid',
+            type: 'integer',
+            unique: true,
+            canNull:false,
+            autoIncrement:true,
+            size: 32,
+            primaryKey:true,
+            comment:'主键ID'
+        },
+        cn_name: {
+            colName: 'mov_cn_name',
+            type: 'string',
+            unique:true,
+            size: 255,
+            canNull:false,
+            comment: '中文名字'
+        },
+        en_name: {
+            colName: 'mov_en_name',
+            type: 'string',
+            size: 255,
+            comment: '英文名字'
+        },
+        year: {
+            colName: 'mov_year',
+            type: 'string',
+            size: 50,
+            comment: '上映年代'
+        },
+        country: {
+            colName: 'mov_country',
+            type: 'string',
+            size: 50,
+            comment: '国家'
+        },
+        language: {
+            colName: 'mov_language',
+            type: 'string',
+            size: 50,
+            comment: '语言'
+        },
+        IMDB: {
+            colName: 'mov_IMDb',
+            type: 'string',
+            size: 50,
+            comment: '评分'
+        },
+        fileType: {
+            colName: 'mov_fileType',
+            type: 'string',
+            size: 50,
+            comment: '文件类型'
+        },
+        resolution: {
+            colName: 'mov_fileResolution',
+            type: 'string',
+            size: 50,
+            comment: '分辨率'
+        },
+        fileSize: {
+            colName: 'mov_fileSize',
+            type: 'string',
+            size: 50,
+            comment: '电影文件大小'
+        },
+        showTime: {
+            colName: 'mov_showTime',
+            type: 'string',
+            size: 50,
+            comment: '电影时长'
+        },
+        director: {
+            colName: 'mov_director',
+            type: 'string',
+            length: 200,
+            comment:'导演'
+        },
+        actor: {
+            colName: 'mov_leadActor',
+            type: 'string',
+            length: 200,
+            comment:'领衔主演'
+        },
+        summary: {
+            colName: 'mov_summary',
+            type: 'text',
+            size: 200,
+            comment:'简介'
+        },
+        awards: {
+            colName: 'mov_awards',
+            type: 'string',
+            length: 50,
+            comment:'获奖'
+        },
+        download: {
+            colName: 'mov_downloadUrl',
+            type: 'string',
+            size: 2000,
+            comment:'下载地址'
+        },
+        fromSite: {
+            colName: 'mov_srcUrl',
+            type: 'string',
+            size: 2000,
+            comment:'来源网址'
+        },
+        createTime: {
+            colName: 'create_date',
+            type: 'datetime',
+            default: 'now()',
+            comment:'创建时间'
+        }
+    },
+    primaryKey:['id']
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Movie.html">Movie</a></li><li><a href="MyEmitter.html">MyEmitter</a></li><li><a href="%25257Barray%25257D%252520-%252520arr%252520%2525E4%2525BF%25259D%2525E5%2525AD%252598%2525E7%25259D%252580%2525E4%2525B8%25258Ekeys%2525E4%2525B8%252580%2525E4%2525B8%252580%2525E5%2525AF%2525B9%2525E5%2525BA%252594%2525E7%25259A%252584%2525E6%252595%2525B0%2525E6%25258D%2525AE.html">{array} - arr 保存着与keys一一对应的数据</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_">_</a></li><li><a href="global.html#_fn">_fn</a></li><li><a href="global.html#_getData">_getData</a></li><li><a href="global.html#_getDom">_getDom</a></li><li><a href="global.html#_getImg">_getImg</a></li><li><a href="global.html#_saveImg">_saveImg</a></li><li><a href="global.html#article">article</a></li><li><a href="global.html#cheerio">cheerio</a></li><li><a href="global.html#Clazz">Clazz</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createModel">createModel</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getArticleLinkFromWeb">getArticleLinkFromWeb</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getByName">getByName</a></li><li><a href="global.html#getLimit">getLimit</a></li><li><a href="global.html#getMovie">getMovie</a></li><li><a href="global.html#getMovieUrl">getMovieUrl</a></li><li><a href="global.html#mysql">mysql</a></li><li><a href="global.html#sqlTypeCast">sqlTypeCast</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#toSqlDate">toSqlDate</a></li><li><a href="global.html#URL">URL</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Jul 12 2016 10:15:33 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: core/common/myAgent.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: core/common/myAgent.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by yxp on 2016/6/16.
+ */
+const cheerio = require('cheerio');
+const sAgent = require('superagent');
+// const sAgentProxy = require('superagent-proxy');
+const sAgentCharset = require('superagent-charset');
+sAgentCharset(sAgent);
+// sAgentProxy(sAgent);
+const fs = require('fs');
+const http = require('http');
+const myTool = require('./littleTool');
+const options = {
+    'charset': 'utf-8',
+    'Connection':'keep-alive',
+    'Content-Type': 'text/html; charset=utf-8',
+    'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
+    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding':'gzip, deflate, sdch',
+    'Accept-Language':'zh-CN,zh;q=0.8,en;q=0.6',
+    // 'Host':'www.ruanyifeng.com',
+    'Cookie':'_gat=1; _ga=GA1.2.2015803745.1466476471',
+    'Referer':'http://www.ruanyifeng.com/blog/developer'
+};
+const proxyIP = 'http://61.135.217.24:80';
+const dateStr = new Date().toUTCString();
+/**
+ * 获取页面上的数据
+ * @param {string} -  资源的url
+ * @param {Obejct|JSON} [opt={charset:'utf-8'}] - 参数
+ *
+ * */
+function _getData(url, opt) {
+    //判断传递参数的个数，
+    if (typeof url == 'object') {
+        opt = url;
+        url = null;
+    }
+    // 初始化opt
+    opt = opt || {};
+    var url = url || opt.url,
+        cb = opt.success,
+        charset = opt.charset || options['charset'];
+
+    //没有url和success 返回
+    if (!url || !cb) return;
+    sAgent.get(url)
+        .charset(charset)
+        // .proxy(proxyIP)
+        .set(options)
+        .on('error',(err)=>{
+            //问题出在这里啊，频繁访问某一个站点资源，可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
+            console.log(url);
+            console.log(err);
+        })
+        .end((err, res) => {
+            if (err) {
+                // console.dir(res);
+                throw err;
+            }
+            cb &amp;&amp; cb(err, res);
+        });
+}
+/**
+ * 获取页面的DOM
+ * @link _getData
+ * @param {string} url - 页面的url
+ * @param {JSON} [opt={charset:'utf-8'}] - 参数
+ * @param {Function} [cb] - 回掉函数
+ * */
+function _getDom(url, opt, cb) {
+    if (typeof opt == 'object') {
+        opt = opt || {};
+    } else if (typeof  opt == 'function') {
+        cb = opt;
+    }
+    _getData(url, {
+        success: function (err, res) {
+            if (err) {
+                cb(1, err);
+            } else {
+                var sHtml = res.text.trim();
+                var errorInfo = {
+                    message: '空文章',
+                    eerror: {
+                        status: 200,
+                        stack: ''
+                    }
+                };
+                !sHtml ? cb(1, errorInfo) : cb(0, cheerio.load(sHtml, {
+                    ignoreWhitespace: true,
+                    xmlMode: true,
+                    decodeEntities: false//禁止中文转成unicode，主要出现在html()方法的时候，一些title、alt
+                }));
+            }
+        },
+        charset: opt.charset
+    });
+}
+/**
+ * 获取页面中img资源
+ * @param {string} url - 页面的url
+ * @param {Function} [cb] - 回掉函数 接受一个参数:arr ,保存获取到的图片src
+ * */
+function _getImg(url, cb) {
+    _getDom(url, ($)=> {
+        var arrRes = [];
+        $('img[src]').each(function (i, e) {
+            arrRes[i] = $(e).attr('src');
+        });
+        cb(arrRes);
+    });
+}
+/**
+ * 保存img资源
+ * @param {string} url - 图片的url
+ * @param {Function} [cb] - 回掉函数 接受两个个参数:（err,res）;err:报错信息，res：结果数据
+ * */
+function _saveImg(url, cb) {
+    var randomName = myTool.randomName;
+    _getData(url, {
+        success: function (err, res) {
+            fs.writeFile('download/' + randomName() + '.png', res.body, (err, data)=> {
+                cb &amp;&amp; cb(err, data);
+            })
+        }
+    })
+}
+
+
+module.exports = {
+    getData: _getData,
+    getDom: _getDom,
+    getImg: _getImg,
+    saveImg: _saveImg
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Movie.html">Movie</a></li><li><a href="MyEmitter.html">MyEmitter</a></li><li><a href="%25257Barray%25257D%252520-%252520arr%252520%2525E4%2525BF%25259D%2525E5%2525AD%252598%2525E7%25259D%252580%2525E4%2525B8%25258Ekeys%2525E4%2525B8%252580%2525E4%2525B8%252580%2525E5%2525AF%2525B9%2525E5%2525BA%252594%2525E7%25259A%252584%2525E6%252595%2525B0%2525E6%25258D%2525AE.html">{array} - arr 保存着与keys一一对应的数据</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_">_</a></li><li><a href="global.html#_fn">_fn</a></li><li><a href="global.html#_getData">_getData</a></li><li><a href="global.html#_getDom">_getDom</a></li><li><a href="global.html#_getImg">_getImg</a></li><li><a href="global.html#_saveImg">_saveImg</a></li><li><a href="global.html#article">article</a></li><li><a href="global.html#cheerio">cheerio</a></li><li><a href="global.html#Clazz">Clazz</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#createModel">createModel</a></li><li><a href="global.html#createTable">createTable</a></li><li><a href="global.html#getAll">getAll</a></li><li><a href="global.html#getArticleLinkFromWeb">getArticleLinkFromWeb</a></li><li><a href="global.html#getById">getById</a></li><li><a href="global.html#getByName">getByName</a></li><li><a href="global.html#getLimit">getLimit</a></li><li><a href="global.html#getMovie">getMovie</a></li><li><a href="global.html#getMovieUrl">getMovieUrl</a></li><li><a href="global.html#mysql">mysql</a></li><li><a href="global.html#sqlTypeCast">sqlTypeCast</a></li><li><a href="global.html#tools">tools</a></li><li><a href="global.html#toSqlDate">toSqlDate</a></li><li><a href="global.html#URL">URL</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Jul 12 2016 10:15:33 GMT+0800 (中国标准时间)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

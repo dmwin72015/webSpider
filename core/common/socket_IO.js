@@ -25,7 +25,6 @@ _fn = Clazz.fn = Clazz.prototype =  {
 	constructor:Clazz
 };
 
-_fn.
 
 function init(port) {
     'use strict';
