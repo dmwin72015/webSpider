@@ -1,35 +1,31 @@
-/**
- * Created by yxp on 2016/7/12.
- */
-'use strict';
-
-const fs = require('fs');
 const path = require('path');
-const requireDir = require('require-directory');
+const _ = require('lodash');
 
-console.log(`Current directory: ${process.cwd()}`);
-// console.log(path.dirname(__dirname));
+process.chdir(__dirname);
+const routerPath = path.resolve('../controller');
+console.log(routerPath);
 
-console.log('命令执行的位置:',process.cwd());
+var loadmodules = require('../../lib/moduleLoader');
+var arrModule = loadmodules(routerPath);
 
-console.log('当前文件的位置',__dirname);
-console.log('当前文件的绝对路径',path.resolve(__dirname));
-var relaPath = path.relative(__dirname, 'D:\\projects\\webSpider\\core\\common');
-console.log('当前路径相对于common的相对路径',relaPath);
 
-console.log('当前',path.dirname(__dirname));
+function replaceNull(req, res, next) {
+    next();
+}
+function init(app) {
+    var router = app.Router();
+    for (var name in arrModule) {
+        console.log(name);
+        var tmpPath = '';
+        if (name == 'index') {
+            tmpPath = '/admin';
+        } else {
+            tmpPath = '/admin/' + name;
+        }
+        // console.log(tmpPath);
+        router.get(tmpPath, _.isFunction(arrModule[name]) || replaceNull);
+    }
+    return router;
+}
 
-console.log(path.basename(module.filename));
-// process.chdir(__dirname);
-
-// var files = fs.readdirSync('..');
-/*
- (err, files)=> {
- // if (err) throw err;
-
- console.log(files);
- setTimeout(console.log,2000,'延迟');
-
- }
- * */
-// console.dir(files);
+exports.init = init;
