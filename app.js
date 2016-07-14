@@ -22,9 +22,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // 路由
-// app.use('/', routes);
-var otherRouter = require('./core/routes/routesLoader').init(express);
-app.use(otherRouter);
+app.use('/', routes);
+// var otherRouter = require('./core/routes/routesLoader').init(express);
+// app.use(otherRouter);
 /* 静态资源
 *  【静态资源】放在【路由】后面的原因:
 * 从磁盘读取文件,而相比较而言磁盘IO操作的效率较低.当路由未找到的时候再去着静态文件。

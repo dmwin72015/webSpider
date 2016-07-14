@@ -5,4 +5,6 @@ module.exports = {
     'articleList': (req, res, next)=> {
         res.end(req.path);
     }
+
+
 };

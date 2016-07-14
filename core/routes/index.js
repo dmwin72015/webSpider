@@ -16,4 +16,12 @@ router.get('/*', (req, res, next)=> {
     // return;
 });
 
+router.post('/test/ajax',(req,res,next)=>{
+
+    setTimeout(function () {
+        res.end('同步');
+    },3000)
+
+});
+
 module.exports = router;
