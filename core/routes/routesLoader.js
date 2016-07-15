@@ -16,8 +16,8 @@ var routeCache = {
 
 function loop(mod, appRoute, basePath, realPath, sMethod) {
     // 上一层路径(作为下一次循环的基准路径),第一次默认是 / 根目录
-    var basePath = basePath || '/',
-        realPath = realPath || '/',
+    var basePath = basePath || '',
+        realPath = realPath || '',
         sMethod = sMethod || 'get';
 
     for (var sP in mod) {
@@ -33,54 +33,43 @@ function loop(mod, appRoute, basePath, realPath, sMethod) {
         // 实际路径与route路径的匹配过滤
 
         var routePath = basePath,
-            nextPath = '';
-        // 过滤POST请求
+            nextPath = sP.indexOf('index') == 0 ? '' : sP;
+
+        // 过滤请求
         if (arrPathFilterRes[3]) {
             sMethod = arrPathFilterRes[3];
-
             if (_.indexOf(REQUEST_METHOD, sMethod.slice(1)) == -1) {
                 console.error('请求方法不识别,路由[' + routePath + ']不处理');
                 continue;
             }
-
-            if (_.indexOf(REQUEST_METHOD, sMethod.slice(1)) != -1) {
-                routePath = routePath.replace(sMethod, '');
-                nextPath = sP.replace(sMethod);
-                sMethod = sMethod.slice(1);
-
-
-            } else {
-                console.error('请求方法不识别,路由[' + routePath + ']不处理');
-                continue;
+            nextPath = sP.replace(sMethod);
+            if (nextPath.indexOf('index') != 0) {
+                routePath = basePath + '/' + nextPath;
+                nextPath = '';
             }
-        } else {
-            // 处理掉index、/, 这种作为默认路径情况
-            if (sP != 'index') {
-                routePath = basePath + '/' + sP;
-                nextPath = sP;
-            }
+            sMethod = sMethod.slice(1);
         }
 
         // 判断是否有处理函数
         if (_.isFunction(mod[sP])) {
             //是函数-> 进行逻辑处理
 
-            console.log('【object】' + realPath + sP + '  >> 实际路径->current');
+            console.log('【object】' + realPath + '/' + sP + '  >> 实际路径->current');
             console.log('【route 】' + routePath + '  >> mount-route');
             console.log('【base  】' + basePath + '  >> 基准路径');
             console.log('----------------------------------------------');
 
             appRoute[sMethod](routePath, mod[sP]);
 
-            routeCache[sMethod].push(routePath);
+            // routeCache[sMethod].push(routePath);
 
         } else if (_.isPlainObject(mod[sP])) {
             //是对象 - > 继续循环
-            console.log('【object】' + realPath + sP + ' >> 实际路径->next');
+            console.log('【object】' + realPath + '/' + sP + ' >> 实际路径->next');
             console.log('【route 】' + basePath + ' >> 基准路径')
             console.log('----------------------------------------------');
-
-            loop(mod[sP], appRoute, basePath + (nextPath || ''), realPath + sP, sMethod);
+            var tmpBase = basePath + '/' + nextPath;
+            loop(mod[sP], appRoute, basePath + tmpBase, realPath + '/' + sP, sMethod);
 
         } else {
             // 都不符合-> 打印错误信息
