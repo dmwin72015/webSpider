@@ -12,15 +12,20 @@ const http = require('http');
 const myTool = require('./littleTool');
 const options = {
     'charset': 'utf-8',
-    'Connection':'keep-alive',
+    'Connection': 'keep-alive',
     'Content-Type': 'text/html; charset=utf-8',
-    'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
-    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Encoding':'gzip, deflate, sdch',
-    'Accept-Language':'zh-CN,zh;q=0.8,en;q=0.6',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
     // 'Host':'www.ruanyifeng.com',
-    'Cookie':'_gat=1; _ga=GA1.2.2015803745.1466476471',
-    'Referer':'http://www.ruanyifeng.com/blog/developer'
+    // 'Cookie': '_gat=1; _ga=GA1.2.2015803745.1466476471',
+    // 'Referer': 'http://www.ruanyifeng.com/blog/developer'
+};
+const cheerOpts = {
+    ignoreWhitespace: true,
+    xmlMode: true,
+    decodeEntities: false //禁止中文转成unicode，主要出现在html()方法的时候，一些title、alt
 };
 const proxyIP = 'http://61.135.217.24:80';
 const dateStr = new Date().toUTCString();
@@ -31,6 +36,7 @@ const dateStr = new Date().toUTCString();
  *
  * */
 function _getData(url, opt) {
+    'use strict';
     //判断传递参数的个数，
     if (typeof url == 'object') {
         opt = url;
@@ -39,27 +45,24 @@ function _getData(url, opt) {
     // 初始化opt
     opt = opt || {};
     var url = url || opt.url,
-        cb = opt.success,
         charset = opt.charset || options['charset'];
 
     //没有url和success 返回
-    if (!url || !cb) return;
-    sAgent.get(url)
-        .charset(charset)
-        // .proxy(proxyIP)
-        .set(options)
-        .on('error',(err)=>{
-            //问题出在这里啊，频繁访问某一个站点资源，可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
-            console.log(url);
-            console.log(err);
-        })
-        .end((err, res) => {
-            if (err) {
-                // console.dir(res);
-                throw err;
-            }
-            cb && cb(err, res);
-        });
+    if (!url) return;
+    return new Promise((resolve, reject) => {
+        sAgent.get(url)
+            .charset(charset)
+            // .proxy(proxyIP)
+            .set(options)
+            .on('error', (err) => {
+                //问题出在这里啊，频繁访问某一个站点资源，可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
+                //console.log('获取页面上的数据出问题了',err);
+                //reject(err);
+            })
+            .end((err, res) => {
+                err ? reject(err) : resolve(res);
+            });
+    });
 }
 /**
  * 获取页面的DOM
@@ -68,33 +71,21 @@ function _getData(url, opt) {
  * @param {JSON} [opt={charset:'utf-8'}] - 参数
  * @param {Function} [cb] - 回掉函数
  * */
-function _getDom(url, opt, cb) {
-    if (typeof opt == 'object') {
-        opt = opt || {};
-    } else if (typeof  opt == 'function') {
-        cb = opt;
-    }
-    _getData(url, {
-        success: function (err, res) {
-            if (err) {
-                cb(1, err);
-            } else {
-                var sHtml = res.text.trim();
-                var errorInfo = {
-                    message: '空文章',
-                    eerror: {
-                        status: 200,
-                        stack: ''
-                    }
-                };
-                !sHtml ? cb(1, errorInfo) : cb(0, cheerio.load(sHtml, {
-                    ignoreWhitespace: true,
-                    xmlMode: true,
-                    decodeEntities: false//禁止中文转成unicode，主要出现在html()方法的时候，一些title、alt
-                }));
-            }
-        },
-        charset: opt.charset
+function _getDom(url, opt) {
+    return new Promise((resolve, reject) => {
+        _getData(url, opt).then((res) => {
+            var sHtml = res.text.trim();
+            var errorInfo = {
+                message: '空文章',
+                eerror: {
+                    status: 200,
+                    stack: ''
+                }
+            };
+            sHtml ? resolve(cheerio.load(sHtml, cheerOpts)) : reject(errorInfo);
+        }).catch((err) => {
+            reject(err);
+        });
     });
 }
 /**
@@ -103,9 +94,9 @@ function _getDom(url, opt, cb) {
  * @param {Function} [cb] - 回掉函数 接受一个参数:arr ,保存获取到的图片src
  * */
 function _getImg(url, cb) {
-    _getDom(url, ($)=> {
+    _getDom(url, ($) => {
         var arrRes = [];
-        $('img[src]').each(function (i, e) {
+        $('img[src]').each(function(i, e) {
             arrRes[i] = $(e).attr('src');
         });
         cb(arrRes);
@@ -119,8 +110,8 @@ function _getImg(url, cb) {
 function _saveImg(url, cb) {
     var randomName = myTool.randomName;
     _getData(url, {
-        success: function (err, res) {
-            fs.writeFile('download/' + randomName() + '.png', res.body, (err, data)=> {
+        success: function(err, res) {
+            fs.writeFile('download/' + randomName() + '.png', res.body, (err, data) => {
                 cb && cb(err, data);
             })
         }

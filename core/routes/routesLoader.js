@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 const PATH_FILTER = /(^\w+(\/:\w+)?)(\|\w+)?$/;
+const INDEX_FILTER = /(^index|\/(\/:\w+)?)$/;
 const REQUEST_METHOD = ['get', 'post', 'head', 'delete'];
 
 
@@ -13,12 +14,13 @@ var routeCache = {
     get: [],
     post: []
 };
+var log = false;
 
 function loop(mod, appRoute, basePath, realPath, sMethod) {
     // 上一层路径(作为下一次循环的基准路径),第一次默认是 / 根目录
     var basePath = basePath || '',
         realPath = realPath || '',
-        sMethod = sMethod || 'get';
+        baseMethod = sMethod;
 
     for (var sP in mod) {
         var arrPathFilterRes = sP.match(PATH_FILTER);
@@ -31,51 +33,72 @@ function loop(mod, appRoute, basePath, realPath, sMethod) {
         }
 
         // 实际路径与route路径的匹配过滤
+        var currRealPath = realPath + '/' + sP,
+            currPath = '/' + sP,
+            currMethod = 'get';
 
-        var routePath = basePath,
-            nextPath = sP.indexOf('index') == 0 ? '' : sP;
+        // 过滤请求:
+        /**
+            1.优先使用当前设置的请求类型。
+            2.当前无类型则使用上一次的。
+            3.上一次无类型，则使用get
+        */
 
-        // 过滤请求
+        if (baseMethod) {
+            currMethod = baseMethod;
+        }
+
+        //TODO 有bug，没有添加验证判断
+        if (/^index(\/:\w+)?$/.test(arrPathFilterRes[1])) {
+            currPath = (basePath || '/') + currPath.replace('/index', '');
+        } else {
+            currPath = basePath + currPath;
+        }
+
         if (arrPathFilterRes[3]) {
-            sMethod = arrPathFilterRes[3];
-            if (_.indexOf(REQUEST_METHOD, sMethod.slice(1)) == -1) {
-                console.error('请求方法不识别,路由[' + routePath + ']不处理');
+            currMethod = arrPathFilterRes[3];
+            if (_.indexOf(REQUEST_METHOD, currMethod.slice(1)) == -1) {
+                console.error('请求方法不识别,路由[' + currRealPath + ']不处理');
                 continue;
             }
-            nextPath = sP.replace(sMethod);
-            if (nextPath.indexOf('index') != 0) {
-                routePath = basePath + '/' + nextPath;
-                nextPath = '';
-            }
-            sMethod = sMethod.slice(1);
+            currPath = currPath.replace(currMethod, '');
+            currMethod = currMethod.slice(1);
         }
+
+        // if (!/^index(\/:\w+)?$/.test(currPath)) {
+        //     currPath = basePath + '/' + currPath;
+        // }
 
         // 判断是否有处理函数
         if (_.isFunction(mod[sP])) {
             //是函数-> 进行逻辑处理
+            if (log) {
+                console.log('【object】' + currRealPath + '  >> 实际路径->current');
+                console.log('【route 】' + currPath + '  >> mount-route');
+                console.log('【base  】' + basePath + '  >> 基准路径');
+                console.log('----------------------------------------------');
+            }
 
-            console.log('【object】' + realPath + '/' + sP + '  >> 实际路径->current');
-            console.log('【route 】' + routePath + '  >> mount-route');
-            console.log('【base  】' + basePath + '  >> 基准路径');
-            console.log('----------------------------------------------');
+            appRoute[currMethod](currPath, mod[sP]);
 
-            appRoute[sMethod](routePath, mod[sP]);
-
-            // routeCache[sMethod].push(routePath);
+            routeCache[currMethod].push(currPath);
 
         } else if (_.isPlainObject(mod[sP])) {
             //是对象 - > 继续循环
-            console.log('【object】' + realPath + '/' + sP + ' >> 实际路径->next');
-            console.log('【route 】' + basePath + ' >> 基准路径')
-            console.log('----------------------------------------------');
-            var tmpBase = basePath + '/' + nextPath;
-            loop(mod[sP], appRoute, basePath + tmpBase, realPath + '/' + sP, sMethod);
+            if (log) {
+                console.log('【object】' + currRealPath + ' >> 实际路径->next');
+                console.log('【route 】' + basePath + ' >> 基准路径')
+                console.log('----------------------------------------------');
+            }
+
+            loop(mod[sP], appRoute, currPath, currRealPath, currMethod);
 
         } else {
             // 都不符合-> 打印错误信息
-            console.error(realPath + '  >> 不匹配,无法识别');
+            console.error('[ error:', new Date().toLocaleString(), ' ] >> 路由：' + realPath + '  >> 类型不是对象或方法，无法匹配、识别。');
         }
     }
+    return appRoute;
 }
 
 
@@ -96,13 +119,18 @@ function logNameFormat(oDate, format) {
 
 module.exports = (appRoute) => {
     var oMods = modLoader(path.join(__dirname, '../controller'));
-    console.log('开始初始化路由表....');
+
+    // console.log(oMods);
+    console.log('*********************************************');
+    console.log('[ info :', new Date().toLocaleString(), ' ] >> 开始初始化路由表[', new Date().toLocaleString(), ']');
 
     var router = loop(oMods, appRoute);
 
-    console.log('路由表初始化完成!!!');
+    console.log('[ info :', new Date().toLocaleString(), ' ] >> 路由表初始化完成');
+    console.log('[ info :', new Date().toLocaleString(), ' ] >> 路由表为：');
+    console.log(routeCache);
 
-    // console.log(routeCache);
-    // console.log(oMods);
+    console.log('*********************************************\n');
+
     return appRoute;
 }

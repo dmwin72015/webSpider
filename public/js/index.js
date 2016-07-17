@@ -18,7 +18,7 @@ function uuid() {
 }
 
 $(function () {
-    var socket = io('http://localhost:9080');
+    var socket = io('http://localhost:9999');
     var $kw = $('#kw');
     var $ul = $('div.result-list ul').eq(0);
     $kw.focus(function () {
@@ -32,26 +32,11 @@ $(function () {
         var sUrl = 'http://www.ruanyifeng.com/blog/developer/';
         var data = {url: $kw.val() || sUrl};
         $.ajax({
-            url: '/article/ruanyf',
+            url: 'spider/geturls',
             type: 'post',
             data: data,
-            success: function (data, textStatus, xhr) {
-                if (data && data.err == 1) {
-                    var len;
-                    if (data.d && (len = data.d.length) > 0) {
-                        $('#arti_num').html('一共搜索到<em>' + len + '</em>条结果');
-                        var str = '',
-                            i = 0;
-                        for (; i < len; i++) {
-                            str += '<li id="' + uuid() + '"><span class="arti_name">(' + data.d[i].name + ')</span><span class="arti_href">' + data.d[i].href + '</span><a class="tosee">采集</a></li>'
-                        }
-                        $ul.html(str);
-                    }
-
-                } else {
-                    alert(data.msg);
-                }
-
+            success: function (d, textStatus, xhr) {
+                console.log(d);
             },
             error: function (xml, textStatus, error) {
                 console.log(textStatus);
@@ -92,7 +77,7 @@ $(function () {
 
     //监听与服务器连接
     socket.on('connect', (data) => {
-        // console.log('链接成功.....');
+        console.log('链接成功.....');
     });
 
     //监听 服务器端是否成功获取页面资源

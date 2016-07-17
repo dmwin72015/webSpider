@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./core/routes/routesLoader')(express.Router());
+var index = require('./core/routes/index');
 var app = express();
 
 // view engine setup
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // 路由
+app.use(index);
 app.use(routes);
 /* 静态资源
 *  【静态资源】放在【路由】后面的原因:

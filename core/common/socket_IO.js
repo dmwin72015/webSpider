@@ -7,6 +7,6 @@ function init(port) {
 }
 
 
-module.exports = function () {
+module.exports = function (port) {
     return _io.listen(port || 8080);
 }
