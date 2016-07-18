@@ -57,11 +57,12 @@ $(function() {
             url: 'spider/geturls',
             type: 'post',
             data: data,
+            timeout:'2000',
             success: function(d, textStatus, xhr) {
                 console.log(d);
             },
             error: function(xml, textStatus, error) {
-                alert(xml.responseText);
+                // alert(xml.responseText);
                 console.log(xml);
             }
         })
