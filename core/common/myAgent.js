@@ -123,5 +123,6 @@ module.exports = {
     getData: _getData,
     getDom: _getDom,
     getImg: _getImg,
-    saveImg: _saveImg
+    saveImg: _saveImg,
+    src: sAgent
 };

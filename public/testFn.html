@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="js/jquery-1.12.4.js"></script>
+    <script>
+    //方法1: 利用迭代,找到子元素的文本节点,然后拼接
+    function getText(ele, recu, result) {
+        var arrChild = ele.childNodes;
+        var i = 0,
+            len = arrChild.length,
+            result = result || [];
+        for (; i < len; i++) {
+            var currNode = arrChild[i];
+            if (recu && currNode.nodeType == 1) {
+                getText(currNode, recu, result);
+            } else if (currNode.nodeType == 3) {
+                result.push(currNode.nodeValue);
+            }
+        }
+        return result.join('').trim();
+    }
+    // 方法2: 获取所有的innerHTML,然后使用正则替换
+    function getText2(ele, recu, result) {
+        var sHtml = ele.innerHTML;
+        var rTag = /<("[^"]*"|'[^']*'|[^'">])*>/g;
+        return sHtml.replace(rTag, '').trim();
+    }
+
+    $(function() {
+        var oDiv = document.querySelector('#outer');
+        console.time('t1');
+        var t1 = getText2(oDiv);
+        console.timeEnd('t1');
+        console.log(t1);
+
+        console.time('t2')
+        var t2 = getText(oDiv, true);
+        console.timeEnd('t2')
+        console.log(t2);
+
+        console.time('t3')
+        var t3 = $('#oDiv').text();
+        console.timeEnd('t3')
+        console.log(t3);
+    });
+    </script>
+</head>
+
+<body>
+    <div id="outer">
+        这是外面的div
+        <p id="inner1">这是里面的一个p
+            <span>这是p里面的一个span标签</span>
+        </p>
+        <ul id="inner2">
+            <li>第一个li</li>
+            <li>第二个li</li>
+            <li>第三个li</li>
+            <li>第四个li</li>
+        </ul>
+    </div>
+</body>
+
+</html>

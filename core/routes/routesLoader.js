@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 const PATH_FILTER = /(^\w+(\/:\w+)?)(\|\w+)?$/;
-const INDEX_FILTER = /(^index|\/(\/:\w+)?)$/;
 const REQUEST_METHOD = ['get', 'post', 'head', 'delete'];
 
 
@@ -18,7 +17,7 @@ var log = false;
 
 function loop(mod, appRoute, basePath, realPath, sMethod) {
     // 上一层路径(作为下一次循环的基准路径),第一次默认是 / 根目录
-    var basePath = basePath || '',
+    var basePath = basePath || '/',
         realPath = realPath || '',
         baseMethod = sMethod;
 
@@ -34,7 +33,7 @@ function loop(mod, appRoute, basePath, realPath, sMethod) {
 
         // 实际路径与route路径的匹配过滤
         var currRealPath = realPath + '/' + sP,
-            currPath = '/' + sP,
+            currPath = sP + '/',
             currMethod = 'get';
 
         // 过滤请求:
@@ -50,7 +49,7 @@ function loop(mod, appRoute, basePath, realPath, sMethod) {
 
         //TODO 有bug，没有添加验证判断
         if (/^index(\/:\w+)?$/.test(arrPathFilterRes[1])) {
-            currPath = (basePath || '/') + currPath.replace('/index', '');
+            currPath = basePath + currPath.replace('index/', '');
         } else {
             currPath = basePath + currPath;
         }
@@ -64,11 +63,7 @@ function loop(mod, appRoute, basePath, realPath, sMethod) {
             currPath = currPath.replace(currMethod, '');
             currMethod = currMethod.slice(1);
         }
-
-        // if (!/^index(\/:\w+)?$/.test(currPath)) {
-        //     currPath = basePath + '/' + currPath;
-        // }
-
+        
         // 判断是否有处理函数
         if (_.isFunction(mod[sP])) {
             //是函数-> 进行逻辑处理

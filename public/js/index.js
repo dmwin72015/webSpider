@@ -17,35 +17,58 @@ function uuid() {
     return uuid;
 }
 
-$(function () {
+function getText(ele, recu, result) {
+    var arrChild = ele.childNodes;
+    var i = 0,
+        len = arrChild.length,
+        result = result || [];
+    for (; i < len; i++) {
+        var currNode = arrChild[i];
+        if (recu && currNode.nodeType == 1) {
+            getText(currNode, recu, result);
+        } else if (currNode.nodeType == 3) {
+            result.push(currNode.nodeValue);
+        }
+    }
+    return innerText.join('');
+}
+
+$(function() {
     var socket = io('http://localhost:9999');
     var $kw = $('#kw');
     var $ul = $('div.result-list ul').eq(0);
-    $kw.focus(function () {
+    $kw.focus(function() {
         $(this).parent().addClass('active');
-    }).blur(function () {
+    }).blur(function() {
         $(this).parent().removeClass('active');
     });
-    $('#get').on('click', function () {
+    $('#get').on('click', function() {
         // var sUrl = 'http://www.ruanyifeng.com/blog/algorithm/';
         // var sUrl = 'http://www.ruanyifeng.com/blog/javascript';
-        var sUrl = 'http://www.ruanyifeng.com/blog/developer/';
-        var data = {url: $kw.val() || sUrl};
+        // var sUrl = 'http://www.ruanyifeng.com/blog/developer/';
+        var sUrl = $kw.val().trim()
+        // if (!sUrl) {
+        //     alert('请输入url');
+        //     return;
+        // }
+        var data = { url: sUrl };
+
         $.ajax({
             url: 'spider/geturls',
             type: 'post',
             data: data,
-            success: function (d, textStatus, xhr) {
+            success: function(d, textStatus, xhr) {
                 console.log(d);
             },
-            error: function (xml, textStatus, error) {
-                console.log(textStatus);
+            error: function(xml, textStatus, error) {
+                alert(xml.responseText);
+                console.log(xml);
             }
         })
     });
 
     // 采集单个
-    $ul.on('click', 'a.tosee', function () {
+    $ul.on('click', 'a.tosee', function() {
         if ($(this).hasClass('disable')) return;
         var url = $(this).prev().text();
         var id = $(this).parent()[0].id;
@@ -57,18 +80,18 @@ $(function () {
     });
 
     // 采集所有
-    $('#caiji').on('click', function () {
+    $('#caiji').on('click', function() {
         var arr = [];
-        $ul.find('li span.arti_href').each(function (i, e) {
+        $ul.find('li span.arti_href').each(function(i, e) {
             arr.push($(e).text());
             if (!$(this).next().hasClass('disable')) {
                 var id = $(e).parent()[0].id;
-                var url =  $(e).text();
-                if(url.indexOf('odp_data_php_parser')>-1){
+                var url = $(e).text();
+                if (url.indexOf('odp_data_php_parser') > -1) {
                     return;
                 }
                 socket.emit('get_article_data', {
-                    url:url,
+                    url: url,
                     id: id
                 })
             }
