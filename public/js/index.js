@@ -82,10 +82,7 @@ $(function() {
                 if(!arrData){
                     return;
                 }
-                console.log(arrData);
                 $('.maskbgContainer').hide();
-                return;
-
                 var i = 0,
                     len = arrData.length,
                     $ul = $('div.result-list>ul')[0];

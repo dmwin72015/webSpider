@@ -54,6 +54,7 @@ function _getData(url, opt) {
             .charset(charset)
             // .proxy(proxyIP)
             .set(options)
+            // .timeout(2000)
             .on('error', (err) => {
                 //问题出在这里啊，频繁访问某一个站点资源，可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
                 //console.log('获取页面上的数据出问题了',err);
