@@ -110,17 +110,18 @@
         var oImg = new Image();
         oImg.id = "testImg";
 
-        $('#imgbox').append(oImg);
+        // $('#imgbox').append(oImg);
         $(document).on('load','img',function(){
 
-            alert($(this)[0].src);
+            // alert($(this)[0].src);
+
 
         });
-        oImg.src="http://hbimg.b0.upaiyun.com/239678703834fdec5d71ef3d138995439d7baa752bfea-thgioJ_sq320";
-        alert(oImg.complete);
-        oImg.onload=function () {
-            alert(this.complete);
-        }
+        // oImg.src="http://hbimg.b0.upaiyun.com/239678703834fdec5d71ef3d138995439d7baa752bfea-thgioJ_sq320";
+        // alert(oImg.complete);
+        // oImg.onload=function () {
+            // alert(this.complete);
+        // }
     });
 </script>
 

@@ -1,5 +1,5 @@
 "use strict";
-var domDo = require('../spiderDom/dom');
+var domDao = require('../spiderDom/dom');
 
 module.exports = {
     'index': (req, res, next) => {
@@ -7,7 +7,7 @@ module.exports = {
             title: '采集首页'
         });
     },
-    'geturls|post': domDo.tomUrls,
+    'geturls|post': domDao.tomUrls,
     'getdom|post': (req, res, next) => {
         var url = req.body.url || '';
     }

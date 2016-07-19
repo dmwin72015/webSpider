@@ -76,6 +76,7 @@ function testConnect() {
 
 /**暴露方法*/
 var tools = {
+    mysql:mysql,
     query: baseQuery,
     queryProm: baseQueryProm
 };

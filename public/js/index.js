@@ -33,6 +33,15 @@ function getText(ele, recu, result) {
     return innerText.join('');
 }
 
+function createMaskLayer(){
+    var str = '<div>';
+    var style = {
+        position:'fixed'
+    }
+
+
+}
+
 $(function() {
     var socket = io('http://localhost:9999');
     var $kw = $('#kw');
@@ -47,71 +56,116 @@ $(function() {
         // var sUrl = 'http://www.ruanyifeng.com/blog/javascript';
         // var sUrl = 'http://www.ruanyifeng.com/blog/developer/';
         var sUrl = $kw.val().trim()
-        // if (!sUrl) {
-        //     alert('请输入url');
-        //     return;
-        // }
+            // if (!sUrl) {
+            //     alert('请输入url');
+            //     return;
+            // }
         var data = { url: sUrl };
-
+        $('.maskbgContainer').show();
         $.ajax({
-            url: 'spider/geturls',
+            url: '/spider/geturls',
             type: 'post',
             data: data,
-            timeout:'2000',
+            // timeout: '2000',
             success: function(d, textStatus, xhr) {
-                console.log(d);
+                if (typeof d == 'string') {
+                    d = $.parseJSON(d);
+                }
+                if (!$.isPlainObject(d)) {
+                    console.log('数据格式有误!!!');
+                }
+                if(d.code != '100'){
+                    console.log(d);
+                    return;
+                }
+                var arrData = d.info.data;
+                if(!arrData){
+                    return;
+                }
+                console.log(arrData);
+                $('.maskbgContainer').hide();
+                return;
+
+                var i = 0,
+                    len = arrData.length,
+                    $ul = $('div.result-list>ul')[0];
+                    sTemplet = $('#list_tpt').html();
+                var arrHtml = [];
+                for (; i < len; i++) {
+                    arrHtml[i] = sTemplet
+                        .replace(/\{\$tmpID\}/,arrData[i].tmpID)
+                        .replace(/\{\$title\}/,arrData[i].title)
+                        .replace(/\{\$href\}/,arrData[i].href)
+                        .replace(/\{\$read\}/,arrData[i].read)
+                        .replace(/\{\$comment\}/,arrData[i].comment);
+                }
+                $ul.innerHTML = arrHtml.join('');
+                $('.maskbgContainer').hide();
             },
             error: function(xml, textStatus, error) {
-                // alert(xml.responseText);
+                $('.maskbgContainer').hide();
+                var content = xml.responseText;
                 console.log(xml);
+                return ;
+                var rTag = /<("[^"]*"|'[^']*'|[^'">])*>/g;
+                content = content.replace(rTag, function(str) {
+                    switch (str) {
+                        case '<h1>':
+                        case '</h1>':
+                            return str;
+                            break;
+                        case '<pre>':
+                        case '</pre>':
+                            return str
+                        default:
+                            return '';
+                            break;
+                    }
+                });
+                $('.maskbgContainer').hide();
+                $('#errors').html(content);
             }
-        })
+        });
+
+
     });
 
     // 采集单个
     $ul.on('click', 'a.tosee', function() {
         if ($(this).hasClass('disable')) return;
-        var url = $(this).prev().text();
+        var url = $(this).parent().find('span.href').text();
         var id = $(this).parent()[0].id;
         // var url = 'http://www.ruanyifeng.com/blog/2008/03/six_criteria_of_a_business-critical_programming_language.html';
-        socket.emit('get_article_data', {
-            url: url,
-            id: id
-        });
+        // socket.emit('article url', {
+        //     url: url,
+        //     id: id
+        // });
+
+        // [触发]  服务器端保存数据事件
+        socket.emit('save article data',{url:url,id:id});
     });
 
     // 采集所有
     $('#caiji').on('click', function() {
-        var arr = [];
-        $ul.find('li span.arti_href').each(function(i, e) {
-            arr.push($(e).text());
-            if (!$(this).next().hasClass('disable')) {
-                var id = $(e).parent()[0].id;
-                var url = $(e).text();
-                if (url.indexOf('odp_data_php_parser') > -1) {
-                    return;
-                }
-                socket.emit('get_article_data', {
-                    url: url,
-                    id: id
-                })
-            }
+        $ul.find('li').each(function(i, e) {
+            $(this).find('a.tosee').trigger('click');
         });
     });
 
-    //监听与服务器连接
+    //[监听]  与服务器连接
     socket.on('connect', (data) => {
-        console.log('链接成功.....');
+        // console.log('链接成功.....');
     });
 
-    //监听 服务器端是否成功获取页面资源
-    socket.on('dataFromServer', (json) => {
-        console.log(json);
-
-        var id = json.id;
-        var resStatus = json.err ? '成功' : '重试';
-        var sClass = json.err ? 'tosee disable ' : 'tosee try-again fale';
-        $('#' + id).find('a').attr('class', sClass).text(resStatus);
+    //[监听]  服务器是否成功保存数据到数据库中
+    socket.on('article_data to client',function(d) {
+        console.log(d);
+        if(d.code != '100'){
+            console.log(d);
+            alert(d.message+'\n'+d.info.error);
+            return;
+        }
+        $('#'+d.info.data[0]).find('a').addClass('disable').text('成功');
     });
 
 });
