@@ -103,7 +103,7 @@ function tomuncle_page($) {
     // TODO : 逻辑处理
     return arrData;
 }
-// 司徒正美Blog，文章页获取文章内容逻辑
+// 司徒正美Blog，获取列表页的文章连接、标题、简介等信息
 function stzm_page($) {
     var arrData = [];
     var regTime = /\d{4}-\d{2}-\d{2}\s*\d{2}\:\d{2}/;
@@ -137,7 +137,7 @@ function stzm_page($) {
     return arrData;
 }
 
-// 获取页面中的文章
+// 获取文章页面中的文章的内容
 function stzm_article_page(data, socket) {
     var oRes = urlFilter(data.url);
     if (oRes.code) {
