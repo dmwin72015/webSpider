@@ -11,13 +11,15 @@ function MyEmitter() {
     EventEmitter.call(this);
 }
 
-var myEmit = new MyEmitter();
 
 function addEvent(sEvent, callback) {
+	var myEmit = new MyEmitter();
     if (!sEvent) return;
     myEmit.on(sEvent, callback);
+    console.log('*************************************************');
+    console.log('实例化一个EventEmitter[ '+sEvent+' ]');
+    console.log('*************************************************\n');
     return myEmit;
 }
 
-exports.addEvent = addEvent;
-exports.emitter = myEmit;
+module.exports = addEvent;

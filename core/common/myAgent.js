@@ -45,17 +45,21 @@ function _getData(url, opt) {
     // 初始化opt
     opt = opt || {};
     var url = url || opt.url,
+        timeout = opt.timeout === void 0 ? 3000 : opt.timeout,
         charset = opt.charset || options['charset'];
 
     //没有url和success 返回
     if (!url) return;
     return new Promise((resolve, reject) => {
+        var timer = null;
         sAgent.get(url)
             .charset(charset)
             // .proxy(proxyIP)
             .set(options)
+            .timeout(timeout)
             .on('error', (err) => {
-                //问题出在这里啊，频繁访问某一个站点资源，可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
+                // 问题出在这里啊，频繁访问某一个站点资源，
+                // 可能对方设置了限制，导致短时间 内无法访问，或者是其他原因。
                 //console.log('获取页面上的数据出问题了',err);
                 //reject(err);
             })
