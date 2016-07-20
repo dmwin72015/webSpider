@@ -69,16 +69,18 @@ function getUrls(req, res, next) {
             var url = baseUrl + pNum;
             agent.getDom(url).then(($) => {
                 arrHrefs['p' + pNum] = stzm_page($);
+                return arrHrefs;
             }).catch((err) => {
                 arrHrefs['p' + pNum] = TIPS_INFO['103'];
-                console.log(err);
+                console.log('[错误信息-->]'+err);
                 errorUrls.push(url);
-            }).then(() => {
+                return arrHrefs;
+            }).then((data) => {
                 nTote--;
                 if (nTote == 1) {
                     var tmpArr = [];
-                    for (var n in arrHrefs) {
-                        tmpArr = tmpArr.concat(arrHrefs[n]);
+                    for (var n in data) {
+                        tmpArr = tmpArr.concat(data[n]);
                     }
                     oRes = {
                         code: '100',
@@ -139,8 +141,10 @@ function stzm_page($) {
 
 
 /*在后台触发保存事件*/
-
-
+function testEmit(arg1,arg2) {
+    // body...
+    console.log('[参数一-->]'+arg1);
+}
 /*
     获取页面中的数据
     @param {Object|JSON} data  - 必须有2个属性, id:生成的临时ID; url:文章的地址
@@ -162,7 +166,7 @@ function stzm_article_page(data, socket, save) {
             html: sHtmlContent,
             text: sTextContent
         });
-        oRes = {
+        return {
             code: '100',
             message: TIPS_INFO['100'],
             info: {
@@ -171,7 +175,7 @@ function stzm_article_page(data, socket, save) {
             }
         }
     }).catch((err) => {
-        oRes = {
+        return {
             code: '103',
             message: TIPS_INFO['103'],
             info: {
@@ -179,40 +183,32 @@ function stzm_article_page(data, socket, save) {
                 error: err.stack
             }
         };
-    }).then(() => {
+
+    }).then((res) => {
         if (save) {
-            var oneEmit = addEmit('server_save_article', save_to_database2);
-            if (oRes.code == '100') {
-                // oneEmit.emit('server save article', {
-                //     'tid': data.tid,
-                //     'html': sHtmlContent,
-                //     'text': sTextContent
-                // }, socket);
+            var oneEmit = addEmit('server_save_article', testEmit);
+            if (res.code == '100') {
+                console.log('事件对象',oneEmit);
                 var tmpData = {
                     'tid': data.tid,
                     'html': sHtmlContent,
                     'text': sTextContent
                 };
-                try{
-                oneEmit.emit('server_save_article',function (argument) {
-                    // body...
-                });
-                }
-
+                oneEmit.emit(tmpData,socket);
             } else {
-                console.log('[fail]' + oRes.info.error);
+                console.log('[fail 错误信息]' + res.info.error);
+                socket.emit('article_data to client', res);
             }
+
         } else {
-            socket.emit('article_data to client', oRes);
+            socket.emit('article_data to client', res);
         }
     });
 }
-// 保存文章数据到数据库
 
-
-
-function save_to_database(d, socket) {
-    var oRes = urlFilter(d.url);
+// 保存文章数据到数据库，版本1，根据model生成sql语句
+function save_to_database(data, socket) {
+    var oRes = urlFilter(data.url);
     if (oRes.code) {
         socket.emit('article_data to client', oRes);
         return;
@@ -221,11 +217,11 @@ function save_to_database(d, socket) {
         $('#cnblogs_post_body').find('h3').remove();
         var sHtmlContent = $('#cnblogs_post_body').html(),
             sTextContent = $('#cnblogs_post_body').text();
-        var tid = d.tid;
-        var sTitle = arrCache[tid].title || d.title;
-        var sSorce = arrCache[tid].href || d.href;
-        var sTime = arrCache[tid].time || d.time;
-        var nRead = arrCache[tid].read || d.read;
+        var tid = data.tid;
+        var sTitle = arrCache[tid].title || data.title;
+        var sSorce = arrCache[tid].href || data.href;
+        var sTime = arrCache[tid].time || data.time;
+        var nRead = arrCache[tid].read || data.read;
 
         var oData = {
             'arti_name': sTitle,
@@ -251,7 +247,7 @@ function save_to_database(d, socket) {
         }
 
         var sql = commonDao.insertSql(articleMod, oData);
-        console.log(sql);
+        console.log('[sql 语句]-->'+sql);
         if (!sql) {
             oRes = {
                 code: '105',
@@ -278,6 +274,7 @@ function save_to_database(d, socket) {
                 }
             };
         }).catch((err) => {
+            throw err;
             oRes = {
                 code: '104',
                 message: TIPS_INFO['104'],
@@ -286,11 +283,12 @@ function save_to_database(d, socket) {
                     error: err.stack
                 }
             };
-            console.log(err.stack);
+            console.log('[错误信息-->]'+err.stack);
         }).then(() => {
             socket.emit('article_data to client', oRes);
         })
     }).catch((err) => {
+        throw err;
         oRes = {
             code: '103',
             message: TIPS_INFO['103'],
@@ -303,12 +301,13 @@ function save_to_database(d, socket) {
     });
 }
 
-
+/*
+    保存到数据库，版本2，自己写sql语句
+    @param {Object|JSON} data - 存放文章的数据
+    @param {Object|sockeet} socket - socket连接对象
+*/
 function save_to_database2(data, socket) {
     console.log('chufa.......');
-
-    console.log(data);
-
     var sHtmlContent = data.html,
         sTextContent = data.text,
         sTid = data.tid,

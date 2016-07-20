@@ -15,6 +15,5 @@ module.exports = {
         res.render('article/getarticle', {
             title: '采集美女图片'
         });
-    },
-    
+    }
 };
