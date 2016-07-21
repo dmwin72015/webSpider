@@ -14,7 +14,7 @@ block content
         span.btn.btn-primary.getall#caiji 采集所有
     .result-list
         script(id='list_tpt',type='javascript/templet')
-            <li id="{$tmpID}"><span class="title">{$title}</span><span class="href">{$href}</span><span class="read">阅读量({$read})</span><span class="comment">评论({$comment})</span><a class="tosee">采集</a></li>
+            <li id="{$tmpID}"><span>{$tmpnum}</span><span class="title">{$title}</span><span class="href">{$href}</span><span class="read">阅读量({$read})</span><span class="comment">评论({$comment})</span><span class="time">{$time}</span><a class="tosee">采集</a></li>
         ul
     #errors
     .maskbgContainer(style="display:none")

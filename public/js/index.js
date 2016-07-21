@@ -94,17 +94,22 @@ $(function() {
             data: data,
             // timeout: '2000',
             success: function(d, textStatus, xhr) {
+                if (!d) {
+                    console.log('啥也没有');
+                    $('.maskbgContainer').hide();
+                    return;
+                }
                 if (typeof d == 'string') {
-                    d = $.parseJSON(d);
+                    d = $.parseJSON('{"data":"xx' + d + '"}');
                 }
                 if (!$.isPlainObject(d)) {
                     console.log('数据格式有误!!!');
                 }
                 if (d.code != '100') {
                     console.log(d);
+                    $('.maskbgContainer').hide();
                     return;
                 }
-                console.log(d);
                 var arrData = d.info.data;
                 if (!arrData) {
                     return;
@@ -116,13 +121,16 @@ $(function() {
                 var arrHtml = [];
                 for (; i < len; i++) {
                     arrHtml[i] = sTemplet
+                        .replace(/\{\$tmpnum\}/, i)
                         .replace(/\{\$tmpID\}/, arrData[i].tid)
                         .replace(/\{\$title\}/, arrData[i].title)
                         .replace(/\{\$href\}/, arrData[i].href)
                         .replace(/\{\$read\}/, arrData[i].read)
-                        .replace(/\{\$comment\}/, arrData[i].comment);
+                        .replace(/\{\$comment\}/, arrData[i].comment)
+                        .replace(/\{\$time\}/, arrData[i].time);
                 }
                 $ul.innerHTML = arrHtml.join('');
+                $('#caiji').html('采集所有(' + len + '条记录)');
                 $('.maskbgContainer').hide();
             },
             error: function(xml, textStatus, error) {
@@ -145,7 +153,7 @@ $(function() {
                         }
                     });
                     $('#errors').html(content);
-                }else{
+                } else {
                     console.log('Nothing');
                 }
                 $('.maskbgContainer').hide();
@@ -164,21 +172,23 @@ $(function() {
         var sTitle = $parent.find('span.title').text();
         var sRead = $parent.find('span.read').text().match(/\d+/)[0];
         var sComment = $parent.find('span.comment').text().match(/\d+/)[0];
+        var sTime = $parent.find('span.time').text();
 
         var oData = {
             'tid': sTid,
             'title': sTitle,
             'href': sHref,
             'read': sRead,
-            'comment': sComment
+            'comment': sComment,
+            'time': sTime
         };
-        alert(JSON.stringify(oData));
+        // alert(JSON.stringify(oData));
 
         // [触发]  服务器端保存数据事件
         socket.emit('save article data', oData);
 
         // [触发]  获取文章内容事件(在触发服务器端保存数据事件时.默认执行) 
-        // socket.emit('get article data',{url:url,id:id});
+        // socket.emit('get article data',oData);
     });
 
     // 采集所有
@@ -195,13 +205,25 @@ $(function() {
 
     //[监听]  服务器是否成功保存数据到数据库中
     socket.on('article_data to client', function(d) {
-        console.log(d);
-        if (d.code != '100') {
-            console.log(d);
-            alert(d.message + '\n' + d.info.error);
-            return;
+        var code = d.code,
+            sCname = '',
+            sTxt = '';
+        switch (code) {
+            case '100':
+                sCname = 'disable';
+                sTxt = '入库成功';
+                break;
+            case '103':
+                sCname = 'fale';
+                sTxt = '网络问题';
+                break;
+            case '104':
+                sCname = 'fale';
+                sTxt = '入库失败';
+                console.log(d.info.error);
+                break;
         }
-        $('#' + d.info.data[0]).find('a').addClass('disable').text('成功');
+        $('#' + d.info.data[0]).find('a').addClass(sCname).text(sTxt);
     });
 
 });

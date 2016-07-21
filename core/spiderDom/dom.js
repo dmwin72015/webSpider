@@ -1,3 +1,4 @@
+'use strict';
 const _ = require('lodash');
 const agent = require('../common/myAgent');
 const io = require('../common/socket_IO')('9999');
@@ -71,18 +72,19 @@ function getUrls(req, res, next) {
                 arrHrefs['p' + pNum] = stzm_page($);
                 return arrHrefs;
             }).catch((err) => {
-                arrHrefs['p' + pNum] = TIPS_INFO['103'];
-                console.log('[错误信息-->]'+err);
+                // arrHrefs['p' + pNum] = TIPS_INFO['103'];
+                // arrHrefs['p' + pNum] = err.stack;
+                console.log('[错误信息-->]' + err);
                 errorUrls.push(url);
                 return arrHrefs;
             }).then((data) => {
                 nTote--;
-                if (nTote == 1) {
+                if (nTote == 0) {
                     var tmpArr = [];
                     for (var n in data) {
                         tmpArr = tmpArr.concat(data[n]);
                     }
-                    oRes = {
+                    var oRes = {
                         code: '100',
                         message: TIPS_INFO['100'],
                         info: {
@@ -90,7 +92,8 @@ function getUrls(req, res, next) {
                             error: errorUrls
                         }
                     };
-                    res.send(oRes);
+                    console.log('采集完成');
+                    res.send(oRes).end();
                 }
             })
         })(i)
@@ -140,11 +143,6 @@ function stzm_page($) {
 }
 
 
-/*在后台触发保存事件*/
-function testEmit(arg1,arg2) {
-    // body...
-    console.log('[参数一-->]'+arg1);
-}
 /*
     获取页面中的数据
     @param {Object|JSON} data  - 必须有2个属性, id:生成的临时ID; url:文章的地址
@@ -175,34 +173,37 @@ function stzm_article_page(data, socket, save) {
             }
         }
     }).catch((err) => {
+        console.log('[fail 错误信息]' + err.stack);
         return {
             code: '103',
             message: TIPS_INFO['103'],
             info: {
-                data: null,
+                data: [data.tid],
                 error: err.stack
             }
         };
-
     }).then((res) => {
         if (save) {
-            var oneEmit = addEmit('server_save_article', testEmit);
+            var oneEmit = addEmit('server_save_article', save_to_database2);
             if (res.code == '100') {
-                console.log('事件对象',oneEmit);
                 var tmpData = {
-                    'tid': data.tid,
-                    'html': sHtmlContent,
-                    'text': sTextContent
+                    'tid': res.info.data[0],
+                    'html': res.info.data[1],
+                    'text': res.info.data[2]
                 };
-                oneEmit.emit(tmpData,socket);
+                tmpData = _.merge({}, data, tmpData);
+                oneEmit.emit('server_save_article', tmpData, socket);
+                // save_to_database2(tmpData,socket)
+                console.log('--------保存数据事件完成--------');
             } else {
-                console.log('[fail 错误信息]' + res.info.error);
                 socket.emit('article_data to client', res);
+                console.log('--------返回到客户端--------');
             }
-
         } else {
             socket.emit('article_data to client', res);
         }
+    }).catch((e) => {
+        throw e;
     });
 }
 
@@ -247,7 +248,7 @@ function save_to_database(data, socket) {
         }
 
         var sql = commonDao.insertSql(articleMod, oData);
-        console.log('[sql 语句]-->'+sql);
+        console.log('[sql 语句]-->' + sql);
         if (!sql) {
             oRes = {
                 code: '105',
@@ -283,7 +284,7 @@ function save_to_database(data, socket) {
                     error: err.stack
                 }
             };
-            console.log('[错误信息-->]'+err.stack);
+            console.log('[错误信息-->]' + err.stack);
         }).then(() => {
             socket.emit('article_data to client', oRes);
         })
@@ -308,20 +309,24 @@ function save_to_database(data, socket) {
 */
 function save_to_database2(data, socket) {
     console.log('chufa.......');
-    var sHtmlContent = data.html,
-        sTextContent = data.text,
-        sTid = data.tid,
-        sTitle = arrCache[sTid].title || data.title,
-        sSorce = arrCache[sTid].href || data.href,
-        sTime = arrCache[sTid].time || data.time,
-        nRead = arrCache[sTid].read || data.read;
 
+    var sHtmlContent = data.html || '没获取到';
+    var sTextContent = data.text || '没获取到';
+    var sTid = data.tid;
+    var sTitle = data.title;
+    var sSorce = data.href;
+    var sTime = data.time;
+    var nRead = data.read;
+
+    // TODO: 刚开始设想把第一次获取到的所有href,title等缓存,
+    // 但是使用supervisor,每次修改文件会重启服务,而页面没有刷新,
+    // 导致缓存是空的,就无法获取到数据
     var sql = 'INSERT INTO `blog_article` (`arti_name`,`arti_author_id`, `arti_author_name`, `arti_textcontent`, `arti_htmlcontent`, `arti_sorce`, `arti_label`, `arti_cate_id`,`arti_cate_name`, `arti_editor`,`arti_from`, `pub_time`,`read_num`, `create_time`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,now())';
 
     var arrData = [sTitle, 1002, '司徒正美(Ruby\'s Louvre)', sTextContent, sHtmlContent, sSorce, 'javascript,blog', '100', 'javascript', '司徒正美(Ruby\'s Louvre)', sTid, sTime, nRead];
 
     mysqlTool.queryProm(sql, arrData).then((rows) => {
-        oRes = {
+        return {
             code: '100',
             message: TIPS_INFO['100'],
             info: {
@@ -330,17 +335,19 @@ function save_to_database2(data, socket) {
             }
         };
     }).catch((err) => {
-        oRes = {
+        return {
             code: '104',
             message: TIPS_INFO['104'],
             info: {
-                data: null,
+                data: [sTid],
                 error: err.stack
             }
         };
-    }).then(() => {
-        socket.emit('article_data to client', oRes);
+    }).then((data) => {
+        console.log('保存完毕');
+        socket.emit('article_data to client', data);
     })
+
 }
 
 // socket操作
@@ -348,7 +355,7 @@ io.on('connection', (socket) => {
 
     // [监听]  获取文章内容事件
     socket.on('get article data', (data) => {
-        stzm_article_page(data, socket);
+        stzm_article_page(data, socket, false);
     });
 
     // [监听]  保存到数据库事件
