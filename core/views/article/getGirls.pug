@@ -2,8 +2,10 @@ extends ../head
 
 block head_cont
     link(rel='stylesheet', href='/css/index.css')
+    link(rel='stylesheet', href='https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css')
     script(src='http://localhost:9999/socket.io/socket.io.js')
     script(src='/js/girls-img.js')
+    script(src='https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js')
 block content
     .input-wraper
         span.input-box
@@ -16,6 +18,13 @@ block content
         script(id='list_tpt',type='javascript/templet')
             <li id="{$tmpID}"><span>{$tmpnum}</span><span class="title">{$title}</span><span class="href">{$href}</span><span class="read">阅读量({$read})</span><span class="comment">评论({$comment})</span><span class="time">{$time}</span><a class="tosee">采集</a></li>
         ul
+        table#mytable.display(cellspacing="0" width="100%")
+            thead
+                tr
+                    th|页面地址
+                    th|连接数
+                    th|图片数量
+                    th|使用时间 
     #errors
     .maskbgContainer(style="display:none")
         .css3-waiting
