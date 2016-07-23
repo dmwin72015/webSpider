@@ -1,5 +1,4 @@
-;
-var I18N_CONFIG = {
+;var I18N_CONFIG = {
     'zh_cn': {
         "sProcessing": "处理中...",
         "sLengthMenu": "显示 _MENU_ 项结果",
@@ -31,48 +30,34 @@ $(function(argument) {
 
     $('#get').click(function() {
         var url = $('#kw').val() || '';
-        if (!url) {
-            $('div.input-wraper').after('<p style="color:red">请输入url</p>');
-            return;
-        }
+        // if (!url) {
+        //     $('div.input-wraper').after('<p style="color:red">请输入url</p>');
+        //     return;
+        // }
 
         $.ajax({
             url: 'getgirlsimg',
             data: { url: url },
             type: 'post',
             success: function(d) {
-                /*
-                res.send({
-                    data: everyPageData,
-                    time: result
-                });
-                src: url,
-                arr: pageUrls,
-                time:lastEndTime - startTime
-                */
                 console.log(d);
                 var data = d.data;
                 var arr = [];
-                if (d && d.data) {
-                    var arrUrl = d.everyPagrUrls;
-                    var arrimg = d.everyImgrUrls;
+                if (d && data) {
                     var i = 0,
-                        len = arrUrl.length;
+                        len = data.length;
 
                     for (; i < len; i++) {
                         var o = {
-                            url: arrUrl[i].src,
-                            links: arrUrl[i].arr.length,
-                            pic: arrimg[i]
+                            url: data[i].src,
+                            links: data[i].link.length,
+                            pic: data[i].img.length,
+                            time:data[i].time/1000+'s'
                         }
-
-
+                        arr.push(o);
                     }
-
-                    initTable(d);
+                    initTable(arr);
                 }
-
-
             },
             error: function(xml, status, c) {
 

@@ -33,8 +33,9 @@ function baseQueryProm(sql, data) {
             conn.query(sql, data, function(err, rows) {
                 //释放连接
                 conn.release();
-                if (err) reject(err);
-                resolve(rows);
+                if (err) { reject(err); } else {
+                    resolve(rows);
+                }
             })
         });
     });
@@ -76,7 +77,7 @@ function testConnect() {
 
 /**暴露方法*/
 var tools = {
-    mysql:mysql,
+    mysql: mysql,
     query: baseQuery,
     queryProm: baseQueryProm
 };

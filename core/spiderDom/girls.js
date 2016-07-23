@@ -112,7 +112,8 @@ function getLargeUrls(req, res, next) {
         var startTime = new Date().getTime();
         sagent.get(url).end((err, res) => {
             if (err) {
-                callback(null, err);
+                cb(null, err);
+                return;
             }
             var resultTime = new Date().getTime();
             var sHtml = res.text.trim();
@@ -135,7 +136,7 @@ function getLargeUrls(req, res, next) {
             });
             var lastEndTime = new Date().getTime();
 
-            everyPagrData.push({
+            everyPageData.push({
                 src: url,
                 link: pageUrls,
                 img: imgUrls,
@@ -148,7 +149,7 @@ function getLargeUrls(req, res, next) {
         if (err) {
             throw err;
         }
-        console.log(result);
+        // console.log(result);
         console.log('执行完了');
         res.send({
             data: everyPageData,

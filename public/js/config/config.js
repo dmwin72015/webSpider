@@ -3,7 +3,8 @@ seajs.config({
         'jquery': 'modules/sea-jquery',
         'datatable': 'modules/sea-jquery-datatable',
         'easing': 'modules/sea-jquery-easing',
-        'blog': 'modules/blog'
+        'blog': 'modules/blog',
+        'common':'modules/common'
     },
     preload:['jquery']
 });
