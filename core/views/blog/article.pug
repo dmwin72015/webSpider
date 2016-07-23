@@ -37,13 +37,13 @@ html.no-js(lang='zh-cn')
             .inner
                 .me_nav
                     a()|#{categary}
-                    span|下一篇:
-                        - if(next)
-                          a(href=next.id)|#{next.name}
-                    span|上一篇:
-                        - if(prev)
-                          a(href=prev.id)|#{prev.name}
-                          //-n像“草根”一样，紧贴着地面，低调的存在，冬去春来，枯荣无恙。
+                    - if(next)
+                      span|下一篇:
+                        a(href=next.id)|#{next.name}
+                    - if(prev)
+                      span|上一篇:
+                        a(href=prev.id)|#{prev.name}
+                        //-n像“草根”一样，紧贴着地面，低调的存在，冬去春来，枯荣无恙。
                 .left
                     section.art-content#article
                         h2.art-title= title
