@@ -21,13 +21,13 @@ html.no-js(lang='zh-cn')
                 nav#nav.nav
                     ul
                         li
-                            a(href='') 首页
+                            a(href='/') 首页
                         li.cuurent
-                            a(href='about_me.html') 关于我
+                            a(href='/blog/about_me.html') 关于我
                         li
-                            a(href='allblog.html') 文章
+                            a(href='/blog/allblog.html') 文章
                         li
-                            a(href='everyday.html') 心情
+                            a(href='/blog/everyday.html') 心情
                         li
                             a(href='') 相册
                         li
@@ -97,7 +97,7 @@ html.no-js(lang='zh-cn')
                                     img(src="/images/01.jpg", alt='')
                                 figure
                                     figcaption.arc_title
-                                        a(href='article/'+item.id target='_blank') #{item.arti_name}
+                                        a(href='article/'+item.ID target='_blank') #{item.arti_name}
                                     - var summary = item.arti_textcontent.substring(0,150)+'...';
                                     p.arc_text.textcn!= summary
                                     p.arc_author

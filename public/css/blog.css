@@ -109,7 +109,7 @@
 /* about Me */
 .me_nav { border-bottom: 1px solid #ccc; overflow: hidden; margin-bottom: 5px; }
 .me_nav>a { float: left; padding: 8px 15px; background-color: #5EA51B; color: #fff; }
-.me_nav>span { float: right; color: #999; padding-top: 10px; margin-left: 25px;}
+.me_nav>span { float: right; color: #999; padding-top: 10px; margin-left: 25px; }
 .aboutMe .left { background: url(../images/r_line.jpg) right 0 repeat-y; }
 .personal_info { color: #888; padding-top: 25px; }
 .info_box { padding-top: 5px; }
@@ -155,29 +155,13 @@
 .flip-arrow-btn>a.l_arrow,.flip-arrow-btn>.arrow-btn.l_arrow{ left: 3px; background-position: 0 0; }
 .flip-arrow-btn>a.r_arrow,.flip-arrow-btn>.arrow-btn.r_arrow{ right: 3px; background-position: -59px 0; }
 /*文章内容页*/
-.art-content{display: block;}
-.art-content p,.art-content pre,.art-content code, .art-content blockquote{word-break: normal;word-wrap: break-word;}
-.art-content p,.art-content blockquote{
-	text-indent: 2em;
-	/*line-height: 1.5em;*/
-}
-.art-content pre,.art-content code,.art-content blockquote{
-	font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace;
-}
-.art-content pre,.art-content blockquote{
-	background-color: #f7f7f7;
-	border: 1px solid #ddd;
-	padding:5px;
-	font-size: 14px;
-	font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace;
-    border-radius: 5px;
-}
-.art-content code{
-	color:#666;
-}
-.art-content blockquote pre{
-    border:none;
-}
-.art-content .art-title{font-size:22px;text-align: center;margin:20px 0;}
-.art-content  .art-moreinfo{ text-align: center;padding:5px 0;border:1px dashed #999;margin-bottom: 20px;}
-.art-content  .art-moreinfo span{padding:0 3px;margin-right: 20px;color: #999;}
+.art-content{ display: block; }
+.art-content p,.art-content pre,.art-content code, .art-content blockquote,.art-content xmp{ overflow: hidden; word-break: normal; word-wrap: break-word; }
+.art-content p,.art-content blockquote{ text-indent: 2em; /*line-height: 1.5em; */}
+.art-content pre,.art-content code,.art-content blockquote{ font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace; }
+.art-content pre,.art-content blockquote{ background-color: #f7f7f7; border: 1px solid #ddd; padding: 5px; font-size: 14px; font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace; border-radius: 5px; }
+.art-content code{ color: #666; }
+.art-content blockquote pre{ border: none; }
+.art-content .art-title{ font-size: 22px; text-align: center; margin: 20px 0; }
+.art-content  .art-moreinfo{ text-align: center; padding: 5px 0; border: 1px dashed #999; margin-bottom: 20px; }
+.art-content  .art-moreinfo span{ padding: 0 3px; margin-right: 20px; color: #999; }

@@ -29,14 +29,15 @@ function baseQueryProm(sql, data) {
     if (!sql) return;
     return new Promise((resolve, reject) => {
         pool.getConnection((err, conn) => {
-            if (err) reject(err);
-            conn.query(sql, data, function(err, rows) {
-                //释放连接
-                conn.release();
-                if (err) { reject(err); } else {
-                    resolve(rows);
-                }
-            })
+            if (err) { reject(err) } else {
+                conn.query(sql, data, function(err, rows) {
+                    //释放连接
+                    conn.release();
+                    if (err) { reject(err); } else {
+                        resolve(rows);
+                    }
+                })
+            }
         });
     });
 }

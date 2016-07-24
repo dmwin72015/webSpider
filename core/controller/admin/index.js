@@ -17,7 +17,7 @@ module.exports = {
         'subroute1': (req, res, next) => {},
         'subroute2': (req, res, next) => {}
     },
-    'tst': {
-        a: 12
+    'article/save': (req, res, next) => {
+        // res.render('');
     }
 };
