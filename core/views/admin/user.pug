@@ -1,0 +1,49 @@
+extends  ../admin_layout
+block head_cont
+    link(rel='stylesheet', type='text/css', href='http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css')
+
+block topnav
+    include includes/topnav
+
+block leftnav
+    include includes/leftnav
+
+block main_content
+
+    ol.breadcrumb.dm-breadcrumb
+        li
+            a(href='javascript:void(0);')
+                i.fa.fa-home
+        li
+            a(href='#') 人员管理
+        li.active
+            a(href='') 添加
+    h3.page-header.page-header-top
+        | 一长串的标题
+        small 自描述子标题
+    #people_list
+        table#usertable
+            thead
+                tr
+                    td ID
+                    td 真实名字
+                    td 昵称
+                    td email
+                    td 个人网址
+                    td 角色
+                    td 注册时间
+                    td 状态
+            tbody
+                each item in data
+                  tr
+                    td|#{item.ID}
+                    td|#{item.user_login}
+                    td|#{item.user_nicename}
+                    td|#{item.user_email}
+                    td|#{item.user_url}
+                    td|#{item.user_rolename}
+                    td|#{item.user_registered}
+                    td|#{item.user_status == 1?'正常':'锁定'}
+block pagefoot
+    script.
+        seajs.use(['admin'])

@@ -31,8 +31,8 @@ module.exports = function(grunt) {
                 tabs: false,
             },
             files:{
-                src:'public/blog/*.html',
-                dest:'views/blog',
+                src:'public/add_article.html',
+                dest:'core/views/blog',
                 ext:'.pug'
             }
         }

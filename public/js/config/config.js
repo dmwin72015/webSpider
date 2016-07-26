@@ -4,7 +4,9 @@ seajs.config({
         'datatable': 'modules/sea-jquery-datatable',
         'easing': 'modules/sea-jquery-easing',
         'blog': 'modules/blog',
-        'common':'modules/common'
+        'common':'modules/common',
+        'admin':'modules/bg',
+        'bootstrap':'bootstrap.min'
     },
     preload:['jquery']
 });
