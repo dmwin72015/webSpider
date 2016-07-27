@@ -6,7 +6,7 @@ seajs.config({
         'blog': 'modules/blog',
         'common':'modules/common',
         'admin':'modules/bg',
-        'bootstrap':'bootstrap.min'
+        'bootstrap':'tools/bootstrap'
     },
     preload:['jquery']
 });

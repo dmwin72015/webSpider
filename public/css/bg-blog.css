@@ -1,17 +1,25 @@
 @charset "utf-8";
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 header.navbar {
     height: 40px;
     min-height: 0;
     border-radius: 0;
     padding: 0;
 }
+
 .navbar.navbar-inverse {
     background-color: #4b4b4b;
 }
+
 .navbar-nav-custom > li {
     float: left;
     line-height: 20px;
 }
+
 .navbar-nav-custom > li:before {
     content: " ";
     height: 40px;
@@ -21,36 +29,46 @@ header.navbar {
     border-right: 1px solid #3b3b3b;
     border-left: 1px solid #5b5b5b;
 }
+
 .navbar-nav-custom > li > a {
     display: inline-block;
     padding: 10px 15px;
     color: #999;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
 }
+
 .navbar-nav-custom > li > a:active, .navbar-nav-custom > li > a:focus, .navbar-nav-custom > li > a:hover {
     text-decoration: none;
     color: #fff;
 }
+
 .dropdown-user img {
     margin: -7px 5px -5px 0;
     vertical-align: middle;
     border-radius: 50%;
 }
+
 .navbar-nav-custom .dropdown .label {
     margin-left: 3px;
     border-radius: 10px;
 }
+
 .navbar-dm .dropdown-menu {
     padding: 0;
 }
+
 .navbar-dm .dropdown-menu a {
     white-space: nowrap;
     color: #333;
 }
-.navbar-dm .dropdown-menu li {}
+
+.navbar-dm .dropdown-menu li {
+}
+
 .widget > li {
     padding: 3px 8px;
 }
+
 .widget li.widget-header {
     padding-top: 7px;
     padding-bottom: 6px;
@@ -59,57 +77,72 @@ header.navbar {
     background-color: #e5e5e5;
     text-align: center;
 }
+
 .widget li.widget-header a {
     color: #555;
     font-size: 13px;
     font-weight: 700;
 }
+
 .widget li.widget-item a {
     color: #333;
     font-size: 12px;
 }
+
 .widget li:first-child {
     margin-top: 3px;
 }
+
 .dropdown-user .dropdown-menu {
     padding-top: 5px;
     padding-bottom: 7px;
 }
+
 .dropdown-user .widget a {
     display: block;
 }
+
 .dropdown-user .widget li:hover {
     background: #db4a39;
 }
+
 .dropdown-user .widget li:hover a {
     color: #fff;
 }
+
 .dropdown-user .fa {
     width: 20px;
 }
+
 .main-container {
     background-color: #ddd;
 }
+
 #page_sidebar {
     width: 200px;
     position: absolute;
     left: 0;
     border-right: 1px solid #ccc;
 }
+
 #search_form {
     display: block;
     height: 10px;
 }
+
 .leftbar-list a:focus, .leftbar-list a:hover {
     text-decoration: none
 }
+
 .leftbar-list > li {
     margin-top: 3px;
     background-color: #e9e9e9;
 }
-.leftbar-list>li>a {
+
+.leftbar-list > li > a {
     font-weight: 700;
 }
+
 .leftbar-list li a {
     display: block;
     border-left: 5px solid transparent;
@@ -117,29 +150,36 @@ header.navbar {
     background-color: #e9e9e9;
     color: #999;
 }
+
 .leftbar-list li a:hover, .leftbar-list li a:focus {
     color: #666;
     background-color: #f6f6f6;
 }
+
 .leftbar-list li a:hover i, .leftbar-list li a:focus i, .leftbar-list li a:hover i {
     color: #666;
 }
+
 .leftbar-list li li a:hover i {
     color: #333;
 }
+
 .leftbar-list li a.active {
     background-color: #fff;
     border-left-color: #db4a39;
     color: #333;
 }
+
 .leftbar-list li a.active i {
     color: #333;
 }
+
 .leftbar-list li i {
     display: inline-block;
     margin-right: 10px;
     color: #999;
 }
+
 .leftbar-list li span {
     display: block;
     width: 20px;
@@ -153,70 +193,310 @@ header.navbar {
     -moz-border-radius: 10px;
     border-radius: 10px;
 }
+
 .leftbar-list li > ul a {
     background: #eee;
     font-size: 13px;
 }
+
 .page-content {
     margin: 0 0 0 200px;
     padding: 20px;
     background-color: #fff;
     border-left: 1px solid #ccc;
     min-height: 580px;
+    position: relative;
 }
-.breadcrumb.dm-breadcrumb {
-    margin: -20px -20px 0 -20px;
+
+.dm-breadcrumb {
+    margin: -20px -20px 20px;
     padding: 0;
+    border-bottom: 1px solid #ddd;
+    background-color: #f6f6f6;
     border-radius: 0;
 }
+
 .dm-breadcrumb > li {
+    float: left;
+    padding: 0 15px 0 20px;
     height: 30px;
-    /*padding-right: 10px;*/
-    line-height: 30px;
-    /*position: relative;*/
+    line-height: 32px;
+    color: #999;
+    font-size: 12px;
+    background-image: url(../images/nav_info_seperator.png);
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: 5px 30px
 }
-.dm-breadcrumb > li a{
+
+.dm-breadcrumb > li a {
     color: #555;
 }
-.dm-breadcrumb > li:first-child{
-    margin-left:10px;
-}
-/*
-.dm-breadcrumb > li+li {
-    margin-left: 10px;
-}
-.dm-breadcrumb > li:not(:last-child):after, .dm-breadcrumb > li:not(:last-child):before {
-    content: " " !important;
-    border-right: 2px solid #ccc;
-    height: 57.735%;
-    width: 0;
-    position: absolute;
-    padding: 0 !important;
-}
-.dm-breadcrumb > li:before {
-    left: 100%;
-    top: -3.867%;
-    transform: rotate(-30deg);
-}
-.dm-breadcrumb > li:after {
-    left: 100%;
-    bottom: -3.867%;
-    transform: rotate(30deg);
-}
+
 .dm-breadcrumb > li:first-child {
-    margin-left: 10px;
+    background: 0 0;
+    padding: 0 15px
 }
-.dm-breadcrumb > li > a {
-    color: #555;
-}*/
+
+.dm-breadcrumb > li.active, .dm-breadcrumb > li > a {
+    color: #555
+}
+
 .dm-breadcrumb > li.active a {
-    color: #db4a39;
+    color: #db4a39
 }
-.page-header{
+
+.page-header {
     margin: 0 -20px 20px;;
-    padding:10px 20px 9px;
+    padding: 10px 20px 9px;
     border-width: 1px 0;
     border-style: solid;
     border-color: #ccc;
     font-size: 20px;
 }
+
+.page-tools {
+    margin-top: -10px;
+    overflow: hidden;
+    padding: 8px 0;
+}
+
+.page-tools .btn + .btn {
+    margin-left: 4px;
+}
+
+.page-tools i, #usertable i {
+    margin-right: 3px;
+}
+
+/*data-table  样式修改Start *******************************/
+.dataTables_wrapper .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.dataTables_wrapper > div {
+    background-color: #f9f9f9;
+    padding: 8px 0 3px;
+    width: auto;
+    border: 1px solid #ddd;
+}
+
+.dataTables_filter input {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    color: #444;
+}
+
+.dataTables_filter .fa-search {
+    cursor: pointer
+}
+
+.dataTables_length .form-control {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    padding: 0 8px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.dataTable tr td:first-child {
+    text-align: center;
+    cursor: pointer;
+}
+
+.table-bordered, .table-bordered td, .table-bordered th {
+    border-color: #ddd
+}
+
+/*data-table  样式修改END  *************************************/
+.page-content .overlay {
+    width: 100%;
+    height: 100%;
+}
+
+.page-content.showlayer .overlay {
+    display: block;
+    opacity: 1;
+}
+
+/*----遮罩效果----*/
+.dmlayer {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/*局部*/
+.locallaer {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    transition: all 0.5s;
+    opacity: 0;
+    z-index: 10;
+    display: none;
+}
+
+/*整个页面*/
+.pagelayer {
+    position: fixed;
+
+}
+
+.pagelayer .lycover {
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s;
+    width: 100%;
+    height: 100%;
+}
+
+.pagelayer .lycover.show {
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(237, 237, 239, 0.8);
+}
+
+.pagelayer .lyloading {
+
+}
+
+.pagelayer .lycontent {
+    position: absolute;
+    z-index: 201;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.pagelayer .lycontent .lybody {
+    width: 860px;
+    margin: 0 auto;
+    padding-top: 50px;
+    position: relative;
+}
+
+.pagelayer .lyclose {
+    display: block;
+    display: block;
+    width: 20px;
+    height: 20px;
+    text-indent: -2000px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.pagelayer .lyclose:after,
+.pagelayer .lyclose:before {
+    content: " ";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 3px;
+    height: 120%;
+    background-color: #dfdfdf;
+    transform: translateX(-50%);
+}
+
+.pagelayer .lyclose:hover:after,
+.pagelayer .lyclose:hover:before {
+    background-color: #aaa;
+}
+
+.pagelayer .lyclose:before {
+    transform: rotate(45deg);
+}
+
+.pagelayer .lyclose:after {
+    transform: rotate(-45deg);
+}
+
+/*----遮罩效果----*/
+/*----表单----*/
+.form-box {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.form-box .form-group {
+    padding: 8px 5px;
+    margin: 0;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.form-box .form-group .control-label {
+    padding-top: 5px;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.form-box .form-group .form-control {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    min-width: 120px;
+}
+
+.form-box .form-group .help-block {
+    display: inline-block;
+    padding-top: 5px;
+}
+
+.form-box .form-header {
+    position: relative;
+    height: 20px;
+    background-color: #fff;
+}
+
+.lytools {
+    position: absolute;
+    right: -50px;
+    top: 40%;
+}
+
+.lybtn-group {
+    position: relative;
+}
+
+.lybtn-group .lyfn-btn {
+    display: block;
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    top: 30%;
+    transform: translateY(-50%);
+    /*background-color: #fff;*/
+    border-radius: 0 !important;
+}
+
+.lybtn-group .btn.lyfn-btn:first-child {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.lybtn-group .btn.lyfn-btn:last-child {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.lybtn-group .lyfn-btn i {
+    font-size: 24px;
+    color: #fff;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 5px;
+}
+
+.lybtn-group .lyfn-btn.save {
+    /*margin-top:50px;*/
+    /*margin-left: 0;*/
+}
+
+.lybtn-group .lyfn-btn.cancle {
+    margin-top: 50px;
+    margin-left: 0;
+}
+
