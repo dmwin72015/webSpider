@@ -1,4 +1,4 @@
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     var langZh_Cn = {
         "sProcessing": "处理中...",
         "sLengthMenu": "显示 _MENU_ 项结果",
@@ -35,6 +35,11 @@ define(function(require, exports, module) {
             : obj.removeClass(c2).addClass(c1);
     }
 
+    function toggleAttr(obj, k, v) {
+
+
+    }
+
     $(function () {
         $('nav.leftbar-nav').on('click', 'li.sub-menu>a', function () {
             $(this).parent().hasClass('open') ? $(this).next().slideUp(250) && $(this).parent().removeClass('open') : $(this).next().slideDown(250) && $(this).parent().addClass('open');
@@ -44,6 +49,7 @@ define(function(require, exports, module) {
             // sFilterInput: "form-control",
             sLengthSelect: "form-control"
         });
+
         var $table = $('#usertable');
         $table.dataTable({
             "dom": '<"row"<"col-sm-6 col-xs-5"l><"col-sm-6 col-xs-7"f>>',
@@ -55,8 +61,14 @@ define(function(require, exports, module) {
             },
             'language': langZh_Cn,
         });
-        $table.on('click', 'tbody i', function () {
-            changeClass($(this), 'fa-square-o', 'fa-check-square-o');
+        $table.on('click', 'tr td:first-child', function () {
+            var otr = $(this).parent();
+            changeClass($(this).find('i'), 'fa-square-o', 'fa-check-square-o');
+            if(otr.attr('data-status')){
+                otr.removeAttr('data-status');
+            }else{
+                otr.attr('data-status','selected');
+            }
         });
 
         var $pagelayer = $('.pagelayer');
@@ -67,12 +79,14 @@ define(function(require, exports, module) {
         });
 
         $pagelayer.on('click', 'a.cancle,a.lyclose', function () {
-            $('.dmlayer').addClass('disN').find('.lycover').removeClass('show');
-            $('.lyloading').addClass('disN');
+            var dmlayer = $('.dmlayer');
+            dmlayer.addClass('disN').find('.lycover').removeClass('show');
+            dmlayer.find('.form-group').removeClass('has-error');
+            dmlayer.find('.lyloading').addClass('disN');
             $('body').css('overflow', 'visible');
         });
 
-        var rName = /[\u4e00-\u9fa5\w]{0,20}/g,
+        var rName = /[\u4e00-\u9fa5\w]{1,20}/g,
             rPsswd = /\w{8,10}/g,
             rEmail = /^\w+@\w+(\.\w+)+$/g,
             rWeb = /^https?:\/\/\w+\..*/g;
@@ -96,9 +110,12 @@ define(function(require, exports, module) {
                         break;
                     }
                 }
+                clearTimeout(timer);
+                var timer = setTimeout(function () {
+                    $('.lyloading').removeClass('disN');
+                }, 300);
                 if (flag) {
                     $('.lycontent').hide();
-                    $('.lyloading').removeClass('disN');
                     $.ajax({
                         url: '/admin/user/add',
                         type: 'post',
@@ -111,10 +128,10 @@ define(function(require, exports, module) {
                             'description': $userstatus.val()
                         },
                         success: function (d) {
-                            if(d.code == '100'){
-                                alert('d.message');
-                                $('a.lyclose').trigger('click');
-                            }
+                            clearTimeout(timer);
+                            console.log(d);
+                            // alert(d.message);
+                            $('a.lyclose').trigger('click');
                         }
                     });
                 }
@@ -161,7 +178,7 @@ define(function(require, exports, module) {
                     removeErrorRemind(id);
                     break;
             }
-            if (formReady.length == len-1) {
+            if (formReady.length == len - 1) {
                 fn && fn(formReady);
                 formReady.length = 0;
             }
@@ -193,4 +210,19 @@ define(function(require, exports, module) {
         $('span.help-block[error-for="' + selector + '"]').eq(0).text('').parent().parent().removeClass('has-error');
     }
 
+    $('#deluser').click(function () {
+        var id = $('tr[data-status="selected"]').eq(0).attr('data-id');
+        if(id){
+            $.ajax({
+                url: '/admin/user/del',
+                type: 'post',
+                data: {id:id},
+                success: function (d) {
+                    console.log(d);
+                    alert(d.message);
+                    location.reload(true);
+                }
+            });
+        }
+    });
 });

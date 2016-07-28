@@ -20,8 +20,38 @@ function saveUser(req, res, next) {
         return;
     }
     var data = [sEmail,sNick,sEmail,sRole,sWeb,sName];
+
+    console.log(data);
+    // user_login user_nicename  user_email user_rolename user_status display_name
     var sql = "INSERT INTO `blog_users` (user_login,user_pass,user_nicename,user_email,user_rolename,user_url,user_status,display_name,user_registered,create_date) VALUES (?,'000000',?,?,?,?,'1',?,now(),now());";
     mysqlTools.queryProm(sql,data).then((rows)=>{
+        console.log(rows);
+        return {
+            code:'100',
+            message:ERRORS['100'],
+            info:{
+                d:rows,
+                err:null
+            }
+        };
+    }).catch((err)=>{
+        return {
+            code:'104',
+            message:ERRORS['104'],
+            info:{
+                d:null,
+                err:err
+            }
+        };
+    }).then((result)=>{
+        res.send(result).end();
+    });
+}
+
+function delUser(req, res, next) {
+    var sql = 'DELETE from blog_users WHERE id=?';
+    var id = req.body.id;
+    mysqlTools.queryProm(sql,[id]).then((rows)=>{
         console.log(rows);
         return {
             code:'100',
@@ -53,9 +83,8 @@ module.exports = {
             case 'add':
                 saveUser(req, res, next);
                 break;
-
             case 'del':
-
+                delUser(req, res, next);
                 break;
 
             case 'update':

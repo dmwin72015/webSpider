@@ -63,7 +63,7 @@ block main_content
                         | 状态
             tbody
                 each item in data
-                  tr
+                  tr(data-id=item.ID)
                     td
                         i.fa.fa-square-o
                     td|#{item.ID}
