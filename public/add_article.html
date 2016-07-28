@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>保存文章</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="from-website" content="http://demo.pixelcave.com/uadmin/index.php">
+    <!-- <meta http-equiv="Refresh" content="5;url=http://www.w3school.com.cn"> -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/blog-common.css">
+    <link rel="stylesheet" href="css/bg-blog.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+    <script type="text/javascript" src="js/sea.js"></script>
+    <script type="text/javascript" src="js/config/config.js"></script>
+</head>
+
+<body>
+<div id="page-wraper">
+    <header class="navbar navbar-inverse">
+        <a class="logo" href=""></a>
+        <ul id="" class="navbar-nav-custom pull-right navbar-dm">
+            <Li class="dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left widget">
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                </ul>
+            </Li>
+            <Li class="dropdown ">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-wifi"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left widget">
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                </ul>
+            </Li>
+            <Li class="dropdown emails">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope"></i>
+                    <span class="label label-warning">99+</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left widget">
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                </ul>
+            </Li>
+            <Li class="dropdown notification">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell"></i>
+                    <span class="label label-danger">1</span>
+                    <span class="label label-warning">12</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-left widget">
+                    <li class="widget-header">
+                        <a href="#">
+                            最近新闻
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                    <li class="widget-header">
+                        <a href="#">
+                            一级菜单
+                        </a>
+                    </li>
+                    <li class="widget-item"><a href="#"><i class="fa fa-umbrella"></i> 这一个二级菜单</a></li>
+                </ul>
+            </Li>
+            <li class="dropdown dropdown-user">
+                <a href="javascript:void(0)" class="dropdown-toggle flag" data-toggle="dropdown">
+                    <img src="images/ico_05_1.jpg" width="30" height="30">
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right widget">
+                    <li class="">
+                        <a href="#"><i class="fa fa-user"></i>登录</a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-lock"></i>注销</a></li>
+                    <li><a href="#"><i class="fa fa-cog"></i>设置</a></li>
+                </ul>
+            </li>
+            <li class="dropdown pull-right">
+                <a href="javascript:void(0)">
+                    <i class="fa fa-tasks"></i>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <div id="main-container" class="main-container">
+        <aside id="page_sidebar" class="navbar-collapse navbar-main-collapse">
+            <form action="" id="search_form"></form>
+            <nav class="leftbar-nav" id="pNavbar">
+                <ul class="leftbar-list">
+                    <li><a href="" class="active"><i class="fa fa-flag"></i>首 页</a></li>
+                    <li class="sub-menu">
+                        <a href="javascript:void(0);"><i class="fa fa-glass"></i>人员管理 <span>4</span></a>
+                        <ul style="display: none;">
+                            <li>
+                                <a href="javascript:void(0);" class="active"><i
+                                        class="fa fa-file-text"></i>Components</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-exclamation-triangle"></i>Validation</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-magic"></i>Wizard</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-flask"></i>Masked Inputs</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:void(0);"><i class="fa fa-font"></i>文章管理<span>8</span></a>
+                        <ul style="display: none;">
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-file-text"></i>Components</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-exclamation-triangle"></i>Validation</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-magic"></i>Wizard</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-flask"></i>Masked Inputs</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="active"><i
+                                        class="fa fa-file-text"></i>Components</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-exclamation-triangle"></i>Validation</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-magic"></i>Wizard</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);"><i class="fa fa-flask"></i>Masked Inputs</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-leaf"></i>变迁管理</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-star"></i>发布文章</a></li>
+                    <li><a href="javascript:void(0);"><i class="fa fa-star-half-full"></i>人员管理</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <section class="page-content">
+            <ol class="dm-breadcrumb clearfix">
+                <li><a href="javascript:void(0);"><i class="fa fa-home"></i></a></li>
+                <li><a href="#">人员管理</a></li>
+                <li class="active"><a href="">添加</a></li>
+            </ol>
+            <h3 class="page-header page-header-top">
+                一长串的标题
+                <small>自描述子标题</small>
+            </h3>
+            <div class="page-tools">
+                <div class="btn-group-sm pull-left">
+                    <span class="btn btn-success"><i class="fa fa-user-plus"></i>添加</span>
+                    <span class="btn btn-success"><i class="fa fa-edit"></i>修改</span>
+                </div>
+                <div class="btn-group-sm pull-right">
+                    <span class="btn btn-danger"><i class="fa fa-user-times"></i>删除</span>
+                </div>
+            </div>
+            <div id="people_list">
+                <table id="usertable" class="table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th><i class="fa fa-user"></i>真实名字</th>
+                        <th><i class="fa fa-user"></i>昵称</th>
+                        <th><i class="fa fa-envelope-o"></i>email</th>
+                        <th><i class="fa fa-internet-explorer"></i>个人网址</th>
+                        <th><i class="fa fa-users"></i>角色</th>
+                        <th><i class="fa fa-calendar"></i>注册时间</th>
+                        <th><i class="fa fa-flag"></i>状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><i class="fa fa-square-o "></i>1001</td>
+                        <td>张三</td>
+                        <td>往死</td>
+                        <td>email</td>
+                        <td>www.baidu.com</td>
+                        <td>管理员</td>
+                        <td>2016-07-21 19:23:11</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr>
+                        <td>1001</td>
+                        <td>张三</td>
+                        <td>往死</td>
+                        <td>email</td>
+                        <td>www.baidu.com</td>
+                        <td>管理员</td>
+                        <td>2016-07-21 19:23:11</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr>
+                        <td>1001</td>
+                        <td>张三</td>
+                        <td>往死</td>
+                        <td>email</td>
+                        <td>www.baidu.com</td>
+                        <td>管理员</td>
+                        <td>2016-07-21 19:23:11</td>
+                        <td>正常</td>
+                    </tr>
+                    <tr>
+                        <td>1001</td>
+                        <td>张三</td>
+                        <td>往死</td>
+                        <td>email</td>
+                        <td>www.baidu.com</td>
+                        <td>管理员</td>
+                        <td>2016-07-21 19:23:11</td>
+                        <td>正常</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dmlayer locallaer"></div>
+
+
+        </section>
+    </div>
+
+    <div class="pagelayer dmlayer">
+        <div class="lycover show"></div>
+        <div class="dmlayer lycontent">
+            <div class="lybody">
+                <div class="form-box">
+                    <div class="form-header">
+                        <a href="javascript:;" class="lyclose">关闭</a>
+                    </div>
+                    <form action="">
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-2">姓名</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3">
+                                <span class="help-block text-danger">必填</span>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-2">昵称</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3">
+                                <span class="help-block text-danger">必填</span>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-2">E-mail</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3">
+                                <span class="help-block">必填</span>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-2">个人网站</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3">
+                                <span class="help-block">必填</span>
+                            </div>
+
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-2">角色</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3">
+                                <span class="help-block">(*必填)</span>
+                            </div>
+
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-2">状态</label>
+                            <div class="col-md-10">
+                                <textarea id="example-textarea-ckeditor" name="example-textarea-ckeditor"
+                                          class="ckeditor"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="lytools">
+                    <div class="btn-group lybtn-group">
+                        <a href="" class="btn lyfn-btn btn-success save">
+                            <i class="fa fa-save"></i>
+                        </a>
+                        <a href="" class="btn lyfn-btn btn-danger cancle">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    seajs.use(['admin']);
+</script>
+
+</html>

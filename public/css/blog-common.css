@@ -4,7 +4,7 @@ input,textarea,button,a{ outline:0; }
 body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,dd,fieldset,textarea{ margin:0; padding:0}
 fieldset,legend,textarea,input{ padding:0; }
 ul,ol{ padding-left:0; list-style-type:none; }
-a,a:hover{color: #459ae9;text-decoration: none;}
+a,a:hover{color: #459ae9;/*text-decoration: none;*/}
 i{font-style: normal;}
 a img,fieldset{ border:0; }
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{ display:block; }
@@ -25,12 +25,13 @@ button::-moz-focus-inner,input::-moz-focus-inner{ border:0; padding:0; }
 textarea{ overflow:auto; vertical-align:top; resize:none; }
 input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofill{ box-shadow:inset 0 0 0 1000px #fff; -moz-box-shadow:inset 0 0 0 1000px #fff; -webkit-box-shadow:inset 0 0 0 1000px #fff; }
 select{ border-radius:0; -webkit-border-radius:0; }
-body { font: 14px/1.6  "Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif; color: #222; }
+body { font: 14px/1.6  "Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif; color: #333; }
 .clearfix,.inner,.body {*zoom:1;}
 .clearfix:after,.inner:after,.body:after{content: "\200B";display: block;height: 0;clear: both;}
 .textcn{text-indent:2em;}
 .disN{display:none;}
 img{max-width:100%;}
+small{font-size: 70%;color: #777;}
 html,body {
 	scrollbar-face-color:#FB4446; /*滚动条3D表面（ThreedFace）的颜色*/ 
 	scrollbar-highlight-color:#fff; /*滚动条3D界面的亮边（ThreedHighlight）颜色*/ 
@@ -71,3 +72,7 @@ html,body {
    background-color:#fff;  
    -webkit-border-radius:0;  
 }
+/*后台通用模块*/
+
+
+

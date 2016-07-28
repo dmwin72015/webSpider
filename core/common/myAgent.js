@@ -45,6 +45,7 @@ function _getData(url, opt) {
     // 初始化opt
     opt = opt || {};
     var url = url || opt.url,
+        timeout = opt.timeout === void 0 ? 3000 : opt.timeout,
         charset = opt.charset || options['charset'];
 
     //没有url和success 返回

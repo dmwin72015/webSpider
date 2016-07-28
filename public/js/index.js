@@ -32,13 +32,39 @@ function getText(ele, recu, result) {
     }
     return innerText.join('');
 }
-
-function createMaskLayer(){
-    var str = '<div>';
-    var style = {
-        position:'fixed'
+/*
+获取字符串的字节数
+*/
+function getSize(str, charset) {
+    var total = 0,
+        charCode,
+        i,
+        len;
+    charset = charset ? charset.toLowerCase() : '';
+    if (charset === 'utf-16' || charset === 'utf16') {
+        for (i = 0, len = str.length; i < len; i++) {
+            charCode = str.charCodeAt(i);
+            if (charCode <= 0xffff) {
+                total += 2;
+            } else {
+                total += 4;
+            }
+        }
+    } else {
+        for (i = 0, len = str.length; i < len; i++) {
+            charCode = str.charCodeAt(i);
+            if (charCode <= 0x007f) {
+                total += 1;
+            } else if (charCode <= 0x07ff) {
+                total += 2;
+            } else if (charCode <= 0xffff) {
+                total += 3;
+            } else {
+                total += 4;
+            }
+        }
     }
-
+    return total;
 
 }
 
@@ -68,59 +94,69 @@ $(function() {
             data: data,
             // timeout: '2000',
             success: function(d, textStatus, xhr) {
+                if (!d) {
+                    console.log('啥也没有');
+                    $('.maskbgContainer').hide();
+                    return;
+                }
                 if (typeof d == 'string') {
-                    d = $.parseJSON(d);
+                    d = $.parseJSON('{"data":"xx' + d + '"}');
                 }
                 if (!$.isPlainObject(d)) {
                     console.log('数据格式有误!!!');
                 }
-                if(d.code != '100'){
+                if (d.code != '100') {
                     console.log(d);
+                    $('.maskbgContainer').hide();
                     return;
                 }
                 var arrData = d.info.data;
-                if(!arrData){
+                if (!arrData) {
                     return;
                 }
-                $('.maskbgContainer').hide();
                 var i = 0,
                     len = arrData.length,
                     $ul = $('div.result-list>ul')[0];
-                    sTemplet = $('#list_tpt').html();
+                sTemplet = $('#list_tpt').html();
                 var arrHtml = [];
                 for (; i < len; i++) {
                     arrHtml[i] = sTemplet
-                        .replace(/\{\$tmpID\}/,arrData[i].tmpID)
-                        .replace(/\{\$title\}/,arrData[i].title)
-                        .replace(/\{\$href\}/,arrData[i].href)
-                        .replace(/\{\$read\}/,arrData[i].read)
-                        .replace(/\{\$comment\}/,arrData[i].comment);
+                        .replace(/\{\$tmpnum\}/, i)
+                        .replace(/\{\$tmpID\}/, arrData[i].tid)
+                        .replace(/\{\$title\}/, arrData[i].title)
+                        .replace(/\{\$href\}/, arrData[i].href)
+                        .replace(/\{\$read\}/, arrData[i].read)
+                        .replace(/\{\$comment\}/, arrData[i].comment)
+                        .replace(/\{\$time\}/, arrData[i].time);
                 }
                 $ul.innerHTML = arrHtml.join('');
+                $('#caiji').html('采集所有(' + len + '条记录)');
                 $('.maskbgContainer').hide();
             },
             error: function(xml, textStatus, error) {
                 $('.maskbgContainer').hide();
                 var content = xml.responseText;
-                console.log(xml);
-                return ;
-                var rTag = /<("[^"]*"|'[^']*'|[^'">])*>/g;
-                content = content.replace(rTag, function(str) {
-                    switch (str) {
-                        case '<h1>':
-                        case '</h1>':
-                            return str;
-                            break;
-                        case '<pre>':
-                        case '</pre>':
-                            return str
-                        default:
-                            return '';
-                            break;
-                    }
-                });
+                if (content) {
+                    var rTag = /<("[^"]*"|'[^']*'|[^'">])*>/g;
+                    content = content.replace(rTag, function(str) {
+                        switch (str) {
+                            case '<h1>':
+                            case '</h1>':
+                                return str;
+                                break;
+                            case '<pre>':
+                            case '</pre>':
+                                return str
+                            default:
+                                return '';
+                                break;
+                        }
+                    });
+                    $('#errors').html(content);
+                } else {
+                    console.log('Nothing');
+                }
                 $('.maskbgContainer').hide();
-                $('#errors').html(content);
             }
         });
 
@@ -130,16 +166,29 @@ $(function() {
     // 采集单个
     $ul.on('click', 'a.tosee', function() {
         if ($(this).hasClass('disable')) return;
-        var url = $(this).parent().find('span.href').text();
-        var id = $(this).parent()[0].id;
-        // var url = 'http://www.ruanyifeng.com/blog/2008/03/six_criteria_of_a_business-critical_programming_language.html';
-        // socket.emit('article url', {
-        //     url: url,
-        //     id: id
-        // });
+        var $parent = $(this).parent();
+        var sTid = $parent[0].id;
+        var sHref = $parent.find('span.href').text();
+        var sTitle = $parent.find('span.title').text();
+        var sRead = $parent.find('span.read').text().match(/\d+/)[0];
+        var sComment = $parent.find('span.comment').text().match(/\d+/)[0];
+        var sTime = $parent.find('span.time').text();
+
+        var oData = {
+            'tid': sTid,
+            'title': sTitle,
+            'href': sHref,
+            'read': sRead,
+            'comment': sComment,
+            'time': sTime
+        };
+        // alert(JSON.stringify(oData));
 
         // [触发]  服务器端保存数据事件
-        socket.emit('save article data',{url:url,id:id});
+        socket.emit('save article data', oData);
+
+        // [触发]  获取文章内容事件(在触发服务器端保存数据事件时.默认执行) 
+        // socket.emit('get article data',oData);
     });
 
     // 采集所有
@@ -155,14 +204,26 @@ $(function() {
     });
 
     //[监听]  服务器是否成功保存数据到数据库中
-    socket.on('article_data to client',function(d) {
-        console.log(d);
-        if(d.code != '100'){
-            console.log(d);
-            alert(d.message+'\n'+d.info.error);
-            return;
+    socket.on('article_data to client', function(d) {
+        var code = d.code,
+            sCname = '',
+            sTxt = '';
+        switch (code) {
+            case '100':
+                sCname = 'disable';
+                sTxt = '入库成功';
+                break;
+            case '103':
+                sCname = 'fale';
+                sTxt = '网络问题';
+                break;
+            case '104':
+                sCname = 'fale';
+                sTxt = '入库失败';
+                console.log(d.info.error);
+                break;
         }
-        $('#'+d.info.data[0]).find('a').addClass('disable').text('成功');
+        $('#' + d.info.data[0]).find('a').addClass(sCname).text(sTxt);
     });
 
 });

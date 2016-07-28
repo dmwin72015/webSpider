@@ -1,0 +1,24 @@
+doctype html
+html(lang='en')
+    head
+        meta(charset='UTF-8')
+        title #{title}
+        meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+        meta(name='from-website', content='http://demo.pixelcave.com/uadmin/index.php')
+        // <meta http-equiv="Refresh" content="5;url=http://www.w3school.com.cn">
+        link(rel='stylesheet', href='css/bootstrap.min.css')
+        link(rel='stylesheet', href='css/font-awesome.min.css')
+        link(rel='stylesheet', href='css/blog-common.css')
+        link(rel='stylesheet', href='css/bg-blog.css')
+        script(type='text/javascript', src='js/sea.js')
+        script(type='text/javascript', src='js/config/config.js')
+        block head_cont
+    body
+        #page-wraper
+            block topnav
+            #main-container.main-container
+                block leftnav
+
+                section.page-content
+                    block main_content
+        block pagefoot

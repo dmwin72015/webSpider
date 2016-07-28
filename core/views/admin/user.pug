@@ -1,0 +1,83 @@
+extends  ../admin_layout
+block head_cont
+    link(rel='stylesheet', type='text/css', href='css/jquery.dataTables.css')
+
+block topnav
+    include includes/topnav
+
+block leftnav
+    include includes/leftnav
+
+block main_content
+    ol.dm-breadcrumb.clearfix
+        li
+            a(href='javascript:void(0);')
+                i.fa.fa-home
+        li
+            a(href='#') 人员管理
+        li.active
+            a(href='') 添加
+
+    //h3.page-header.page-header-top 一长串的标题
+        small 自描述子标题
+
+    .page-tools
+        .btn-group-sm.pull-left
+            span.btn.btn-success#adduser
+                i.fa.fa-user-plus
+                | 添加
+            span.btn.btn-success#edituser
+                i.fa.fa-edit
+                | 修改
+        .btn-group-sm.pull-right
+            span.btn.btn-danger#deluser
+                i.fa.fa-user-times
+                | 删除
+
+    #people_list
+        table#usertable.table-bordered.table-hover.table-striped
+            thead
+                tr
+                    th
+                    th 编号
+                    th
+                        i.fa.fa-user
+                        | 真实名字
+                    th
+                        i.fa.fa-user
+                        | 昵称
+                    th
+                        i.fa.fa-envelope-o
+                        | email
+                    th
+                        i.fa.fa-internet-explorer
+                        | 个人网址
+                    th
+                        i.fa.fa-users
+                        | 角色
+                    th
+                        i.fa.fa-calendar
+                        | 注册时间
+                    th
+                        i.fa.fa-flag
+                        | 状态
+            tbody
+                each item in data
+                  tr
+                    td
+                        i.fa.fa-square-o
+                    td|#{item.ID}
+                    td|#{item.user_login}
+                    td|#{item.user_nicename}
+                    td|#{item.user_email}
+                    td|#{item.user_url}
+                    td|#{item.user_rolename}
+                    td|#{item.user_registered}
+                    td|#{item.user_status == 1 ? '正常' : '锁定'}
+
+    .overlay
+
+
+block pagefoot
+    script.
+        seajs.use(['admin'])

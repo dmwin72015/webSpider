@@ -9,7 +9,7 @@ html.no-js(lang='zh-cn')
             script(src='../js/tools/modernizr.min.js')
         link(rel='stylesheet', href='../css/blog-common.css')
         link(rel='stylesheet', href='../css/blog.css')
-        title 博客-首页
+        title= title
         script(src='../js/sea.js')
         script(src='../js/config/config.js')
     body
@@ -21,13 +21,13 @@ html.no-js(lang='zh-cn')
                 nav#nav.nav
                     ul
                         li
-                            a(href='/') 首页
+                            a(href='') 首页
                         li.cuurent
-                            a(href='/blog/about_me.html') 关于我
+                            a(href='about_me.html') 关于我
                         li
-                            a(href='/blog/allblog.html') 文章
+                            a(href='allblog.html') 文章
                         li
-                            a(href='/blog/everyday.html') 心情
+                            a(href='everyday.html') 心情
                         li
                             a(href='') 相册
                         li
@@ -35,86 +35,30 @@ html.no-js(lang='zh-cn')
                     span#textbg
         .body
             .inner
+                .me_nav
+                    a()|#{categary}
+                    - if(next)
+                      span|下一篇:
+                        a(href=next.id)|#{next.name}
+                    - if(prev)
+                      span|上一篇:
+                        a(href=prev.id)|#{prev.name}
+                        //-n像“草根”一样，紧贴着地面，低调的存在，冬去春来，枯荣无恙。
                 .left
-                    .banner.flip-wrap
-                        ul#DmCarousel.pic_list.flip-items(style='width: 536px;height:224px')
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a1.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a2.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a3.jpg', alt='')
-                                    .item-content-desc
-                                        | 超级无敌插件轮播图~~~~~
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a4.jpg', alt='')
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a5.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a6.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a7.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a8.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                            li.flip-item
-                                .flip-item-content
-                                    img(src='../images/a9.jpg', alt='')
-                                    .item-content-desc
-                                        | 文字不显示
-                        .flip-arrow-btn(style='display: none;')
-                            a.l_arrow(href='javascript:;')
-                            a.r_arrow(href='javascript:;')
-                    .content
-                        h3.title.clearfix
-                            | 文章推荐
-                            span.sub
-                                a(href='') 热门文章
-                                a(href='') 热门话题
-                                a(href='') 热点新闻
-                        each item in data
-                            article.arc_item(data-id=item.ID)
-                                aside.arc_pic
-                                    img(src="/images/01.jpg", alt='')
-                                figure
-                                    figcaption.arc_title
-                                        a(href='article/'+item.ID target='_blank') #{item.arti_name}
-                                    - var summary = item.arti_textcontent.substring(0,150)+'...';
-                                    p.arc_text.textcn!= summary
-                                    p.arc_author
-                                        span.type
-                                            i.icon
-                                            a(href='') #{item.arti_cate_name}
-                                        span.time
-                                            i.icon
-                                            a(href='') #{item.pub_time}
-                                        span.view
-                                            i.icon
-                                            a(href='') 浏览(#{item.read_num || 0})
-                                        span.talk
-                                            i.icon
-                                            a(href='') 评论(#{item.readnum || 0})
+                    section.art-content#article
+                        h2.art-title= title
+                        p.art-moreinfo
+                            span.art-author| 作者:
+                                a(href=sorce target="_blank")|#{author}
+                            span.pubtime| 发布时间:#{pubtime}
+                            span.readnum| 阅读量(#{readnum})
+                        div.art-body
+                            |!{html}
+
+
                 .right
                     section.weimail
+                    //-
                         h3 关注我
                         .wm_box
                             ul
@@ -260,4 +204,4 @@ html.no-js(lang='zh-cn')
                 li
                     a(href='##')  Copyright © 2015-2016 . All Rights Reserved
     script.
-        seajs.use(['common','blog']);
+        seajs.use(['common']);
