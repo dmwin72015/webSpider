@@ -47,7 +47,6 @@ header.navbar { height: 40px; min-height: 0; border-radius: 0; padding: 0; }
 .page-tools { margin-top: -10px; overflow: hidden; padding: 8px 0; }
 .page-tools .btn + .btn { margin-left: 4px; }
 .page-tools i, #usertable i { margin-right: 3px; }
-
 /*data-table  样式修改Start *******************************/
 
 .dataTables_wrapper .row { margin-left: 0; margin-right: 0; }
@@ -64,7 +63,6 @@ header.navbar { height: 40px; min-height: 0; border-radius: 0; padding: 0; }
 .page-content.showlayer .overlay { display: block; opacity: 1; }
 
 /*----遮罩效果----*/
-
 .dmlayer { left: 0; top: 0; right: 0; bottom: 0; }
 
 /*局部*/

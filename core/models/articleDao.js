@@ -2,8 +2,6 @@ const mysqlTool = require('./common/mysql_connect');
 const articleMod = require('./blog_articleMod');
 const commonDao = require('./commonDao');
 
-
-
 function saveArticle(data) {
 
     var sql = commonDao.insertSql(articleMod, data);
