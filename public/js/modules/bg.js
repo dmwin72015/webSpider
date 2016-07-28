@@ -27,6 +27,14 @@ define(function (require, exports, module) {
     var $ = window.jQuery = require('jquery');
     require('datatable')($);
     require('bootstrap')($);
+
+    //切换class
+    function changeClass(obj, c1, c2) {
+        obj.hasClass(c1)
+            ? obj.removeClass(c1).addClass(c2)
+            : obj.removeClass(c2).addClass(c1);
+    }
+
     $(function () {
         $('nav.leftbar-nav').on('click', 'li.sub-menu>a', function () {
             $(this).parent().hasClass('open') ? $(this).next().slideUp(250) && $(this).parent().removeClass('open') : $(this).next().slideDown(250) && $(this).parent().addClass('open');
@@ -36,7 +44,8 @@ define(function (require, exports, module) {
             // sFilterInput: "form-control",
             sLengthSelect: "form-control"
         });
-        $('#usertable').dataTable({
+        var $table = $('#usertable');
+        $table.dataTable({
             "dom": '<"row"<"col-sm-6 col-xs-5"l><"col-sm-6 col-xs-7"f>>',
             'oLanguage': {
                 sLengthMenu: "_MENU_",
@@ -46,20 +55,142 @@ define(function (require, exports, module) {
             },
             'language': langZh_Cn,
         });
-        var $table = $('#usertable');
-        $table.on('click','tbody i',function () {
-            changeClass($(this),'fa-square-o','fa-check-square-o');
-        })
-        $('#adduser').on('click',function () {
 
-
-
-
+        $table.on('click', 'tbody i', function () {
+            changeClass($(this), 'fa-square-o', 'fa-check-square-o');
         });
-        function changeClass(obj,c1,c2) {
-            obj.hasClass(c1)
-                ?obj.removeClass(c1).addClass(c2)
-                :obj.removeClass(c2).addClass(c1);
-        }
+
+        var $pagelayer = $('.pagelayer');
+
+        $('#adduser').on('click', function () {
+            $('.dmlayer').removeClass('disN').find('.lycover').addClass('show');
+            $('body').css('overflow', 'hidden');
+        });
+
+        $pagelayer.on('click', 'a.cancle,a.lyclose', function () {
+            $('.dmlayer').addClass('disN').find('.lycover').removeClass('show');
+            $('.lyloading').addClass('disN');
+            $('body').css('overflow', 'visible');
+        });
+
+        var rName = /[\u4e00-\u9fa5\w]{0,20}/g,
+            rPsswd = /\w{8,10}/g,
+            rEmail = /^\w+@\w+(\.\w+)+$/g,
+            rWeb = /^https?:\/\/\w+\..*/g;
+
+        var formReady = [];
+        var len = $pagelayer.find('form input,form textarea').length;
+
+        $pagelayer.on('click', '#saveuser', function () {
+            var $realname = $('#realname'),
+                $nickname = $('#nickname'),
+                $email = $('#email'),
+                $website = $('#website'),
+                $rolename = $('#rolename'),
+                $userstatus = $('#userstatus');
+
+            $('#userdata input').trigger('blur', function (arr) {
+                var flag = true;
+                for (var i = 0; i < arr.length; i++) {
+                    if (!arr[i]) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    $('.lycontent').hide();
+                    $('.lyloading').removeClass('disN');
+                    $.ajax({
+                        url: '/admin/user/add',
+                        type: 'post',
+                        data: {
+                            'realname': $realname.val(),
+                            'nickname': $nickname.val(),
+                            'email': $email.val(),
+                            'website': $website.val(),
+                            'role': $rolename.val(),
+                            'description': $userstatus.val()
+                        },
+                        success: function (d) {
+                            if(d.code == '100'){
+                                alert('d.message');
+                                $('a.lyclose').trigger('click');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+
+        $pagelayer.on('focus', 'form input', function () {
+            $(this).parent().parent().removeClass('has-error');
+        });
+
+        $pagelayer.on('blur', 'form input', function (e, fn) {
+            var reg;
+            var isMust = false;
+            var id = $(this).get(0).id;
+            switch (id) {
+                case 'realname':
+                    reg = rName;
+                    isMust = true;
+                case 'rolename':
+                case 'userstatus':
+                case 'nickname':
+                    reg = rName;
+                    break;
+                case 'email':
+                    reg = rEmail;
+                    isMust = true;
+                    break;
+                case 'website':
+                    reg = rWeb;
+                    break;
+            }
+            switch (validateItem($(this).val(), reg, isMust)) {
+                case -1:
+                    errorRemind(id, '不能为空');
+                    formReady.push(false);
+                    break;
+                case -3:
+                    errorRemind(id, '格式有误');
+                    formReady.push(false);
+                    break;
+                default:
+                    formReady.push(true);
+                    removeErrorRemind(id);
+                    break;
+            }
+            if (formReady.length == len-1) {
+                fn && fn(formReady);
+                formReady.length = 0;
+            }
+        });
     });
+
+    function validateItem(val, reg, isMust, length) {
+        if (!val) {
+            if (isMust) {
+                return -1;
+            } else {
+                return true;
+            }
+        } else {
+            if (!reg.test(val)) {
+                return -3
+            }
+        }
+        reg.lastIndex = 0;
+        return true;
+    }
+
+    function errorRemind(selector, text) {
+        $('span.help-block[error-for="' + selector + '"]').eq(0).text(text).parent().parent().addClass('has-error');
+    }
+
+    function removeErrorRemind(selector) {
+        $('span.help-block[error-for="' + selector + '"]').eq(0).text('').parent().parent().removeClass('has-error');
+    }
+
 });

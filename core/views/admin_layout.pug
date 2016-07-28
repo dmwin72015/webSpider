@@ -21,4 +21,12 @@ html(lang='en')
 
                 section.page-content
                     block main_content
+            .pagelayer.dmlayer.disN
+                .lycover
+                .dmlayer.lycontent
+                    .lybody
+                        block lyUserContent
+                a.lyclose(href="javascript:;") 关闭
+                .lyloading.disN
+                    i.fa.fa-spin.fa-spinner.fa-4x
         block pagefoot

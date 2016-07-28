@@ -3,7 +3,9 @@ html, body {
     width: 100%;
     height: 100%;
 }
-
+.disN{
+    display: none;
+}
 header.navbar {
     height: 40px;
     min-height: 0;
@@ -345,17 +347,21 @@ header.navbar {
 }
 
 .pagelayer .lycover {
-    visibility: hidden;
     opacity: 0;
     transition: all 0.5s;
     width: 100%;
     height: 100%;
+    /*background-image: url("https://cn.bing.com/az/hprichbg/rb/Castelluccio_ZH-CN13949453635_1920x1080.jpg");*/
+    /*background-size: cover;*/
 }
 
 .pagelayer .lycover.show {
     opacity: 1;
-    visibility: visible;
-    background-color: rgba(237, 237, 239, 0.8);
+    background-color: rgba(229,229,229,.95);
+    /*-webkit-filter: blur(2px);*/
+    /*-moz-filter: blur(2px);*/
+    /*-ms-filter: blur(2px);*/
+    /*filter: blur(2px);*/
 }
 
 .pagelayer .lyloading {
@@ -372,19 +378,20 @@ header.navbar {
 .pagelayer .lycontent .lybody {
     width: 860px;
     margin: 0 auto;
-    padding-top: 50px;
+    padding-top: 40px;
     position: relative;
 }
 
 .pagelayer .lyclose {
     display: block;
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     text-indent: -2000px;
     position: absolute;
     top: 10px;
     right: 15px;
+    z-index: 202;
 }
 
 .pagelayer .lyclose:after,
@@ -395,13 +402,13 @@ header.navbar {
     top: 0;
     width: 3px;
     height: 120%;
-    background-color: #dfdfdf;
+    background-color: #aaa;
     transform: translateX(-50%);
 }
 
 .pagelayer .lyclose:hover:after,
 .pagelayer .lyclose:hover:before {
-    background-color: #aaa;
+    background-color: #d9534f;
 }
 
 .pagelayer .lyclose:before {
@@ -415,7 +422,9 @@ header.navbar {
 /*----遮罩效果----*/
 /*----表单----*/
 .form-box {
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
+    border-radius: 5px;
+    overflow: hidden;
     background-color: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
@@ -469,7 +478,7 @@ header.navbar {
     top: 30%;
     transform: translateY(-50%);
     /*background-color: #fff;*/
-    border-radius: 0 !important;
+    /*border-radius: 0 !important;*/
 }
 
 .lybtn-group .btn.lyfn-btn:first-child {
@@ -491,12 +500,17 @@ header.navbar {
 }
 
 .lybtn-group .lyfn-btn.save {
-    /*margin-top:50px;*/
-    /*margin-left: 0;*/
+    border-radius:0.25rem 0.25rem 0 0  !important;
 }
 
 .lybtn-group .lyfn-btn.cancle {
     margin-top: 50px;
     margin-left: 0;
+    border-radius:0 0 0.25rem 0.25rem !important ;
 }
-
+.dmlayer .lyloading{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}

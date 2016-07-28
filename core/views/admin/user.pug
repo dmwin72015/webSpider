@@ -75,8 +75,50 @@ block main_content
                     td|#{item.user_registered}
                     td|#{item.user_status == 1 ? '正常' : '锁定'}
 
-    .overlay
-
+block lyUserContent
+    .form-box
+        .form-header
+        form#userdata()
+            .form-group.clearfix
+                label.control-label.col-md-2 姓名
+                .col-md-6
+                    input#realname.form-control.form-control-sm(name="realname" type='text' placeholder="姓名")
+                .col-md-3
+                    span.help-block.text-danger(error-for="realname") *
+            .form-group.clearfix
+                label.control-label.col-md-2 昵称
+                .col-md-6
+                    input#nickname.form-control.form-control-sm(name="nickname" type='text' placeholder="昵称")
+                .col-md-3
+                    span.help-block.text-danger(error-for="nickname")
+            .form-group.clearfix
+                label.control-label.col-md-2 E-mail
+                .col-md-6
+                    input#email.form-control.form-control-sm(name="email" type='text' placeholder="Email")
+                .col-md-3
+                    span.help-block.text-danger(error-for="email") *
+            .form-group.clearfix
+                label.control-label.col-md-2 个人网站
+                .col-md-6
+                    input#website.form-control.form-control-sm(name="website" type='text' placeholder="网址")
+                .col-md-3
+                    span.help-block(error-for="website")
+            .form-group.clearfix
+                label.control-label.col-md-2 角色
+                .col-md-6
+                    input#rolename.form-control.form-control-sm(name="role" type='text' placeholder="角色")
+                .col-md-3
+                    span.help-block(error-for="rolename")
+            .form-group.clearfix
+                label.control-label.col-md-2 状态
+                .col-md-10
+                    textarea#userstatus.form-control.ckeditor(name="descriptioni" rows="10" placeholder="简单描述")
+        .lytools
+            .btn-group.lybtn-group
+                a#saveuser.btn.lyfn-btn.btn-success.save(href='javascript:;')
+                    i.fa.fa-save
+                a#cancle.btn.lyfn-btn.btn-danger.cancle(href='javascript:;')
+                    i.fa.fa-times
 
 block pagefoot
     script.
