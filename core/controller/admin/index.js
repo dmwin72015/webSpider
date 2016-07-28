@@ -9,7 +9,7 @@ module.exports = {
             res.render('admin/user',{data:rows});
 
         }).catch((err)=>{
-            next();
+            next(err);
         });
 
     },

@@ -75,9 +75,8 @@ block main_content
                     td|#{item.user_registered}
                     td|#{item.user_status == 1 ? '正常' : '锁定'}
 
-    .overlay
-
-
+block lyusercontent
+    include includes/useradd_form
 block pagefoot
     script.
         seajs.use(['admin'])

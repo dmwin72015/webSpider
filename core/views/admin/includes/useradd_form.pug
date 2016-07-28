@@ -1,0 +1,50 @@
+div.form-box
+    div.form-header
+        a.lyclose(href="javascript:;") 关闭
+    form()
+        div.form-group.clearfix
+            label.control-label.col-md-2 姓名
+            div.col-md-6
+                input.form-control.form-control-sm(type="text")
+            .col-md-3
+                span.help-block.text-danger 必填
+        div.form-group.clearfix
+            label.control-label.col-md-2 昵称
+            div.col-md-6
+                input.form-control.form-control-sm(type="text")
+            .col-md-3
+                span.help-block.text-danger
+        div.form-group.clearfix
+            label.control-label.col-md-2 E-mail
+            div.col-md-6
+                input.form-control.form-control-sm(type="text")
+            .col-md-3
+                span.help-block.text-danger 必填
+        div.form-group.clearfix
+            label.control-label.col-md-2 个人网站
+            div.col-md-6
+                input.form-control.form-control-sm(type="text")
+            .col-md-3
+                span.help-block.text-danger 
+        div.form-group.clearfix
+            label.control-label.col-md-2 角色
+            div.col-md-6
+                input.form-control.form-control-sm(type="text")
+            .col-md-3
+                span.help-block.text-danger 必填
+        div.form-group.clearfix
+            label.control-label.col-md-2 状态
+            div.col-md-6
+                input.form-control.form-control-sm(type="text")
+            .col-md-3
+                span.help-block.text-danger 必填
+        div.form-group.clearfix
+            label.control-label.col-md-2 备注(简介)
+            div.col-md-10
+                textarea.form-control(rows="10")
+.lytools
+    .btn-group.lybtn-group
+        a#saveuser.btn.lyfn-btn.btn-success.save(href="javascript:;")
+            i.fa.fa-save
+        a#lyclose.btn.lyfn-btn.btn-danger.cancle
+            i.fa.fa-times

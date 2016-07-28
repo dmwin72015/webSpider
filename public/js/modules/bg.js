@@ -1,4 +1,4 @@
-define(function (require, exports, module) {
+define(function(require, exports, module) {
     var langZh_Cn = {
         "sProcessing": "处理中...",
         "sLengthMenu": "显示 _MENU_ 项结果",
@@ -27,8 +27,8 @@ define(function (require, exports, module) {
     var $ = window.jQuery = require('jquery');
     require('datatable')($);
     require('bootstrap')($);
-    $(function () {
-        $('nav.leftbar-nav').on('click', 'li.sub-menu>a', function () {
+    $(function() {
+        $('nav.leftbar-nav').on('click', 'li.sub-menu>a', function() {
             $(this).parent().hasClass('open') ? $(this).next().slideUp(250) && $(this).parent().removeClass('open') : $(this).next().slideDown(250) && $(this).parent().addClass('open');
         });
         $.extend($.fn.dataTableExt.oStdClasses, {
@@ -47,19 +47,32 @@ define(function (require, exports, module) {
             'language': langZh_Cn,
         });
         var $table = $('#usertable');
-        $table.on('click','tbody i',function () {
-            changeClass($(this),'fa-square-o','fa-check-square-o');
+        $table.on('click', 'tbody i', function() {
+            changeClass($(this), 'fa-square-o', 'fa-check-square-o');
         })
-        $('#adduser').on('click',function () {
-
+        $('#adduser').on('click', function() {
+            $('.pagelayer').show();
+            $('.lycover,.lycontent').addClass('show');
 
 
 
         });
-        function changeClass(obj,c1,c2) {
-            obj.hasClass(c1)
-                ?obj.removeClass(c1).addClass(c2)
-                :obj.removeClass(c2).addClass(c1);
+        $('#page-wraper').on('click', 'a.lyclose,a.lyfn-btn.cancle', function() {
+            $('.pagelayer').hide();
+            $('.lycover,.lycontent').removeClass('show');
+        });
+        $('#page-wraper').on('click','#saveuser',function () {
+            $.ajax({
+                url:'',
+                type:'post',
+                data:'',
+                success:function(){
+
+                }
+            });
+        })
+        function changeClass(obj, c1, c2) {
+            obj.hasClass(c1) ? obj.removeClass(c1).addClass(c2) : obj.removeClass(c2).addClass(c1);
         }
     });
 });
