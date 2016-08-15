@@ -4,7 +4,7 @@ const ERRORS = require('../../../config/error_info');
 
 /*存储到数据库*/
 function saveUser(req, res, next) {
-    if(_.isEmpty(req.body)){
+    if (_.isEmpty(req.body)) {
         res.send({}).end();
         return;
     }
@@ -15,35 +15,35 @@ function saveUser(req, res, next) {
         sWeb = params.website,
         sRole = params.role,
         sDesc = params.description;
-    if(!sEmail){
+    if (!sEmail) {
         res.send({}).end();
         return;
     }
-    var data = [sEmail,sNick,sEmail,sRole,sWeb,sName];
+    var data = [sEmail, sNick, sEmail, sRole, sWeb, sName];
 
     console.log(data);
     // user_login user_nicename  user_email user_rolename user_status display_name
     var sql = "INSERT INTO `blog_users` (user_login,user_pass,user_nicename,user_email,user_rolename,user_url,user_status,display_name,user_registered,create_date) VALUES (?,'000000',?,?,?,?,'1',?,now(),now());";
-    mysqlTools.queryProm(sql,data).then((rows)=>{
+    mysqlTools.queryProm(sql, data).then((rows)=> {
         console.log(rows);
         return {
-            code:'100',
-            message:ERRORS['100'],
-            info:{
-                d:rows,
-                err:null
+            code: '100',
+            message: ERRORS['100'],
+            info: {
+                d: rows,
+                err: null
             }
         };
-    }).catch((err)=>{
+    }).catch((err)=> {
         return {
-            code:'104',
-            message:ERRORS['104'],
-            info:{
-                d:null,
-                err:err
+            code: '104',
+            message: ERRORS['104'],
+            info: {
+                d: null,
+                err: err
             }
         };
-    }).then((result)=>{
+    }).then((result)=> {
         res.send(result).end();
     });
 }
@@ -51,26 +51,26 @@ function saveUser(req, res, next) {
 function delUser(req, res, next) {
     var sql = 'DELETE from blog_users WHERE id=?';
     var id = req.body.id;
-    mysqlTools.queryProm(sql,[id]).then((rows)=>{
+    mysqlTools.queryProm(sql, [id]).then((rows)=> {
         console.log(rows);
         return {
-            code:'100',
-            message:ERRORS['100'],
-            info:{
-                d:rows,
-                err:null
+            code: '100',
+            message: ERRORS['100'],
+            info: {
+                d: rows,
+                err: null
             }
         };
-    }).catch((err)=>{
+    }).catch((err)=> {
         return {
-            code:'104',
-            message:ERRORS['104'],
-            info:{
-                d:null,
-                err:err
+            code: '104',
+            message: ERRORS['104'],
+            info: {
+                d: null,
+                err: err
             }
         };
-    }).then((result)=>{
+    }).then((result)=> {
         res.send(result).end();
     });
 }
@@ -94,6 +94,12 @@ module.exports = {
                 next();
                 break;
         }
+    },
+    'index': function (req, res, next) {
+        res.render('admin/testuser');
+    },
+    'add': function (req, res, next) {
+        res.send('OK--add');
     }
 }
 
