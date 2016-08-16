@@ -1,0 +1,15 @@
+<h3>图文推荐</h3>
+<ul>
+{% for item in data %}
+    <li id="{{item.ID}}">
+        <a href="" class="media_left">
+            <img src="../images/01.jpg" alt="">
+        </a>
+        <div class="media_right">
+            <p class="sug_title"><a href="">{{item.arti_name}}</a></p>
+            <p><span class="sug_type">{{item.arti_cate_name}}</span>
+             <span class="sug_time">{{item.pub_time|truncate(10,True,'')}}</span></p>
+        </div>
+    </li>
+{% endfor%}
+</ul>

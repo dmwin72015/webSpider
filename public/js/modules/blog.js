@@ -1,8 +1,8 @@
 define(function(require, exports, module) {
     // 'use strict';
     var jQuery = $ = require('jquery');
-    var $datatable = require('datatable')($);
-    var $easing = require('easing')($);
+    // var $datatable = require('datatable')($);
+    // var $easing = require('easing')($);
     //判断某一个元素实在包含另一个元素
     function isContains(o1, o2) {
         if (o1.compareDocumentPosition) {
@@ -133,11 +133,11 @@ define(function(require, exports, module) {
 
             $(this).on({
                 'mouseover': function() {
-                    console.log('鼠标移入，停止自动播放')
+                    // console.log('鼠标移入，停止自动播放')
                     clearInterval(_this.timer);
                 },
                 'mouseout': function() {
-                    console.log('鼠标移出，开始自动播放')
+                    // console.log('鼠标移出，开始自动播放')
                 }
             }, sfnClass);
 

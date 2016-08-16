@@ -18,6 +18,9 @@ var app = express();
 // nunjucks.configure('core/view/nunjucks');
 nunjucks.configure(path.join(__dirname, 'core/views/nunjucks'), {
     autoescape: true,
+    lstripBlocks:true,
+    trimBlocks:true,
+    noCache:true,//缓存
     throwOnUndefined: true,
     express: app
 });
@@ -49,6 +52,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
+    err.title = 404;
+    console.log('404');
     next(err);
 });
 
@@ -60,6 +65,7 @@ if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
+            title:404,
             message: err.message,
             error: err
         });
@@ -71,8 +77,9 @@ if (app.get('env') === 'development') {
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+        title:404,
         message: err.message,
-        error: {}
+        error: err
     });
 });
 

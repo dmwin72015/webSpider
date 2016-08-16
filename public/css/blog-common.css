@@ -4,14 +4,14 @@ input,textarea,button,a{ outline:0; }
 body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,dd,fieldset,textarea{ margin:0; padding:0}
 fieldset,legend,textarea,input{ padding:0; }
 ul,ol{ padding-left:0; list-style-type:none; }
-a,a:hover{color: #459ae9;/*text-decoration: none;*/}
+a,a:hover{color: #459ae9;text-decoration: none;}
 i{font-style: normal;}
 a img,fieldset{ border:0; }
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{ display:block; }
-audio,canvas,video{ display:inline-block; }
+/*audio,canvas,video{ display:inline-block; }
 audio:not([controls]){ display:none; height:0; }
 [hidden]{ display:none; }
-svg:not(:root){ overflow:hidden; }
+svg:not(:root){ overflow:hidden; }*/
 figure{ margin:0; }
 button,input,select,textarea{ font-family:inherit; font-size:100%; margin:0; }
 button,select{ text-transform:none; }

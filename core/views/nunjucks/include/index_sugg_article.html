@@ -1,0 +1,29 @@
+{% for item in data %}
+<article class="arc_item" id="{{item.ID}}">
+    <aside class="arc_pic">
+        <img src="../images/01.jpg" alt="">
+    </aside>
+    <figure>
+        <figcaption class="arc_title"><a href="">{{ item.arti_name }}</a></figcaption>
+        <p class="arc_text textcn">{{ item.arti_textcontent | truncate(150,true) }}</p>
+        <p class="arc_author">
+            <span class="type">
+                <i class="icon"></i>
+                <a href="">{{item.arti_cate_name}}</a>
+            </span>
+            <span class="time">
+                <i class="icon"></i>
+                <a href="">{{item.pub_time}}</a>
+            </span>
+            <span class="view">
+                <i class="icon"></i>
+                <a href="">浏览({{ item.read_num if item.read_num else 0}})</a>
+            </span>
+            <span class="talk">
+                <i class="icon"></i>
+                <a href="">评论({{item.read_num if item.read_num else 0}})</a>
+            </span>
+        </p>
+    </figure>
+</article>
+{% endfor %}
