@@ -89,6 +89,6 @@ function commonQuery(sql, cb) {
 function renderScript(id, html) {
     var whitespace1 = ">[\\x20\\t\\r\\n\\f]*";
     // var whitespace2 = "[\\x20\\t\\r\\n\\f]*<";
-    html = html ? html.replace(new RegExp(whitespace1, 'g'), '>', '<') : '';
+    html = html ? html.replace(new RegExp(whitespace1, 'g'), '>') : '';
     return "<script>render('" + id + "','" + html + "');</script>";
 }

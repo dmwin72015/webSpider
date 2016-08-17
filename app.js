@@ -20,7 +20,7 @@ nunjucks.configure(path.join(__dirname, 'core/views/nunjucks'), {
     autoescape: true,
     lstripBlocks:true,
     trimBlocks:true,
-    noCache:true,//缓存
+    // noCache:true,//缓存
     throwOnUndefined: true,
     express: app
 });
