@@ -3,6 +3,7 @@ var mysqlTool = require('../common/mysql_connect');
 
 module.exports = function (req, res, next) {
     var mt = mysqlTool;
+
     function getArticle(cb) {
         var sql = 'SELECT ID, arti_name, arti_author_name, arti_textcontent, arti_htmlcontent, arti_sorce, arti_label, arti_cate_name, pub_time, read_num FROM blog_article WHERE arti_author_id = 1002 ORDER BY pub_time DESC LIMIT 5';
         commonQuery(sql, function (err, rows) {
@@ -89,6 +90,12 @@ function commonQuery(sql, cb) {
 function renderScript(id, html) {
     var whitespace1 = ">[\\x20\\t\\r\\n\\f]*";
     // var whitespace2 = "[\\x20\\t\\r\\n\\f]*<";
-    html = html ? html.replace(new RegExp(whitespace1, 'g'), '>') : '';
-    return "<script>render('" + id + "','" + html + "');</script>";
+    html = html ? html.replace(new RegExp(whitespace1, 'g'), '>').replace(/\"/g,'\\"') : '';
+
+    var buf = [];
+    buf.push('<script>'),
+    buf.push('bigpipe.set("' + id + '","' + html + '")'),
+    buf.push('</script>');
+
+    return buf.join('');
 }

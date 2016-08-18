@@ -1,6 +1,7 @@
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     // 'use strict';
     var jQuery = $ = require('jquery');
+    // var bigpipe = require('bigpipe');
     // var $datatable = require('datatable')($);
     // var $easing = require('easing')($);
     //判断某一个元素实在包含另一个元素
@@ -20,7 +21,7 @@ define(function(require, exports, module) {
         }
     };
 
-    ! function($, root, doc) {
+    !function ($, root, doc) {
         /** 全局变量、参数****/
         root = root ? root : window;
         doc = doc ? doc : window.document;
@@ -75,18 +76,17 @@ define(function(require, exports, module) {
         }
 
 
-
         /***内部调用类（单例模式）， 存放公共信息**/
         var _DM = {
             // srcEle: this,
-            config: function(argument) {
+            config: function (argument) {
                 // body...
             },
         };
 
         //每个元素的返回对象 
         // fnClass   'unshow', 'past', 'prev', 'current', 'next', 'future'
-        _DM.baseGo = function(index, opt, $ol) {
+        _DM.baseGo = function (index, opt, $ol) {
             var _this = this,
                 $this = $(this),
                 _aAllSon = $(this).find(sAllClass),
@@ -119,12 +119,12 @@ define(function(require, exports, module) {
 
 
         //自动播放
-        _DM.autoGo = function(opt, $ol) {
+        _DM.autoGo = function (opt, $ol) {
             var _this = this,
                 $this = $(this),
                 _nLen = $(this).find(sAllClass).length;
             _this.cuurentIndex = parseInt(opt.defaultIndex);
-            _this.timer = setInterval(function() {
+            _this.timer = setInterval(function () {
                 opt.direction ? _this.cuurentIndex++ : _this.cuurentIndex--;
                 if (_this.cuurentIndex >= _nLen) _this.cuurentIndex = 0;
                 if (_this.cuurentIndex < 0) _this.cuurentIndex = _nLen;
@@ -132,11 +132,11 @@ define(function(require, exports, module) {
             }, opt.time);
 
             $(this).on({
-                'mouseover': function() {
+                'mouseover': function () {
                     // console.log('鼠标移入，停止自动播放')
                     clearInterval(_this.timer);
                 },
-                'mouseout': function() {
+                'mouseout': function () {
                     // console.log('鼠标移出，开始自动播放')
                 }
             }, sfnClass);
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
         };
 
         //初始化图片
-        _DM.initPic = function() {
+        _DM.initPic = function () {
             var _this = this;
             var aSon = $(this).find(sAllClass);
             var nLen = aSon.length;
@@ -167,9 +167,8 @@ define(function(require, exports, module) {
         };
 
         //创建导航小点
-        _DM.initNav = function() {
+        _DM.initNav = function () {
             var len = $(this).find(sAllClass).length;
-            console.log(len);
             var $ol = $('<ol class="flip-nav">');
             var inner = '';
             for (var i = 0; i < len; i++) {
@@ -181,7 +180,7 @@ define(function(require, exports, module) {
         }
 
         //初始化左右两边按钮
-        _DM.initArrow = function() {
+        _DM.initArrow = function () {
             var $arrowBox = $('<div class="flip-arrow-btn">');
             var $arrowL = $('<a href="javascript:;" class="arrow-btn l_arrow"></a>');
             var $arrowR = $('<a href="javascript:;" class="arrow-btn r_arrow"></a>');
@@ -189,7 +188,7 @@ define(function(require, exports, module) {
             return $(this).parent().append($arrowBox);
         };
         // 插件调用名称
-        $.fn.DmCarousel = function(opt) {
+        $.fn.DmCarousel = function (opt) {
             // alias 设置 这里的 that(this) 调用这个方法的jQuery对象（可能是多个，也可能是一个）
             var
                 that = this,
@@ -199,7 +198,7 @@ define(function(require, exports, module) {
             function init(opt) {
                 // 遍历调用这个方法的jQuery对象，取得其中的每个元素。
                 var arr = [];
-                that.each(function(i, e) {
+                that.each(function (i, e) {
                     // 这里的this就是每一个DOM对象（原生）
 
                     var _this = this,
@@ -215,13 +214,13 @@ define(function(require, exports, module) {
                     var $ol = opt.nav ? _DM.initNav.call(_this) : void 0;
 
                     // 绑定事件 图片点击
-                    $this.on('click', sfnClass, function(ev) {
+                    $this.on('click', sfnClass, function (ev) {
                         if (!$(this).hasClass(fnClass[3]))
                             _DM.baseGo.call(_this, $(this).index(), opt, $ol);
                     });
 
                     //绑定事件 小点点击
-                    $ol ? $this.parent().on(event, '.nav-item', function(ev) {
+                    $ol ? $this.parent().on(event, '.nav-item', function (ev) {
                         if (!$(this).hasClass(fnClass[3])) {
                             _DM.baseGo.call(_this, $(this).index(), opt, $ol);
                         }
@@ -234,7 +233,7 @@ define(function(require, exports, module) {
                     if (opt.button) {
                         _DM.initArrow.call(_this, opt);
                         var _nLen = $this.find(sAllClass).length;
-                        $this.parent().on('click', '.l_arrow,.r_arrow', function() {
+                        $this.parent().on('click', '.l_arrow,.r_arrow', function () {
                             $(this).hasClass('l_arrow') ? _this.cuurentIndex++ : _this.cuurentIndex--;
                             if (_this.cuurentIndex >= _nLen) _this.cuurentIndex = 0;
                             if (_this.cuurentIndex < 0) _this.cuurentIndex = _nLen;
@@ -243,13 +242,13 @@ define(function(require, exports, module) {
                     }
                     //返回的结果
                     arr[i] = {
-                        go: function(index) {
+                        go: function (index) {
                             DM.baseGo.call(_this, index, opt, $ol);
                         },
-                        stop: function() {
+                        stop: function () {
                             clearInterval(_this.timer);
                         },
-                        start: function() {
+                        start: function () {
                             _DM.autoGo.call(_this, opt)
                         }
                     };
@@ -270,8 +269,12 @@ define(function(require, exports, module) {
         direction: 1
     });
 
-    $('.logo').click(function() {
+    $('.logo').click(function () {
         carouse.stop();
         alert('停止播放');
-    })
+    });
+    /**************************************************/
+    // bigpipe.ready('top10', function (data) {
+    //     $('#top10').html(data);
+    // });
 });

@@ -6,7 +6,8 @@ seajs.config({
         'blog': 'modules/blog',
         'common':'modules/common',
         'admin':'modules/bg',
-        'bootstrap':'tools/bootstrap'
+        'bootstrap':'tools/bootstrap',
+        // 'bigpipe':'bigpipe'
     },
     preload:['jquery']
 });
